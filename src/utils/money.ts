@@ -60,3 +60,14 @@ export function minorToInputString(amountMinor: MinorAmount, currency: CurrencyC
   const fraction = amountMinor % divisor;
   return fraction === 0 ? `${whole}` : `${whole}.${`${fraction}`.padStart(minorDigits, '0')}`;
 }
+
+/** Minor units → fixed-decimal string with every minor digit ("125050" → "1250.50"). For CSV. */
+export function minorToDecimalString(amountMinor: MinorAmount, currency: CurrencyCode): string {
+  const { minorDigits } = getCurrencyInfo(currency);
+  const sign = amountMinor < 0 ? '-' : '';
+  const abs = Math.abs(amountMinor);
+  const divisor = 10 ** minorDigits;
+  const whole = Math.floor(abs / divisor);
+  if (minorDigits === 0) return `${sign}${whole}`;
+  return `${sign}${whole}.${`${abs % divisor}`.padStart(minorDigits, '0')}`;
+}

@@ -51,7 +51,8 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 1 | `react-hook-form`, `zod`, `@hookform/resolvers` | Forms + validation |
 | 1 | `@react-native-community/datetimepicker` | Date selector |
 | 2 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
-| 6 | `expo-file-system`, `expo-sharing`, `expo-document-picker` | Backup / restore |
+| 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 6) |
+| 6 | `expo-document-picker` | Backup / restore (reuses `expo-file-system`, `expo-sharing`) |
 
 **Not added:** chart libraries (custom charts on `react-native-svg`), UI kits, NativeWind, ORMs, navigation libs beyond Expo Router.
 
@@ -198,7 +199,7 @@ Settings keys: `uiLanguage`, `voiceLanguage`, `currency`, `themeMode`, `onboardi
 
 - `transactionRepository` — `insert`, `insertMany` (single transaction, used by voice "Save all"), `update`, `remove`, `getById`, `listByMonth`, `listRecent`, `listByDate`.
 - `categoryRepository` — `listByType`, `getByKey`, `seedSystemCategories`.
-- `reportRepository` — aggregation queries: monthly totals by type, totals by category, daily totals for a month.
+- `reportRepository` — aggregation queries for an inclusive date range + currency: totals and counts by type, by category (one type), by day, by month.
 - `settingsRepository` — `get`, `set`, `getAll`.
 
 Repositories use parameterized queries only, map rows (`snake_case`) to typed domain objects (`camelCase`) internally, and contain no business rules.

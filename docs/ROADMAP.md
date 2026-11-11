@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 2 — Voice Entry** implemented in code (2026-11-11; the user's brief called this "Phase 3"). Phase 1 — Manual Transactions & Dashboard is also implemented in code. tsc/lint/jest pass; on-device exit checks for both are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 3 — Reports.
+**Current phase:** **Phase 3 — Reports** implemented in code (2026-11-12; the user's brief called this "Phase 4: Reports & Analytics"). Phases 1 and 2 are also implemented in code. tsc/lint/jest pass; on-device exit checks for all three are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 4 — Settings & Onboarding.
 
 ## Rules for every phase
 
@@ -80,13 +80,19 @@
 
 **Reference:** Reports (row 2, col 2), Category Breakdown (row 2, col 3), Monthly Calendar (row 2, col 4), Dashboard trend chart (row 1, col 3).
 
+> Implemented in code (2026-11-12; the user's brief called this "Phase 4"). Scope expanded at the user's request with the items marked *(added)*. tsc/lint/jest pass; on-device exit check pending a development build.
+
 **Scope**
-- `reportRepository` aggregations + `reportService`.
+- `reportRepository` aggregations + `reportService`; pure math in `features/reports/analytics.ts`.
 - `LineChart`, `DonutChart`, `Legend`, `CalendarGrid` on `react-native-svg`.
 - Reports screen: summary cards, donut with total, category legend with %, expense trend, month filter.
 - Category Breakdown screen.
 - Monthly Calendar with daily totals, selected date, day summary, transaction details.
 - Dashboard trend chart.
+- *(added)* Period filter shared by every report: this month / last month / this year / custom range (validated).
+- *(added)* Net balance, saved amount and savings rate (null without income); insights (average daily expense, highest/lowest day, top categories, count); income category breakdown.
+- *(added)* Comparison with the previous period (no percentage when the previous value is 0).
+- *(added)* CSV export of the period's transactions via the share sheet — pulls `expo-file-system` + `expo-sharing` forward from Phase 6.
 
 **Exit:** aggregation tests pass (incl. empty months, single category, rounding of percentages to 100%); charts render correctly with 0, 1, and many data points.
 
@@ -124,7 +130,7 @@
 ## Phase 6 — Backup & Restore
 
 **Scope**
-- Add `expo-file-system`, `expo-sharing`, `expo-document-picker`.
+- Add `expo-document-picker` (`expo-file-system` and `expo-sharing` were added in Phase 3 for CSV export).
 - Export versioned JSON (schema version + data); share sheet.
 - Import with validation (Zod), preview, and explicit confirmation before replacing data.
 

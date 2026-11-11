@@ -1,0 +1,136 @@
+{
+  "title": "रिपोर्ट",
+  "period": {
+    "label": "रिपोर्ट की अवधि",
+    "selected": "दिखाया जा रहा है {{period}}",
+    "previous": "पिछली अवधि",
+    "next": "अगली अवधि",
+    "range": "{{from}} – {{to}}",
+    "presets": {
+      "thisMonth": "इस महीने",
+      "lastMonth": "पिछले महीने",
+      "thisYear": "इस साल",
+      "custom": "कस्टम"
+    },
+    "custom": {
+      "title": "कस्टम तारीख सीमा",
+      "from": "से",
+      "to": "तक",
+      "choose": "तारीख चुनें",
+      "apply": "लागू करें",
+      "errors": {
+        "missing": "शुरू और अंत दोनों तारीखें चुनें",
+        "invalidDate": "सही तारीखें चुनें",
+        "endBeforeStart": "अंतिम तारीख शुरू की तारीख के दिन या उसके बाद होनी चाहिए"
+      }
+    }
+  },
+  "summary": {
+    "income": "आय",
+    "expense": "खर्च",
+    "netBalance": "शुद्ध शेष",
+    "netCaption": "इस अवधि की आय में से खर्च घटाकर",
+    "saved": "बचत",
+    "savingsRate": "बचत दर",
+    "noIncome": "कोई आय नहीं",
+    "savedCaption": "इस अवधि के खर्च के बाद बची आय। शुरुआती शेष या अन्य संपत्तियाँ इसमें शामिल नहीं हैं।"
+  },
+  "breakdown": {
+    "title": "श्रेणी के अनुसार विवरण",
+    "cardTitle": "श्रेणी के अनुसार",
+    "typeLabel": "विवरण का प्रकार",
+    "expense": "खर्च",
+    "income": "आय",
+    "totalExpense": "कुल खर्च",
+    "totalIncome": "कुल आय",
+    "otherCategories": "अन्य श्रेणियाँ",
+    "transactions_one": "{{count}} लेन-देन",
+    "transactions_other": "{{count}} लेन-देन",
+    "rowHint": "इस श्रेणी के लेन-देन दिखाता है",
+    "chartLabel": "श्रेणी के अनुसार {{type}}: {{slices}}",
+    "emptyExpense": "इस अवधि में कोई खर्च नहीं",
+    "emptyIncome": "इस अवधि में कोई आय नहीं"
+  },
+  "trend": {
+    "dailyTitle": "दैनिक रुझान",
+    "monthlyTitle": "मासिक रुझान",
+    "seriesLabel": "रुझान का प्रकार",
+    "expense": "खर्च",
+    "income": "आय",
+    "dayHint": "इस दिन को कैलेंडर में खोलता है",
+    "monthHint": "इस महीने की रिपोर्ट दिखाता है",
+    "pointLabel": "{{label}}: {{amount}}",
+    "chartLabel": "{{series}} का रुझान, कुल {{total}}",
+    "selected": "{{label}} · {{amount}}",
+    "tapHint": "कोई बिंदु चुनने के लिए चार्ट पर टैप करें",
+    "open": "देखें",
+    "emptyExpense": "इस अवधि में चार्ट के लिए कोई खर्च नहीं",
+    "emptyIncome": "इस अवधि में चार्ट के लिए कोई आय नहीं"
+  },
+  "insights": {
+    "title": "जानकारी",
+    "avgDaily": "औसत दैनिक खर्च",
+    "avgDailyCaption_one": "{{count}} दिन के आधार पर",
+    "avgDailyCaption_other": "{{count}} दिनों के आधार पर",
+    "highestDay": "सबसे ज़्यादा खर्च वाला दिन",
+    "lowestDay": "सबसे कम खर्च वाला दिन",
+    "topExpense": "सबसे बड़ी खर्च श्रेणी",
+    "topIncome": "सबसे बड़ी आय श्रेणी",
+    "transactionCount": "लेन-देन",
+    "none": "—"
+  },
+  "comparison": {
+    "title": "पिछली अवधि से तुलना",
+    "previousRange": "पिछली: {{range}}",
+    "income": "आय",
+    "expense": "खर्च",
+    "net": "शुद्ध शेष",
+    "previousValue": "पहले: {{amount}}",
+    "up": "{{percent}} ज़्यादा",
+    "down": "{{percent}} कम",
+    "same": "कोई बदलाव नहीं",
+    "more": "{{amount}} ज़्यादा",
+    "less": "{{amount}} कम",
+    "noPreviousData": "तुलना के लिए पिछली अवधि में कोई लेन-देन नहीं है।"
+  },
+  "calendar": {
+    "title": "मासिक कैलेंडर",
+    "open": "कैलेंडर खोलें",
+    "previousMonth": "पिछला महीना",
+    "nextMonth": "अगला महीना",
+    "monthTotals": "महीना: आय {{income}} · खर्च {{expense}}",
+    "daySummary": "दिन का सारांश",
+    "income": "आय",
+    "expense": "खर्च",
+    "dayLabel": "{{date}}: आय {{income}}, खर्च {{expense}}",
+    "dayLabelEmpty": "{{date}}: कोई लेन-देन नहीं",
+    "todayLabel": "आज, {{label}}",
+    "noTransactions": "इस दिन कोई लेन-देन नहीं",
+    "error": "कैलेंडर लोड नहीं हो सका"
+  },
+  "export": {
+    "button": "CSV एक्सपोर्ट",
+    "dialogTitle": "लेन-देन एक्सपोर्ट करें",
+    "empty": "इस अवधि में एक्सपोर्ट करने के लिए कोई लेन-देन नहीं",
+    "unavailable": "इस डिवाइस पर शेयर करना उपलब्ध नहीं है",
+    "failed": "एक्सपोर्ट नहीं हो सका। फिर से कोशिश करें।",
+    "columns": {
+      "date": "तारीख",
+      "type": "प्रकार",
+      "category": "श्रेणी",
+      "amount": "राशि",
+      "amountFormatted": "राशि (फ़ॉर्मैट की हुई)",
+      "paymentMethod": "भुगतान का तरीका",
+      "note": "नोट"
+    }
+  },
+  "empty": {
+    "title": "इस अवधि में कोई लेन-देन नहीं",
+    "message": "रिपोर्ट देखने के लिए आय या खर्च जोड़ें।",
+    "action": "लेन-देन जोड़ें"
+  },
+  "error": {
+    "title": "रिपोर्ट लोड नहीं हो सकी",
+    "retry": "फिर से कोशिश करें"
+  }
+}

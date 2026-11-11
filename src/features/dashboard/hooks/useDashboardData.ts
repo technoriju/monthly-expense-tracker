@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { reportService } from '@/features/reports/services/reportService';
+import type { Trend } from '@/features/reports/types';
 import { transactionService } from '@/features/transactions/services/transactionService';
 import type { PeriodTotals, Transaction } from '@/features/transactions/types';
 import { useUiStore } from '@/store/uiStore';
@@ -13,6 +15,8 @@ export interface DashboardData {
   /** Last loaded totals (kept while a refetch is in flight); null before the first load. */
   summary: PeriodTotals | null;
   recentTransactions: Transaction[];
+  /** Daily totals of the month for the trend chart; null before the first load. */
+  trend: Trend | null;
   status: 'loading' | 'ready' | 'error';
   reload: () => void;
 }
@@ -21,6 +25,7 @@ interface Loaded {
   key: string;
   summary: PeriodTotals | null;
   recent: Transaction[];
+  trend: Trend | null;
   error: boolean;
 }
 
@@ -41,13 +46,14 @@ export function useDashboardData(): DashboardData {
     Promise.all([
       transactionService.getMonthlyTotals(month),
       transactionService.listRecentForMonth(month, RECENT_TRANSACTIONS_LIMIT),
+      reportService.getMonthTrend(month),
     ])
-      .then(([summary, recent]) => {
-        if (!cancelled) setLoaded({ key, summary, recent, error: false });
+      .then(([summary, recent, trend]) => {
+        if (!cancelled) setLoaded({ key, summary, recent, trend, error: false });
       })
       .catch((error: unknown) => {
         console.error('Loading dashboard failed', error);
-        if (!cancelled) setLoaded({ key, summary: null, recent: [], error: true });
+        if (!cancelled) setLoaded({ key, summary: null, recent: [], trend: null, error: true });
       });
     return () => {
       cancelled = true;
@@ -63,6 +69,7 @@ export function useDashboardData(): DashboardData {
     setMonth,
     summary: loaded?.summary ?? null,
     recentTransactions: loaded?.recent ?? [],
+    trend: loaded?.trend ?? null,
     status,
     reload: () => setReloadToken((n) => n + 1),
   };

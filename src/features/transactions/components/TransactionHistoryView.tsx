@@ -39,8 +39,21 @@ import type { TransactionSort } from '../types';
 import { DateRangeSheet, type DateRange } from './DateRangeSheet';
 import { TransactionRow } from './TransactionRow';
 
-/** "See all" transaction list: search, filters, sort, grouped by date, paginated. */
-export function TransactionHistoryView() {
+export interface TransactionHistoryInitialFilter {
+  type?: TransactionType;
+  categoryId?: number;
+  range?: DateRange;
+}
+
+/**
+ * "See all" transaction list: search, filters, sort, grouped by date, paginated.
+ * `initialFilter` pre-applies filters (e.g. opened from a report category).
+ */
+export function TransactionHistoryView({
+  initialFilter = {},
+}: {
+  initialFilter?: TransactionHistoryInitialFilter;
+}) {
   const styles = useStyles();
   const { colors } = useTheme();
   const { t } = useTranslation('transactions');
@@ -51,9 +64,9 @@ export function TransactionHistoryView() {
   const today = new Date();
 
   const [search, setSearch] = useState('');
-  const [type, setType] = useState<TransactionType | undefined>(undefined);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [range, setRange] = useState<DateRange>({ from: null, to: null });
+  const [type, setType] = useState<TransactionType | undefined>(initialFilter.type);
+  const [categoryId, setCategoryId] = useState<number | null>(initialFilter.categoryId ?? null);
+  const [range, setRange] = useState<DateRange>(initialFilter.range ?? { from: null, to: null });
   const [sort, setSort] = useState<TransactionSort>('newest');
   const [sheet, setSheet] = useState<'category' | 'date' | null>(null);
 

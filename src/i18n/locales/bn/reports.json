@@ -1,0 +1,136 @@
+{
+  "title": "রিপোর্ট",
+  "period": {
+    "label": "রিপোর্টের সময়কাল",
+    "selected": "দেখানো হচ্ছে {{period}}",
+    "previous": "আগের সময়কাল",
+    "next": "পরের সময়কাল",
+    "range": "{{from}} – {{to}}",
+    "presets": {
+      "thisMonth": "এই মাস",
+      "lastMonth": "গত মাস",
+      "thisYear": "এই বছর",
+      "custom": "কাস্টম"
+    },
+    "custom": {
+      "title": "কাস্টম তারিখের সীমা",
+      "from": "থেকে",
+      "to": "পর্যন্ত",
+      "choose": "তারিখ বেছে নিন",
+      "apply": "প্রয়োগ করুন",
+      "errors": {
+        "missing": "শুরু ও শেষ দুটি তারিখই বেছে নিন",
+        "invalidDate": "সঠিক তারিখ বেছে নিন",
+        "endBeforeStart": "শেষের তারিখ শুরুর তারিখের দিন বা পরে হতে হবে"
+      }
+    }
+  },
+  "summary": {
+    "income": "আয়",
+    "expense": "খরচ",
+    "netBalance": "নিট ব্যালান্স",
+    "netCaption": "এই সময়কালের আয় থেকে খরচ বাদ দিয়ে",
+    "saved": "সঞ্চয়",
+    "savingsRate": "সঞ্চয়ের হার",
+    "noIncome": "কোনো আয় নেই",
+    "savedCaption": "এই সময়কালের খরচের পর আয়ের যা বাকি আছে। শুরুর ব্যালান্স বা অন্য সম্পদ এতে ধরা হয়নি।"
+  },
+  "breakdown": {
+    "title": "বিভাগ অনুযায়ী বিশ্লেষণ",
+    "cardTitle": "বিভাগ অনুযায়ী",
+    "typeLabel": "বিশ্লেষণের ধরন",
+    "expense": "খরচ",
+    "income": "আয়",
+    "totalExpense": "মোট খরচ",
+    "totalIncome": "মোট আয়",
+    "otherCategories": "অন্যান্য বিভাগ",
+    "transactions_one": "{{count}}টি লেনদেন",
+    "transactions_other": "{{count}}টি লেনদেন",
+    "rowHint": "এই বিভাগের লেনদেন দেখায়",
+    "chartLabel": "বিভাগ অনুযায়ী {{type}}: {{slices}}",
+    "emptyExpense": "এই সময়কালে কোনো খরচ নেই",
+    "emptyIncome": "এই সময়কালে কোনো আয় নেই"
+  },
+  "trend": {
+    "dailyTitle": "দৈনিক প্রবণতা",
+    "monthlyTitle": "মাসিক প্রবণতা",
+    "seriesLabel": "প্রবণতার ধরন",
+    "expense": "খরচ",
+    "income": "আয়",
+    "dayHint": "ক্যালেন্ডারে এই দিনটি খোলে",
+    "monthHint": "এই মাসের রিপোর্ট দেখায়",
+    "pointLabel": "{{label}}: {{amount}}",
+    "chartLabel": "{{series}}-এর প্রবণতা, মোট {{total}}",
+    "selected": "{{label}} · {{amount}}",
+    "tapHint": "একটি বিন্দু বেছে নিতে চার্টে ট্যাপ করুন",
+    "open": "দেখুন",
+    "emptyExpense": "এই সময়কালে চার্ট দেখানোর মতো কোনো খরচ নেই",
+    "emptyIncome": "এই সময়কালে চার্ট দেখানোর মতো কোনো আয় নেই"
+  },
+  "insights": {
+    "title": "অন্তর্দৃষ্টি",
+    "avgDaily": "গড় দৈনিক খরচ",
+    "avgDailyCaption_one": "{{count}} দিনের হিসাবে",
+    "avgDailyCaption_other": "{{count}} দিনের হিসাবে",
+    "highestDay": "সবচেয়ে বেশি খরচের দিন",
+    "lowestDay": "সবচেয়ে কম খরচের দিন",
+    "topExpense": "শীর্ষ খরচের বিভাগ",
+    "topIncome": "শীর্ষ আয়ের বিভাগ",
+    "transactionCount": "লেনদেন",
+    "none": "—"
+  },
+  "comparison": {
+    "title": "আগের সময়কালের সাথে তুলনা",
+    "previousRange": "আগের: {{range}}",
+    "income": "আয়",
+    "expense": "খরচ",
+    "net": "নিট ব্যালান্স",
+    "previousValue": "আগে: {{amount}}",
+    "up": "{{percent}} বেশি",
+    "down": "{{percent}} কম",
+    "same": "কোনো পরিবর্তন নেই",
+    "more": "{{amount}} বেশি",
+    "less": "{{amount}} কম",
+    "noPreviousData": "তুলনা করার মতো আগের সময়কালে কোনো লেনদেন নেই।"
+  },
+  "calendar": {
+    "title": "মাসিক ক্যালেন্ডার",
+    "open": "ক্যালেন্ডার খুলুন",
+    "previousMonth": "আগের মাস",
+    "nextMonth": "পরের মাস",
+    "monthTotals": "মাস: আয় {{income}} · খরচ {{expense}}",
+    "daySummary": "দিনের সারাংশ",
+    "income": "আয়",
+    "expense": "খরচ",
+    "dayLabel": "{{date}}: আয় {{income}}, খরচ {{expense}}",
+    "dayLabelEmpty": "{{date}}: কোনো লেনদেন নেই",
+    "todayLabel": "আজ, {{label}}",
+    "noTransactions": "এই দিনে কোনো লেনদেন নেই",
+    "error": "ক্যালেন্ডার লোড করা যায়নি"
+  },
+  "export": {
+    "button": "CSV এক্সপোর্ট",
+    "dialogTitle": "লেনদেন এক্সপোর্ট করুন",
+    "empty": "এই সময়কালে এক্সপোর্ট করার মতো কোনো লেনদেন নেই",
+    "unavailable": "এই ডিভাইসে শেয়ার করা যাচ্ছে না",
+    "failed": "এক্সপোর্ট করা যায়নি। আবার চেষ্টা করুন।",
+    "columns": {
+      "date": "তারিখ",
+      "type": "ধরন",
+      "category": "বিভাগ",
+      "amount": "পরিমাণ",
+      "amountFormatted": "পরিমাণ (ফরম্যাট করা)",
+      "paymentMethod": "পেমেন্টের মাধ্যম",
+      "note": "নোট"
+    }
+  },
+  "empty": {
+    "title": "এই সময়কালে কোনো লেনদেন নেই",
+    "message": "রিপোর্ট দেখতে আয় বা খরচ যোগ করুন।",
+    "action": "লেনদেন যোগ করুন"
+  },
+  "error": {
+    "title": "রিপোর্ট লোড করা যায়নি",
+    "retry": "আবার চেষ্টা করুন"
+  }
+}

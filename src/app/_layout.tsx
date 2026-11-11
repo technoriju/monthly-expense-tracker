@@ -41,6 +41,8 @@ function RootNavigator() {
       <Stack.Screen name="transaction/new" options={{ presentation: 'modal' }} />
       <Stack.Screen name="transaction/[id]" options={{ presentation: 'modal' }} />
       <Stack.Screen name="transactions" />
+      <Stack.Screen name="reports/categories" />
+      <Stack.Screen name="reports/calendar" />
       <Stack.Screen name="voice/review" />
       <Stack.Screen name="settings/language" />
     </Stack>

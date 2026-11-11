@@ -90,3 +90,13 @@ export function formatLongDate(isoDate: IsoDate, language: LanguageCode): string
 export function formatMonthShort(date: Date, language: LanguageCode): string {
   return format(date, 'LLL', { locale: DATE_FNS_LOCALES[language] ?? enIN });
 }
+
+/** Short weekday name ("Sun", "রবি", "रवि") for calendar headers. */
+export function formatWeekdayShort(date: Date, language: LanguageCode): string {
+  return format(date, 'EEE', { locale: DATE_FNS_LOCALES[language] ?? enIN });
+}
+
+/** Day of month ("22") for calendar cells and chart axis labels. */
+export function formatDayOfMonth(isoDate: IsoDate, language: LanguageCode): string {
+  return format(parseISO(isoDate), 'd', { locale: DATE_FNS_LOCALES[language] ?? enIN });
+}

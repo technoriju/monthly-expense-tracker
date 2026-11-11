@@ -20,7 +20,9 @@
   },
   "chart": {
     "title": "Monthly Expenses",
-    "placeholder": "Spending trend chart coming soon"
+    "empty": "No expenses this month yet",
+    "openReports": "Opens reports for this month",
+    "label": "Expense trend this month, total {{total}}"
   },
   "quickActions": {
     "addTransaction": "Add Transaction",

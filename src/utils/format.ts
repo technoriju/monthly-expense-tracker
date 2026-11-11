@@ -68,3 +68,36 @@ function groupIndian(digits: string): string {
   const rest = digits.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',');
   return `${rest},${last3}`;
 }
+
+/**
+ * Formats basis points (10000 = 100%) as a localized percentage with Latin digits,
+ * e.g. 3850 → "38.5%". Falls back to plain "38.5%" when Intl lacks the locale.
+ */
+export function formatPercentBp(
+  basisPoints: number,
+  locale: string,
+  {
+    maximumFractionDigits = 1,
+    signDisplay = 'auto',
+  }: { maximumFractionDigits?: number; signDisplay?: SignDisplay } = {},
+): string {
+  const fraction = basisPoints / 10_000;
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'percent',
+      maximumFractionDigits,
+      numberingSystem: 'latn',
+      signDisplay,
+    }).format(fraction);
+  } catch {
+    const factor = 10 ** maximumFractionDigits;
+    const value = Math.round(Math.abs(basisPoints / 100) * factor) / factor;
+    const sign =
+      basisPoints < 0 && signDisplay !== 'never'
+        ? '-'
+        : basisPoints > 0 && (signDisplay === 'always' || signDisplay === 'exceptZero')
+          ? '+'
+          : '';
+    return `${sign}${value}%`;
+  }
+}

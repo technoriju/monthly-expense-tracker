@@ -1,4 +1,4 @@
-import { formatMoney, formatMoneyFallback } from '../format';
+import { formatMoney, formatMoneyFallback, formatPercentBp } from '../format';
 import { isWholeAmount } from '../money';
 
 describe('formatMoney (en-IN)', () => {
@@ -43,5 +43,23 @@ describe('isWholeAmount', () => {
   it('detects whole rupees from minor units', () => {
     expect(isWholeAmount(50_000, 'INR')).toBe(true);
     expect(isWholeAmount(50_050, 'INR')).toBe(false);
+  });
+});
+
+describe('formatPercentBp', () => {
+  it('formats basis points as a percentage with up to one decimal', () => {
+    expect(formatPercentBp(3_800, 'en-IN')).toBe('38%');
+    expect(formatPercentBp(4_309, 'en-IN')).toBe('43.1%');
+    expect(formatPercentBp(0, 'en-IN')).toBe('0%');
+  });
+
+  it('can show a sign', () => {
+    expect(formatPercentBp(2_500, 'en-IN', { signDisplay: 'exceptZero' })).toBe('+25%');
+    expect(formatPercentBp(-2_500, 'en-IN', { signDisplay: 'exceptZero' })).toBe('-25%');
+  });
+
+  it('keeps Latin digits for Bengali and Hindi locales', () => {
+    expect(formatPercentBp(3_800, 'bn-IN')).toMatch(/38/);
+    expect(formatPercentBp(3_800, 'hi-IN')).toMatch(/38/);
   });
 });

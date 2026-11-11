@@ -7,18 +7,18 @@ import { makeStyles } from '@/theme';
 
 import { useDashboardData } from '../hooks/useDashboardData';
 import { BalanceCard } from './BalanceCard';
-import { ChartPlaceholder } from './ChartPlaceholder';
 import { DashboardGreeting } from './DashboardGreeting';
 import { MonthSelector } from './MonthSelector';
 import { QuickActions } from './QuickActions';
 import { RecentTransactions } from './RecentTransactions';
 import { SummaryCard } from './SummaryCard';
+import { TrendChartCard } from './TrendChartCard';
 
 export function DashboardView() {
   const styles = useStyles();
   const { t } = useTranslation('dashboard');
   const { t: tTx } = useTranslation('transactions');
-  const { today, month, setMonth, summary, recentTransactions, status, reload } =
+  const { today, month, setMonth, summary, recentTransactions, trend, status, reload } =
     useDashboardData();
 
   return (
@@ -54,7 +54,7 @@ export function DashboardView() {
         )}
       </View>
       <QuickActions />
-      <ChartPlaceholder />
+      {trend !== null && status !== 'error' ? <TrendChartCard trend={trend} month={month} /> : null}
       {summary !== null && status !== 'error' ? (
         <RecentTransactions transactions={recentTransactions} today={today} />
       ) : null}

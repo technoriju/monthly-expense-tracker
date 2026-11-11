@@ -1,13 +1,15 @@
 import { useSettingsStore } from '@/store/settingsStore';
 import type { MinorAmount } from '@/types/money';
 import {
+  formatDayOfMonth,
   formatLongDate,
   formatMonthShort,
   formatMonthYear,
   formatShortDate,
+  formatWeekdayShort,
   type IsoDate,
 } from '@/utils/dates';
-import { formatMoney, type SignDisplay } from '@/utils/format';
+import { formatMoney, formatPercentBp, type SignDisplay } from '@/utils/format';
 
 import { useActiveLanguage } from './useActiveLanguage';
 
@@ -23,5 +25,9 @@ export function useFormatters() {
     monthShort: (date: Date) => formatMonthShort(date, language.code),
     shortDate: (isoDate: IsoDate) => formatShortDate(isoDate, language.code),
     longDate: (isoDate: IsoDate) => formatLongDate(isoDate, language.code),
+    weekdayShort: (date: Date) => formatWeekdayShort(date, language.code),
+    dayOfMonth: (isoDate: IsoDate) => formatDayOfMonth(isoDate, language.code),
+    percentBp: (basisPoints: number, signDisplay?: SignDisplay) =>
+      formatPercentBp(basisPoints, language.locale, { signDisplay }),
   };
 }

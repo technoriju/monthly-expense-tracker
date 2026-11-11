@@ -1,0 +1,136 @@
+{
+  "title": "Reports",
+  "period": {
+    "label": "Report period",
+    "selected": "Showing {{period}}",
+    "previous": "Previous period",
+    "next": "Next period",
+    "range": "{{from}} – {{to}}",
+    "presets": {
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "thisYear": "This year",
+      "custom": "Custom"
+    },
+    "custom": {
+      "title": "Custom date range",
+      "from": "From",
+      "to": "To",
+      "choose": "Choose a date",
+      "apply": "Apply",
+      "errors": {
+        "missing": "Choose both a start and an end date",
+        "invalidDate": "Choose valid dates",
+        "endBeforeStart": "The end date must be on or after the start date"
+      }
+    }
+  },
+  "summary": {
+    "income": "Income",
+    "expense": "Expenses",
+    "netBalance": "Net balance",
+    "netCaption": "Income minus expenses in this period",
+    "saved": "Saved",
+    "savingsRate": "Savings rate",
+    "noIncome": "No income",
+    "savedCaption": "Income left after this period's expenses. Opening balances and other assets are not included."
+  },
+  "breakdown": {
+    "title": "Category Breakdown",
+    "cardTitle": "By category",
+    "typeLabel": "Breakdown type",
+    "expense": "Expenses",
+    "income": "Income",
+    "totalExpense": "Total Expense",
+    "totalIncome": "Total Income",
+    "otherCategories": "Other categories",
+    "transactions_one": "{{count}} transaction",
+    "transactions_other": "{{count}} transactions",
+    "rowHint": "Shows this category's transactions",
+    "chartLabel": "{{type}} by category: {{slices}}",
+    "emptyExpense": "No expenses in this period",
+    "emptyIncome": "No income in this period"
+  },
+  "trend": {
+    "dailyTitle": "Daily trend",
+    "monthlyTitle": "Monthly trend",
+    "seriesLabel": "Trend series",
+    "expense": "Expenses",
+    "income": "Income",
+    "dayHint": "Opens this day in the calendar",
+    "monthHint": "Shows the report for this month",
+    "pointLabel": "{{label}}: {{amount}}",
+    "chartLabel": "{{series}} trend, total {{total}}",
+    "selected": "{{label}} · {{amount}}",
+    "tapHint": "Tap the chart to pick a point",
+    "open": "View",
+    "emptyExpense": "No expenses to chart in this period",
+    "emptyIncome": "No income to chart in this period"
+  },
+  "insights": {
+    "title": "Insights",
+    "avgDaily": "Average daily expense",
+    "avgDailyCaption_one": "Over {{count}} day",
+    "avgDailyCaption_other": "Over {{count}} days",
+    "highestDay": "Highest spending day",
+    "lowestDay": "Lowest spending day",
+    "topExpense": "Top expense category",
+    "topIncome": "Top income category",
+    "transactionCount": "Transactions",
+    "none": "—"
+  },
+  "comparison": {
+    "title": "Compared with previous period",
+    "previousRange": "Previous: {{range}}",
+    "income": "Income",
+    "expense": "Expenses",
+    "net": "Net balance",
+    "previousValue": "Before: {{amount}}",
+    "up": "{{percent}} higher",
+    "down": "{{percent}} lower",
+    "same": "No change",
+    "more": "{{amount}} more",
+    "less": "{{amount}} less",
+    "noPreviousData": "No transactions in the previous period to compare with."
+  },
+  "calendar": {
+    "title": "Monthly Calendar",
+    "open": "Open calendar",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "monthTotals": "Month: income {{income}} · expenses {{expense}}",
+    "daySummary": "Day Summary",
+    "income": "Income",
+    "expense": "Expenses",
+    "dayLabel": "{{date}}: income {{income}}, expenses {{expense}}",
+    "dayLabelEmpty": "{{date}}: no transactions",
+    "todayLabel": "Today, {{label}}",
+    "noTransactions": "No transactions on this day",
+    "error": "Could not load the calendar"
+  },
+  "export": {
+    "button": "Export CSV",
+    "dialogTitle": "Export transactions",
+    "empty": "No transactions to export in this period",
+    "unavailable": "Sharing is not available on this device",
+    "failed": "Could not export. Please try again.",
+    "columns": {
+      "date": "Date",
+      "type": "Type",
+      "category": "Category",
+      "amount": "Amount",
+      "amountFormatted": "Amount (formatted)",
+      "paymentMethod": "Payment method",
+      "note": "Note"
+    }
+  },
+  "empty": {
+    "title": "No transactions in this period",
+    "message": "Add income or expenses to see your reports.",
+    "action": "Add transaction"
+  },
+  "error": {
+    "title": "Could not load reports",
+    "retry": "Try again"
+  }
+}

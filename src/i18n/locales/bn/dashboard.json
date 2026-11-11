@@ -20,7 +20,9 @@
   },
   "chart": {
     "title": "মাসিক খরচ",
-    "placeholder": "খরচের চার্ট শীঘ্রই আসছে"
+    "empty": "এই মাসে এখনও কোনো খরচ নেই",
+    "openReports": "এই মাসের রিপোর্ট খোলে",
+    "label": "এই মাসের খরচের প্রবণতা, মোট {{total}}"
   },
   "quickActions": {
     "addTransaction": "লেনদেন যোগ",
