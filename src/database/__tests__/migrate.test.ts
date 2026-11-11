@@ -114,6 +114,17 @@ describe('migration 001', () => {
     expect(sql).toMatch(/CREATE TABLE transactions/);
     expect(sql).toMatch(/amount_minor\s+INTEGER NOT NULL CHECK \(amount_minor > 0\)/);
     expect(sql).toMatch(/CREATE TABLE settings/);
-    expect(await getSchemaVersion(db)).toBe(1);
+  });
+});
+
+describe('migration 002', () => {
+  it('adds payment_method and indexes, ending at the latest version', async () => {
+    const db = createFakeDb(1);
+    const result = await runMigrations(db, MIGRATIONS);
+    expect(result.applied).toEqual(['transactions_v2']);
+    const sql = db.executed.join('\n');
+    expect(sql).toMatch(/ALTER TABLE transactions ADD COLUMN payment_method TEXT/);
+    expect(sql).toMatch(/CREATE INDEX idx_categories_type/);
+    expect(await getSchemaVersion(db)).toBe(2);
   });
 });

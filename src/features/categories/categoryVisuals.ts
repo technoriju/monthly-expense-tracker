@@ -1,8 +1,29 @@
-import { ShoppingBasket, Store, Wallet, type LucideIcon } from 'lucide-react-native';
+import {
+  Briefcase,
+  Bus,
+  Clapperboard,
+  Ellipsis,
+  Gift,
+  GraduationCap,
+  HeartPulse,
+  House,
+  Laptop,
+  Plane,
+  ReceiptText,
+  ShoppingBag,
+  ShoppingBasket,
+  ShoppingCart,
+  Sparkles,
+  Store,
+  TrendingUp,
+  Utensils,
+  Wallet,
+  type LucideIcon,
+} from 'lucide-react-native';
 
 import type { TextColorToken } from '@/components/ui';
 
-import type { CategoryKey } from './types';
+import type { Category } from './types';
 
 export type CategoryTone = 'accent' | 'expense' | 'income' | 'info' | 'primary';
 
@@ -24,16 +45,41 @@ export const CATEGORY_TONES: Record<
 };
 
 /**
- * Icon + tone per category key. Keys are identifiers (never translated).
- * Only keys used by the Phase 1 dashboard preview exist so far; the full system
- * category set arrives with transaction CRUD.
+ * Lucide icon name (as stored in `categories.icon`) → component. Every icon used by
+ * `database/seed/systemCategories.ts` must be listed here (enforced by unit test).
  */
-const CATEGORY_VISUALS: Record<CategoryKey, CategoryVisual> = {
-  bazar: { icon: ShoppingBasket, tone: 'accent' },
-  dokan: { icon: Store, tone: 'expense' },
-  salary: { icon: Wallet, tone: 'income' },
+export const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  Briefcase,
+  Bus,
+  Clapperboard,
+  Ellipsis,
+  Gift,
+  GraduationCap,
+  HeartPulse,
+  House,
+  Laptop,
+  Plane,
+  ReceiptText,
+  ShoppingBag,
+  ShoppingBasket,
+  ShoppingCart,
+  Sparkles,
+  Store,
+  TrendingUp,
+  Utensils,
+  Wallet,
 };
 
-export function getCategoryVisual(key: CategoryKey): CategoryVisual {
-  return CATEGORY_VISUALS[key];
+const FALLBACK: CategoryVisual = { icon: Ellipsis, tone: 'primary' };
+
+function isTone(value: string): value is CategoryTone {
+  return value in CATEGORY_TONES;
+}
+
+/** Resolves the stored icon name + color token, falling back for unknown values. */
+export function getCategoryVisual(category: Pick<Category, 'icon' | 'color'>): CategoryVisual {
+  return {
+    icon: CATEGORY_ICONS[category.icon] ?? FALLBACK.icon,
+    tone: isTone(category.color) ? category.color : FALLBACK.tone,
+  };
 }

@@ -2,6 +2,7 @@ import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
 
 import { runMigrations, type MigrationResult } from './migrate';
 import { MIGRATIONS } from './migrations';
+import { seedSystemCategories } from './seed/seedSystemCategories';
 
 export const DATABASE_NAME = 'expense-tracker.db';
 
@@ -12,6 +13,7 @@ async function openAndMigrate(): Promise<SQLiteDatabase> {
   const db = await openDatabaseAsync(DATABASE_NAME);
   await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
   lastMigration = await runMigrations(db, MIGRATIONS);
+  await seedSystemCategories(db);
   return db;
 }
 

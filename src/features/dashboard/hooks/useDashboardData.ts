@@ -1,32 +1,69 @@
-import { subDays } from 'date-fns';
+import { useEffect, useState } from 'react';
 
-import type { TransactionPreview } from '@/features/transactions/types';
-import { toIsoDate } from '@/utils/dates';
+import { transactionService } from '@/features/transactions/services/transactionService';
+import type { PeriodTotals, Transaction } from '@/features/transactions/types';
+import { useUiStore } from '@/store/uiStore';
 
-import { MOCK_RECENT_TRANSACTIONS, MOCK_SUMMARY, type MockSummary } from '../mock/dashboardMock';
+export const RECENT_TRANSACTIONS_LIMIT = 5;
 
 export interface DashboardData {
   today: Date;
   month: Date;
-  summary: MockSummary;
-  recentTransactions: TransactionPreview[];
-  isMock: true;
+  setMonth: (month: Date) => void;
+  /** Last loaded totals (kept while a refetch is in flight); null before the first load. */
+  summary: PeriodTotals | null;
+  recentTransactions: Transaction[];
+  status: 'loading' | 'ready' | 'error';
+  reload: () => void;
+}
+
+interface Loaded {
+  key: string;
+  summary: PeriodTotals | null;
+  recent: Transaction[];
+  error: boolean;
 }
 
 /**
- * Dashboard data source. Currently returns MOCK data (see ../mock/dashboardMock.ts).
- * Will be backed by transaction/report services once transaction storage exists.
+ * Dashboard data for the selected month: totals (integer paise) and recent transactions.
+ * Refetches when the month changes or any transaction is written (`dataVersion`).
  */
 export function useDashboardData(): DashboardData {
-  const today = new Date();
+  const month = useUiStore((s) => s.selectedMonth);
+  const setMonth = useUiStore((s) => s.setSelectedMonth);
+  const dataVersion = useUiStore((s) => s.dataVersion);
+  const [reloadToken, setReloadToken] = useState(0);
+  const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const key = `${month.getTime()}|${dataVersion}|${reloadToken}`;
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([
+      transactionService.getMonthlyTotals(month),
+      transactionService.listRecentForMonth(month, RECENT_TRANSACTIONS_LIMIT),
+    ])
+      .then(([summary, recent]) => {
+        if (!cancelled) setLoaded({ key, summary, recent, error: false });
+      })
+      .catch((error: unknown) => {
+        console.error('Loading dashboard failed', error);
+        if (!cancelled) setLoaded({ key, summary: null, recent: [], error: true });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [key, month]);
+
+  const isCurrent = loaded?.key === key;
+  const status: DashboardData['status'] = !isCurrent ? 'loading' : loaded.error ? 'error' : 'ready';
+
   return {
-    today,
-    month: today,
-    summary: MOCK_SUMMARY,
-    recentTransactions: MOCK_RECENT_TRANSACTIONS.map(({ daysAgo, ...tx }) => ({
-      ...tx,
-      occurredOn: toIsoDate(subDays(today, daysAgo)),
-    })),
-    isMock: true,
+    today: new Date(),
+    month,
+    setMonth,
+    summary: loaded?.summary ?? null,
+    recentTransactions: loaded?.recent ?? [],
+    status,
+    reload: () => setReloadToken((n) => n + 1),
   };
 }

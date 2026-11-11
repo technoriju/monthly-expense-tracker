@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 0 — Foundation** implemented (2026-11-11; the user's brief called this "Phase 1"). Next: Phase 1 — Manual Transactions & Dashboard.
+**Current phase:** **Phase 1 — Manual Transactions & Dashboard** implemented in code (2026-11-11; the user's brief called this "Phase 2"). tsc/lint/jest pass; on-device exit check pending a development build (Expo Go on the test device lacks `ExpoSQLite`). Next: Phase 2 — Reports.
 
 ## Rules for every phase
 

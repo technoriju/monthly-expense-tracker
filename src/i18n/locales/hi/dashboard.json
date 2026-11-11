@@ -8,7 +8,10 @@
   "profileLabel": "प्रोफ़ाइल",
   "month": {
     "selectorLabel": "चुना गया महीना: {{month}}",
-    "calendarLabel": "कैलेंडर खोलें"
+    "calendarLabel": "कैलेंडर खोलें",
+    "pickerTitle": "महीना चुनें",
+    "previousYear": "पिछला साल",
+    "nextYear": "अगला साल"
   },
   "summary": {
     "income": "आय",
@@ -26,5 +29,6 @@
   "recent": {
     "title": "हाल के लेन-देन",
     "empty": "अभी कोई लेन-देन नहीं"
-  }
+  },
+  "loadError": "इस महीने का डेटा लोड नहीं हो सका। फिर से कोशिश करें।"
 }

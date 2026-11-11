@@ -1,5 +1,22 @@
 {
+  "food": "খাবার",
+  "groceries": "মুদিখানা",
   "bazar": "বাজার",
   "dokan": "দোকান",
-  "salary": "বেতন"
+  "transportation": "যাতায়াত",
+  "shopping": "কেনাকাটা",
+  "bills": "বিল",
+  "rent": "ভাড়া",
+  "healthcare": "স্বাস্থ্য",
+  "education": "শিক্ষা",
+  "entertainment": "বিনোদন",
+  "travel": "ভ্রমণ",
+  "personal_care": "ব্যক্তিগত যত্ন",
+  "other_expense": "অন্যান্য",
+  "salary": "বেতন",
+  "freelance": "ফ্রিল্যান্স",
+  "business": "ব্যবসা",
+  "investment": "বিনিয়োগ",
+  "gift": "উপহার",
+  "other_income": "অন্যান্য"
 }

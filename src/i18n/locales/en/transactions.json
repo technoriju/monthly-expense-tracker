@@ -1,0 +1,94 @@
+{
+  "add": { "title": "Add Transaction" },
+  "edit": { "title": "Edit Transaction" },
+  "type": {
+    "label": "Transaction type",
+    "expense": "Expense",
+    "income": "Income"
+  },
+  "fields": {
+    "category": "Category",
+    "amount": "Amount",
+    "amountPlaceholder": "0",
+    "date": "Date",
+    "dateHint": "Opens a date picker",
+    "note": "Note (Optional)",
+    "notePlaceholder": "Add note…",
+    "paymentMethod": "Payment method (Optional)"
+  },
+  "paymentMethods": {
+    "cash": "Cash",
+    "upi": "UPI",
+    "card": "Card",
+    "bank_transfer": "Bank transfer",
+    "other": "Other"
+  },
+  "validation": {
+    "amountRequired": "Enter an amount",
+    "amountInvalid": "Enter an amount greater than 0 with up to 2 decimals",
+    "categoryRequired": "Choose a category",
+    "categoryMismatch": "This category does not match the transaction type",
+    "dateInvalid": "Choose a valid date",
+    "noteTooLong": "Note can be at most 200 characters"
+  },
+  "actions": {
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "toast": {
+    "created": "Transaction saved",
+    "updated": "Transaction updated",
+    "deleted": "Transaction deleted",
+    "saveFailed": "Could not save. Please try again.",
+    "deleteFailed": "Could not delete. Please try again."
+  },
+  "delete": {
+    "title": "Delete transaction?",
+    "message": "{{category}} · {{amount}} on {{date}} will be permanently deleted.",
+    "label": "Delete transaction"
+  },
+  "notFound": {
+    "title": "Transaction not found",
+    "message": "It may have been deleted."
+  },
+  "row": {
+    "editHint": "Opens the transaction for editing"
+  },
+  "history": {
+    "title": "Transactions",
+    "searchLabel": "Search transactions",
+    "searchPlaceholder": "Search notes or categories",
+    "all": "All",
+    "filtersLabel": "Filters",
+    "sort": {
+      "newest": "Newest first",
+      "oldest": "Oldest first"
+    },
+    "allCategories": "All categories",
+    "anyDate": "Any date",
+    "dateRange": "Date range",
+    "from": "From",
+    "to": "To",
+    "apply": "Apply",
+    "clearFilters": "Clear filters",
+    "empty": {
+      "title": "No transactions yet",
+      "message": "Tap + to add your first income or expense."
+    },
+    "noResults": {
+      "title": "No matching transactions",
+      "message": "Try a different search or filter."
+    },
+    "error": {
+      "title": "Could not load transactions",
+      "message": "Please try again."
+    },
+    "retry": "Try again"
+  },
+  "categoryPicker": {
+    "title": "Choose category",
+    "searchPlaceholder": "Search categories",
+    "empty": "No categories found"
+  }
+}

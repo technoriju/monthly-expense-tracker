@@ -1,5 +1,22 @@
 {
+  "food": "Food",
+  "groceries": "Groceries",
   "bazar": "Bazar",
   "dokan": "Dokan",
-  "salary": "Salary"
+  "transportation": "Transportation",
+  "shopping": "Shopping",
+  "bills": "Bills",
+  "rent": "Rent",
+  "healthcare": "Healthcare",
+  "education": "Education",
+  "entertainment": "Entertainment",
+  "travel": "Travel",
+  "personal_care": "Personal Care",
+  "other_expense": "Other",
+  "salary": "Salary",
+  "freelance": "Freelance",
+  "business": "Business",
+  "investment": "Investment",
+  "gift": "Gift",
+  "other_income": "Other"
 }

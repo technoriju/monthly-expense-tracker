@@ -1,16 +1,9 @@
-import { SquarePen } from 'lucide-react-native';
-import { useTranslation } from 'react-i18next';
+import { useLocalSearchParams } from 'expo-router';
 
-import { PlaceholderScreen } from '@/components/layout/PlaceholderScreen';
+import { TransactionFormView } from '@/features/transactions/components/TransactionFormView';
 
 export default function NewTransactionScreen() {
-  const { t } = useTranslation();
-  return (
-    <PlaceholderScreen
-      icon={SquarePen}
-      title={t('placeholders.addTransaction.title')}
-      message={t('placeholders.addTransaction.message')}
-      isStackScreen
-    />
-  );
+  const { type } = useLocalSearchParams<{ type?: string }>();
+  const initialType = type === 'income' ? 'income' : 'expense';
+  return <TransactionFormView mode={{ kind: 'create', initialType }} />;
 }

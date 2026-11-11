@@ -8,7 +8,10 @@
   "profileLabel": "Profile",
   "month": {
     "selectorLabel": "Selected month: {{month}}",
-    "calendarLabel": "Open calendar"
+    "calendarLabel": "Open calendar",
+    "pickerTitle": "Select month",
+    "previousYear": "Previous year",
+    "nextYear": "Next year"
   },
   "summary": {
     "income": "Income",
@@ -26,5 +29,6 @@
   "recent": {
     "title": "Recent Transactions",
     "empty": "No transactions yet"
-  }
+  },
+  "loadError": "Could not load this month. Pull down or try again."
 }

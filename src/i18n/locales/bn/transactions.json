@@ -1,0 +1,94 @@
+{
+  "add": { "title": "লেনদেন যোগ করুন" },
+  "edit": { "title": "লেনদেন সম্পাদনা" },
+  "type": {
+    "label": "লেনদেনের ধরন",
+    "expense": "খরচ",
+    "income": "আয়"
+  },
+  "fields": {
+    "category": "বিভাগ",
+    "amount": "পরিমাণ",
+    "amountPlaceholder": "0",
+    "date": "তারিখ",
+    "dateHint": "তারিখ বাছাই খোলে",
+    "note": "নোট (ঐচ্ছিক)",
+    "notePlaceholder": "নোট যোগ করুন…",
+    "paymentMethod": "পেমেন্টের মাধ্যম (ঐচ্ছিক)"
+  },
+  "paymentMethods": {
+    "cash": "নগদ",
+    "upi": "UPI",
+    "card": "কার্ড",
+    "bank_transfer": "ব্যাংক ট্রান্সফার",
+    "other": "অন্যান্য"
+  },
+  "validation": {
+    "amountRequired": "পরিমাণ লিখুন",
+    "amountInvalid": "০-এর বেশি পরিমাণ লিখুন (সর্বোচ্চ ২ দশমিক)",
+    "categoryRequired": "একটি বিভাগ বাছুন",
+    "categoryMismatch": "এই বিভাগটি লেনদেনের ধরনের সঙ্গে মেলে না",
+    "dateInvalid": "সঠিক তারিখ বাছুন",
+    "noteTooLong": "নোট সর্বোচ্চ ২০০ অক্ষরের হতে পারে"
+  },
+  "actions": {
+    "save": "সংরক্ষণ করুন",
+    "delete": "মুছুন",
+    "cancel": "বাতিল"
+  },
+  "toast": {
+    "created": "লেনদেন সংরক্ষিত হয়েছে",
+    "updated": "লেনদেন আপডেট হয়েছে",
+    "deleted": "লেনদেন মুছে ফেলা হয়েছে",
+    "saveFailed": "সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।",
+    "deleteFailed": "মোছা যায়নি। আবার চেষ্টা করুন।"
+  },
+  "delete": {
+    "title": "লেনদেন মুছবেন?",
+    "message": "{{date}} তারিখের {{category}} · {{amount}} স্থায়ীভাবে মুছে যাবে।",
+    "label": "লেনদেন মুছুন"
+  },
+  "notFound": {
+    "title": "লেনদেন পাওয়া যায়নি",
+    "message": "এটি হয়তো মুছে ফেলা হয়েছে।"
+  },
+  "row": {
+    "editHint": "সম্পাদনার জন্য লেনদেন খোলে"
+  },
+  "history": {
+    "title": "লেনদেন",
+    "searchLabel": "লেনদেন খুঁজুন",
+    "searchPlaceholder": "নোট বা বিভাগ খুঁজুন",
+    "all": "সব",
+    "filtersLabel": "ফিল্টার",
+    "sort": {
+      "newest": "নতুন আগে",
+      "oldest": "পুরনো আগে"
+    },
+    "allCategories": "সব বিভাগ",
+    "anyDate": "যেকোনো তারিখ",
+    "dateRange": "তারিখের সীমা",
+    "from": "থেকে",
+    "to": "পর্যন্ত",
+    "apply": "প্রয়োগ করুন",
+    "clearFilters": "ফিল্টার মুছুন",
+    "empty": {
+      "title": "এখনও কোনো লেনদেন নেই",
+      "message": "প্রথম আয় বা খরচ যোগ করতে + চাপুন।"
+    },
+    "noResults": {
+      "title": "মিলে যাওয়া কোনো লেনদেন নেই",
+      "message": "অন্য কিছু খুঁজুন বা ফিল্টার বদলান।"
+    },
+    "error": {
+      "title": "লেনদেন লোড করা যায়নি",
+      "message": "আবার চেষ্টা করুন।"
+    },
+    "retry": "আবার চেষ্টা করুন"
+  },
+  "categoryPicker": {
+    "title": "বিভাগ বাছুন",
+    "searchPlaceholder": "বিভাগ খুঁজুন",
+    "empty": "কোনো বিভাগ পাওয়া যায়নি"
+  }
+}

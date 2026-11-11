@@ -7,7 +7,7 @@ import { TriangleAlert } from 'lucide-react-native';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { AppEmptyState, AppScreen } from '@/components/ui';
+import { AppEmptyState, AppScreen, AppToast } from '@/components/ui';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { ThemeProvider, useTheme } from '@/theme';
 
@@ -27,6 +27,7 @@ export default function RootLayout() {
     <ThemeProvider>
       <StatusBar style="dark" />
       {status === 'error' ? <StartupError /> : <RootNavigator />}
+      <AppToast />
     </ThemeProvider>
   );
 }
@@ -38,6 +39,7 @@ function RootNavigator() {
       screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="transaction/new" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="transaction/[id]" options={{ presentation: 'modal' }} />
       <Stack.Screen name="transactions" />
       <Stack.Screen name="settings/language" />
     </Stack>

@@ -36,6 +36,8 @@ export const palette = {
 
   white: '#FFFFFF',
   shadow: '#2A1B6B',
+  /** textPrimary (#17152A) at 40% — modal backdrop. */
+  overlay: 'rgba(23, 21, 42, 0.4)',
 } as const;
 
 /** Semantic color tokens consumed by components. */
@@ -61,6 +63,8 @@ export interface ColorTokens {
   info: string;
   infoSoft: string;
   shadow: string;
+  /** Modal / sheet backdrop. */
+  overlay: string;
   chart: {
     blue: string;
     purple: string;
@@ -92,6 +96,7 @@ export const lightColors: ColorTokens = {
   info: palette.info,
   infoSoft: palette.infoBackground,
   shadow: palette.shadow,
+  overlay: palette.overlay,
   chart: {
     blue: palette.chartBlue,
     purple: palette.chartPurple,

@@ -4,13 +4,13 @@ import { AppIcon } from '@/components/ui';
 import { makeStyles, useTheme } from '@/theme';
 
 import { CATEGORY_TONES, getCategoryVisual } from '../categoryVisuals';
-import type { CategoryKey } from '../types';
+import type { Category } from '../types';
 
 /** Pastel circle with a Lucide icon (design.md §6 Category Icons). */
-export function CategoryIcon({ categoryKey }: { categoryKey: CategoryKey }) {
+export function CategoryIcon({ category }: { category: Pick<Category, 'icon' | 'color'> }) {
   const styles = useStyles();
   const { colors } = useTheme();
-  const { icon, tone } = getCategoryVisual(categoryKey);
+  const { icon, tone } = getCategoryVisual(category);
   const { background, foreground } = CATEGORY_TONES[tone];
   return (
     <View style={[styles.circle, { backgroundColor: colors[background] }]}>

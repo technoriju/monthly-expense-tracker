@@ -10,7 +10,9 @@
   "actions": {
     "back": "Go back",
     "seeAll": "See all",
-    "addTransaction": "Add transaction"
+    "addTransaction": "Add transaction",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "status": {
     "loading": "Loading…",
@@ -32,14 +34,6 @@
     "voice": {
       "title": "Voice Entry",
       "message": "Speak your expenses in Bengali, Hindi or English. Coming soon."
-    },
-    "addTransaction": {
-      "title": "Add Transaction",
-      "message": "Manual entry for income and expenses is coming soon."
-    },
-    "transactions": {
-      "title": "Transactions",
-      "message": "All your transactions will be listed here."
     }
   }
 }

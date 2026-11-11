@@ -1,5 +1,22 @@
 {
+  "food": "भोजन",
+  "groceries": "किराना",
   "bazar": "बाज़ार",
   "dokan": "दुकान",
-  "salary": "वेतन"
+  "transportation": "परिवहन",
+  "shopping": "खरीदारी",
+  "bills": "बिल",
+  "rent": "किराया",
+  "healthcare": "स्वास्थ्य",
+  "education": "शिक्षा",
+  "entertainment": "मनोरंजन",
+  "travel": "यात्रा",
+  "personal_care": "व्यक्तिगत देखभाल",
+  "other_expense": "अन्य",
+  "salary": "वेतन",
+  "freelance": "फ्रीलांस",
+  "business": "व्यवसाय",
+  "investment": "निवेश",
+  "gift": "उपहार",
+  "other_income": "अन्य"
 }

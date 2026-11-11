@@ -8,7 +8,10 @@
   "profileLabel": "প্রোফাইল",
   "month": {
     "selectorLabel": "নির্বাচিত মাস: {{month}}",
-    "calendarLabel": "ক্যালেন্ডার খুলুন"
+    "calendarLabel": "ক্যালেন্ডার খুলুন",
+    "pickerTitle": "মাস বাছুন",
+    "previousYear": "আগের বছর",
+    "nextYear": "পরের বছর"
   },
   "summary": {
     "income": "আয়",
@@ -26,5 +29,6 @@
   "recent": {
     "title": "সাম্প্রতিক লেনদেন",
     "empty": "এখনও কোনো লেনদেন নেই"
-  }
+  },
+  "loadError": "এই মাসের তথ্য লোড করা যায়নি। আবার চেষ্টা করুন।"
 }

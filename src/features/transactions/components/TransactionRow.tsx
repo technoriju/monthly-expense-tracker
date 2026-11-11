@@ -1,46 +1,64 @@
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/ui';
 import { CategoryIcon } from '@/features/categories/components/CategoryIcon';
+import { useCategoryName } from '@/features/categories/hooks/useCategoryName';
 import { useFormatters } from '@/hooks/useFormatters';
 import { makeStyles } from '@/theme';
 import { getRelativeDayKey } from '@/utils/dates';
 
-import type { TransactionPreview } from '../types';
+import type { Transaction } from '../types';
+
+export interface TransactionRowProps {
+  transaction: Transaction;
+  today: Date;
+  /** Hide the date when rows are already grouped under a date header. */
+  showDate?: boolean;
+  onPress?: () => void;
+  onLongPress?: () => void;
+}
 
 export function TransactionRow({
   transaction,
   today,
-}: {
-  transaction: TransactionPreview;
-  today: Date;
-}) {
+  showDate = true,
+  onPress,
+  onLongPress,
+}: TransactionRowProps) {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { t: tCategory } = useTranslation('categories');
+  const { t: tTx } = useTranslation('transactions');
+  const nameOf = useCategoryName();
   const format = useFormatters();
 
-  const { type, amountMinor, categoryKey, occurredOn } = transaction;
-  const title = tCategory(categoryKey);
+  const { type, amountMinor, category, occurredOn, note } = transaction;
+  const title = nameOf(category);
   const relative = getRelativeDayKey(occurredOn, today);
   const dateLabel = relative ? t(`date.${relative}`) : format.shortDate(occurredOn);
+  const subtitle = [showDate ? dateLabel : null, note].filter(Boolean).join(' · ');
   const signedAmount = type === 'expense' ? -amountMinor : amountMinor;
   const amountLabel = format.money(signedAmount, 'exceptZero');
 
   return (
-    <View
-      style={styles.root}
-      accessible
-      accessibilityLabel={`${title}, ${dateLabel}, ${amountLabel}`}>
-      <CategoryIcon categoryKey={categoryKey} />
+    <Pressable
+      onPress={onPress}
+      onLongPress={onLongPress}
+      disabled={!onPress && !onLongPress}
+      accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityHint={onPress ? tTx('row.editHint') : undefined}
+      accessibilityLabel={[title, subtitle, amountLabel].filter(Boolean).join(', ')}
+      style={({ pressed }) => [styles.root, pressed && styles.pressed]}>
+      <CategoryIcon category={category} />
       <View style={styles.text}>
         <AppText variant="bodyMedium" numberOfLines={1}>
           {title}
         </AppText>
-        <AppText variant="bodySmall" color="textSecondary" numberOfLines={1}>
-          {dateLabel}
-        </AppText>
+        {subtitle ? (
+          <AppText variant="bodySmall" color="textSecondary" numberOfLines={1}>
+            {subtitle}
+          </AppText>
+        ) : null}
       </View>
       <AppText
         variant="bodyMedium"
@@ -48,7 +66,7 @@ export function TransactionRow({
         constrainScale>
         {amountLabel}
       </AppText>
-    </View>
+    </Pressable>
   );
 }
 
@@ -60,4 +78,5 @@ const useStyles = makeStyles((t) => ({
     paddingVertical: t.spacing.sm,
   },
   text: { flex: 1 },
+  pressed: { opacity: t.layout.pressedOpacity },
 }));

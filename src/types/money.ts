@@ -5,3 +5,7 @@ export type MinorAmount = number;
 export type CurrencyCode = 'INR';
 
 export type TransactionType = 'income' | 'expense';
+
+/** How a transaction was paid. Optional on every transaction. */
+export const PAYMENT_METHODS = ['cash', 'upi', 'card', 'bank_transfer', 'other'] as const;
+export type PaymentMethod = (typeof PAYMENT_METHODS)[number];

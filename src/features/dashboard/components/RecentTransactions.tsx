@@ -6,11 +6,11 @@ import { View } from 'react-native';
 import { SectionHeader } from '@/components/layout/SectionHeader';
 import { AppCard, AppEmptyState } from '@/components/ui';
 import { TransactionRow } from '@/features/transactions/components/TransactionRow';
-import type { TransactionPreview } from '@/features/transactions/types';
+import type { Transaction } from '@/features/transactions/types';
 import { makeStyles } from '@/theme';
 
 export interface RecentTransactionsProps {
-  transactions: TransactionPreview[];
+  transactions: Transaction[];
   today: Date;
 }
 
@@ -24,7 +24,16 @@ export function RecentTransactions({ transactions, today }: RecentTransactionsPr
         {transactions.length === 0 ? (
           <AppEmptyState icon={Inbox} title={t('recent.empty')} />
         ) : (
-          transactions.map((tx) => <TransactionRow key={tx.id} transaction={tx} today={today} />)
+          transactions.map((tx) => (
+            <TransactionRow
+              key={tx.id}
+              transaction={tx}
+              today={today}
+              onPress={() =>
+                router.push({ pathname: '/transaction/[id]', params: { id: String(tx.id) } })
+              }
+            />
+          ))
         )}
       </AppCard>
     </View>
