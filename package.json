@@ -58,7 +58,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
-    "clean:android": "node scripts/clean-android.mjs"
+    "clean:android": "node scripts/clean-android.mjs",
+    "postinstall": "node scripts/patch-windows-paths.mjs"
   },
   "private": true,
   "jest": {
