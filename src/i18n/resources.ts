@@ -3,16 +3,19 @@ import bnCommon from './locales/bn/common.json';
 import bnDashboard from './locales/bn/dashboard.json';
 import bnSettings from './locales/bn/settings.json';
 import bnTransactions from './locales/bn/transactions.json';
+import bnVoice from './locales/bn/voice.json';
 import enCategories from './locales/en/categories.json';
 import enCommon from './locales/en/common.json';
 import enDashboard from './locales/en/dashboard.json';
 import enSettings from './locales/en/settings.json';
 import enTransactions from './locales/en/transactions.json';
+import enVoice from './locales/en/voice.json';
 import hiCategories from './locales/hi/categories.json';
 import hiCommon from './locales/hi/common.json';
 import hiDashboard from './locales/hi/dashboard.json';
 import hiSettings from './locales/hi/settings.json';
 import hiTransactions from './locales/hi/transactions.json';
+import hiVoice from './locales/hi/voice.json';
 
 import type { LanguageCode } from './languages';
 
@@ -22,6 +25,7 @@ export const NAMESPACES = [
   'transactions',
   'categories',
   'settings',
+  'voice',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -32,6 +36,7 @@ const en = {
   transactions: enTransactions,
   categories: enCategories,
   settings: enSettings,
+  voice: enVoice,
 };
 
 export type TranslationResources = typeof en;
@@ -42,6 +47,7 @@ const bn: TranslationResources = {
   transactions: bnTransactions,
   categories: bnCategories,
   settings: bnSettings,
+  voice: bnVoice,
 };
 
 const hi: TranslationResources = {
@@ -50,6 +56,7 @@ const hi: TranslationResources = {
   transactions: hiTransactions,
   categories: hiCategories,
   settings: hiSettings,
+  voice: hiVoice,
 };
 
 /**

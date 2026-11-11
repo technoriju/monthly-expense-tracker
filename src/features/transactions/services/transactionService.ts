@@ -13,6 +13,7 @@ import type {
   TransactionFilter,
   TransactionInput,
   TransactionQuery,
+  TransactionSource,
 } from '../types';
 
 export type TransactionErrorCode = 'notFound' | 'categoryNotFound' | 'categoryMismatch';
@@ -31,6 +32,11 @@ async function validate(input: TransactionInput): Promise<TransactionInput> {
   if (!category) throw new TransactionError('categoryNotFound');
   if (category.type !== parsed.type) throw new TransactionError('categoryMismatch');
   return parsed;
+}
+
+export interface CreateOptions {
+  source?: TransactionSource;
+  voiceTranscript?: string | null;
 }
 
 function dataChanged(): void {
@@ -52,13 +58,17 @@ async function categoryIdsMatching(text: string): Promise<number[]> {
 }
 
 export const transactionService = {
-  /** Creates a manual transaction in the active currency. Returns the stored row. */
-  async create(input: TransactionInput): Promise<Transaction> {
+  /**
+   * Creates a transaction in the active currency (manual by default; voice entries pass
+   * their source and transcript). Returns the stored row.
+   */
+  async create(input: TransactionInput, options: CreateOptions = {}): Promise<Transaction> {
     const valid = await validate(input);
     const id = await transactionRepository.insert({
       ...valid,
       currency: useSettingsStore.getState().currency,
-      source: 'manual',
+      source: options.source ?? 'manual',
+      voiceTranscript: options.voiceTranscript ?? null,
     });
     dataChanged();
     const created = await transactionRepository.getById(id);

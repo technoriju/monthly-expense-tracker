@@ -13,13 +13,26 @@ import {
   toTransactionInput,
   type TransactionFormValues,
 } from '../schemas';
-import { TransactionError, transactionService } from '../services/transactionService';
+import {
+  TransactionError,
+  transactionService,
+  type CreateOptions,
+} from '../services/transactionService';
+
+export interface TransactionFormOptions extends CreateOptions {
+  /** Called after a successful create instead of the default toast + `router.back()`. */
+  onCreated?: () => void;
+}
 
 /**
  * Add/Edit form state: React Hook Form + Zod, category list for the selected type,
  * duplicate-submit guard, persistence and feedback. Pass `transactionId` to edit.
  */
-export function useTransactionForm(defaults: TransactionFormValues, transactionId?: number) {
+export function useTransactionForm(
+  defaults: TransactionFormValues,
+  transactionId?: number,
+  options: TransactionFormOptions = {},
+) {
   const { t } = useTranslation('transactions');
   const currency = useSettingsStore((s) => s.currency);
   const showToast = useUiStore((s) => s.showToast);
@@ -50,7 +63,12 @@ export function useTransactionForm(defaults: TransactionFormValues, transactionI
     try {
       const input = toTransactionInput(values, currency);
       if (transactionId === undefined) {
-        await transactionService.create(input);
+        const { onCreated, ...createOptions } = options;
+        await transactionService.create(input, createOptions);
+        if (onCreated) {
+          onCreated();
+          return;
+        }
         showToast(t('toast.created'));
       } else {
         await transactionService.update(transactionId, input);

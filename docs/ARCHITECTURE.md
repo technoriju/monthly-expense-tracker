@@ -50,7 +50,7 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 0 (dev) | `jest-expo`, `jest`, `@testing-library/react-native`, `@types/jest` | Tests |
 | 1 | `react-hook-form`, `zod`, `@hookform/resolvers` | Forms + validation |
 | 1 | `@react-native-community/datetimepicker` | Date selector |
-| 4 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
+| 2 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
 | 6 | `expo-file-system`, `expo-sharing`, `expo-document-picker` | Backup / restore |
 
 **Not added:** chart libraries (custom charts on `react-native-svg`), UI kits, NativeWind, ORMs, navigation libs beyond Expo Router.
@@ -378,7 +378,7 @@ interface SpeechEngine {
 }
 ```
 
-- `NativeSpeechEngine` — wraps `expo-speech-recognition` (Android `SpeechRecognizer`, iOS `SFSpeechRecognizer`). Ships in Phase 4.
+- `NativeSpeechEngine` — wraps `expo-speech-recognition` (Android `SpeechRecognizer`, iOS `SFSpeechRecognizer`). Ships in Phase 2 (Voice Entry).
 - `CloudSpeechEngine` — reserved slot (e.g. Google Cloud STT / Bhashini via a backend proxy). Evaluated in Phase 7 only if native coverage proves insufficient. Never required for core features.
 - The voice-language picker shows **only locales the device actually supports**, queried at runtime and intersected with the registry's `speechLocales`.
 
@@ -391,6 +391,10 @@ Pure TypeScript, fully unit-testable, no I/O:
 3. **Segment** — split on commas, "and" / "আর" / "এবং" / "और" / "तथा", and on amount boundaries ("bazar 100 dokan 200" → 2 segments).
 4. **Category match** — keyword dictionaries per language mapped to category keys (bazar / বাজার / बाज़ार → `bazar`), including Banglish/Hinglish romanized words; fallback `others`.
 5. **Output** — `ParsedEntry[]` `{ categoryKey, amountMinor, type, confidence, rawSegment }`.
+
+**As implemented (Phase 2, single entry):** `parseVoiceExpense(text, { language, currency, today })` returns one in-memory `VoiceExpenseDraft` (`amountMinor | null`, `categoryKey | null`, `occurredOn`, `note`, `paymentMethod`, `recognizedText`, `missingFields`, `uncertainFields`, `status`). Amounts are computed in integer hundredths — no floats. Several different amounts or categories → the field is left empty and flagged, never guessed. The draft lives in `store/voiceDraftStore.ts` (memory only); the Review screen reuses the Add Transaction form and saves through `transactionService.create(input, { source: 'voice', voiceTranscript })`, which stores `voice_transcript`. Segmentation into several entries and "Save all" are deferred.
+
+**Native build:** `expo-speech-recognition` is a config plugin with native code → it does not run in Expo Go. Build a development client (`npx expo run:android` / `npx expo run:ios`, or `npx eas-cli@latest build --profile development`). Without the native module the engine reports `unavailable` and the screen offers manual entry.
 
 **Safety rule:** parsed entries **always** go to the Review screen for confirmation/editing. Voice never writes to the DB directly. "Save all" uses `transactionRepository.insertMany` in one transaction, with `source = 'voice'` and the transcript stored.
 

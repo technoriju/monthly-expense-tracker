@@ -1,6 +1,13 @@
 import { settingsRepository } from '@/database';
 import { changeUiLanguage } from '@/i18n';
-import { isSelectableLanguage, resolveInitialLanguage, type LanguageCode } from '@/i18n/languages';
+import {
+  DEFAULT_VOICE_LANGUAGE,
+  isSelectableLanguage,
+  isVoiceLanguage,
+  resolveInitialLanguage,
+  type LanguageCode,
+  type VoiceLanguage,
+} from '@/i18n/languages';
 import { useSettingsStore } from '@/store/settingsStore';
 import type { ThemeMode } from '@/theme/theme';
 import type { CurrencyCode } from '@/types/money';
@@ -29,9 +36,15 @@ export const settingsService = {
     const uiLanguage = resolveInitialLanguage(stored[SETTING_KEYS.uiLanguage], deviceLanguageCodes);
     const currency = isCurrencyCode(storedCurrency) ? storedCurrency : DEFAULT_CURRENCY;
     const themeMode = isThemeMode(storedThemeMode) ? storedThemeMode : 'system';
+    const storedVoiceLanguage = stored[SETTING_KEYS.voiceLanguage];
+    const voiceLanguage = isVoiceLanguage(storedVoiceLanguage)
+      ? storedVoiceLanguage
+      : isVoiceLanguage(uiLanguage)
+        ? uiLanguage
+        : DEFAULT_VOICE_LANGUAGE;
 
     await changeUiLanguage(uiLanguage);
-    useSettingsStore.getState().applySettings({ uiLanguage, currency, themeMode });
+    useSettingsStore.getState().applySettings({ uiLanguage, currency, themeMode, voiceLanguage });
   },
 
   /** Persists the UI language (DB first), then switches it live. */
@@ -42,5 +55,14 @@ export const settingsService = {
     await settingsRepository.set(SETTING_KEYS.uiLanguage, code);
     await changeUiLanguage(code);
     useSettingsStore.getState().applySettings({ uiLanguage: code });
+  },
+
+  /** Persists the voice-recognition language. Never changes the UI language. */
+  async setVoiceLanguage(code: VoiceLanguage): Promise<void> {
+    if (!isVoiceLanguage(code)) {
+      throw new Error(`Voice language "${String(code)}" is not supported.`);
+    }
+    await settingsRepository.set(SETTING_KEYS.voiceLanguage, code);
+    useSettingsStore.getState().applySettings({ voiceLanguage: code });
   },
 };

@@ -331,3 +331,20 @@ export function resolveInitialLanguage(
   }
   return DEFAULT_LANGUAGE;
 }
+
+/**
+ * Languages offered for voice entry (speech recognition + expense parser). Independent of the
+ * UI language: a Bengali UI user may dictate in English and vice versa.
+ */
+export const VOICE_LANGUAGES = ['bn', 'en', 'hi'] as const satisfies readonly LanguageCode[];
+export type VoiceLanguage = (typeof VOICE_LANGUAGES)[number];
+export const DEFAULT_VOICE_LANGUAGE: VoiceLanguage = 'en';
+
+export function isVoiceLanguage(value: unknown): value is VoiceLanguage {
+  return VOICE_LANGUAGES.includes(value as VoiceLanguage);
+}
+
+/** Primary speech-recognition locale for a voice language (en-IN, bn-IN, hi-IN). */
+export function getSpeechLocale(code: VoiceLanguage): string {
+  return getLanguage(code).speechLocales[0] ?? getLanguage(code).locale;
+}

@@ -35,6 +35,8 @@ export interface TransactionInput {
 export interface TransactionRecord extends TransactionInput {
   currency: CurrencyCode;
   source: TransactionSource;
+  /** Recognized speech a voice entry was created from. */
+  voiceTranscript?: string | null;
 }
 
 export type TransactionSort = 'newest' | 'oldest';

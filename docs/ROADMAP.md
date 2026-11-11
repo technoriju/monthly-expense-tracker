@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 1 — Manual Transactions & Dashboard** implemented in code (2026-11-11; the user's brief called this "Phase 2"). tsc/lint/jest pass; on-device exit check pending a development build (Expo Go on the test device lacks `ExpoSQLite`). Next: Phase 2 — Reports.
+**Current phase:** **Phase 2 — Voice Entry** implemented in code (2026-11-11; the user's brief called this "Phase 3"). Phase 1 — Manual Transactions & Dashboard is also implemented in code. tsc/lint/jest pass; on-device exit checks for both are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 3 — Reports.
 
 ## Rules for every phase
 
@@ -55,7 +55,28 @@
 
 ---
 
-## Phase 2 — Reports
+## Phase 2 — Voice Entry
+
+> Moved ahead of Reports and Settings at the user's request (2026-11-11; the user's brief called this "Phase 3"). Implemented in code: tsc/lint/jest pass; on-device exit check pending a development build.
+
+**Reference:** Voice Entry (row 1, col 5), Review Your Entries (row 2, col 1).
+
+**Scope**
+- Add `expo-speech-recognition`; configure plugin and permission strings; development build required (not Expo Go).
+- `SpeechEngine` interface + `NativeSpeechEngine` + `speechRecognitionService` (single session, cancel on blur/unmount/background).
+- Voice screen: mic button with listening pulse, waveform (volume-driven), duration, live transcript, voice language toggle (বাংলা / English / हिन्दी), instructions, stop/cancel/retry, manual-entry fallback.
+- Parser for en / bn / hi (digits, number words incl. দেড়/আড়াই/সাড়ে and डेढ़/ढाई/साढ़े/सवा/पौने, rupee words, relative dates, category and payment keywords incl. romanized). Never guesses: missing/ambiguous fields are left for the user.
+- Review screen: **single entry** per recording, editable with the Add Transaction fields, Confirm & Save via `transactionService.create` (`source = 'voice'`, transcript stored).
+- `voiceLanguage` setting pulled forward from Settings (persisted, independent of UI language).
+- Unsupported device/locale and permission-denied states.
+
+**Deferred:** multi-entry review list with Total + "Save all" (reference row 2, col 1) and the voice settings screen.
+
+**Exit:** parser fixture suite passes (≥ 50 phrases per language); on-device test in Bengali, Hindi, English on at least one Android device (and iOS if available); nothing saves without review.
+
+---
+
+## Phase 3 — Reports
 
 **Reference:** Reports (row 2, col 2), Category Breakdown (row 2, col 3), Monthly Calendar (row 2, col 4), Dashboard trend chart (row 1, col 3).
 
@@ -71,7 +92,7 @@
 
 ---
 
-## Phase 3 — Settings & Onboarding
+## Phase 4 — Settings & Onboarding
 
 **Reference:** Splash (row 1, col 1), Onboarding (row 1, col 2), Settings (row 2, col 5).
 
@@ -84,22 +105,6 @@
 **Out of scope:** notifications, backup/restore (rows shown but disabled or hidden until their phase), help/support content.
 
 **Exit:** first launch → onboarding → dashboard; settings persist across restarts; UI language and voice language independent.
-
----
-
-## Phase 4 — Voice Entry
-
-**Reference:** Voice Entry (row 1, col 5), Review Your Entries (row 2, col 1).
-
-**Scope**
-- Add `expo-speech-recognition`; configure plugin and permission strings; create EAS development build.
-- `SpeechEngine` interface + `NativeSpeechEngine`.
-- Voice screen: mic button with listening pulse, waveform (volume-driven), language toggle, instructions, cancel.
-- Parser for en / bn / hi (digits, number words, segmentation, category keywords incl. romanized).
-- Review screen: editable entries, total, Save all (single DB transaction), Edit more.
-- Unsupported device/locale and permission-denied states.
-
-**Exit:** parser fixture suite passes (≥ 50 phrases per language); on-device test in Bengali, Hindi, English on at least one Android device (and iOS if available); nothing saves without review.
 
 ---
 

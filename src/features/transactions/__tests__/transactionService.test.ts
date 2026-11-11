@@ -56,6 +56,22 @@ describe('transactionService.create', () => {
     expect(useUiStore.getState().dataVersion).toBe(before + 1);
   });
 
+  it('stores a voice transaction with its transcript; manual stays the default', async () => {
+    const tx = await transactionService.create(await input(), {
+      source: 'voice',
+      voiceTranscript: 'tea 500 rupees',
+    });
+    expect(tx.source).toBe('voice');
+    const row = await mockDb.getFirstAsync<{ voice_transcript: string | null }>(
+      'SELECT voice_transcript FROM transactions WHERE id = ?',
+      [tx.id],
+    );
+    expect(row?.voice_transcript).toBe('tea 500 rupees');
+
+    const manual = await transactionService.create(await input());
+    expect(manual.source).toBe('manual');
+  });
+
   it('rejects a category of the other type', async () => {
     const salary = await idOf('salary');
     await expect(transactionService.create(await input({ categoryId: salary }))).rejects.toEqual(

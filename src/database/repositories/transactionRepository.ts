@@ -121,8 +121,8 @@ export const transactionRepository = {
     const result = await db.runAsync(
       `INSERT INTO transactions
          (type, amount_minor, currency, category_id, occurred_on, note, payment_method, source,
-          created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          voice_transcript, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         record.type,
         record.amountMinor,
@@ -132,6 +132,7 @@ export const transactionRepository = {
         record.note,
         record.paymentMethod,
         record.source,
+        record.voiceTranscript ?? null,
         now,
         now,
       ],
@@ -211,4 +212,4 @@ export const transactionRepository = {
   },
 };
 
-export type TransactionRecordUpdate = Omit<TransactionRecord, 'source' | 'currency'>;
+export type TransactionRecordUpdate = Omit<TransactionRecord, 'source' | 'currency' | 'voiceTranscript'>;

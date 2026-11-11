@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 
+import type { Script } from '@/i18n/languages';
 import { makeStyles } from '@/theme';
 
 import { AppText } from './AppText';
@@ -8,6 +9,8 @@ export interface SegmentOption<T extends string> {
   value: T;
   /** Already-translated label. */
   label: string;
+  /** Font script for a label written in another language (e.g. "বাংলা" in an English UI). */
+  script?: Script;
 }
 
 export interface AppSegmentedControlProps<T extends string> {
@@ -49,7 +52,8 @@ export function AppSegmentedControl<T extends string>({
               variant="button"
               color={selected ? 'onPrimary' : 'primary'}
               numberOfLines={1}
-              align="center">
+              align="center"
+              script={option.script}>
               {option.label}
             </AppText>
           </Pressable>

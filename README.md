@@ -15,6 +15,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
    npx expo start
    ```
+3.
+   npx expo run:android   
 
 In the output, you'll find options to open the app in a
 
@@ -24,6 +26,24 @@ In the output, you'll find options to open the app in a
 - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
 You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Clear the Android build cache
+
+Use this when a native Android build fails with stale-cache errors, after adding a native
+package (e.g. `expo-speech-recognition`), or after moving the project folder (CMake caches
+store absolute paths).
+
+```bash
+cd android && ./gradlew --stop && cd ..   # stop Gradle daemons (skip if android/ is missing)
+npm run clean:android                      # delete android/ and node_modules/*/android/{build,.cxx}
+npx expo prebuild --platform android       # regenerate android/ from app.json + config plugins
+npx expo run:android                       # rebuild and install the development build
+```
+
+On Windows PowerShell use `cd android; .\gradlew --stop; cd ..` for the first line.
+
+> **Windows path limit:** native builds (Reanimated C++) fail with `ninja: error: mkdir(...): No such file or directory`
+> when the project path is long. Keep the project at a short path such as `D:\met`, then clear the cache as above.
 
 ## Get a fresh project
 

@@ -3,6 +3,7 @@ export const SETTING_KEYS = {
   uiLanguage: 'uiLanguage',
   currency: 'currency',
   themeMode: 'themeMode',
+  voiceLanguage: 'voiceLanguage',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

@@ -1,0 +1,108 @@
+{
+  "title": "Voice Entry",
+  "languageLabel": "Voice language",
+  "status": {
+    "idle": "Tap to speak",
+    "preparing": "Getting ready…",
+    "listening": "Listening…",
+    "processing": "Processing…",
+    "done": "Here's what we heard"
+  },
+  "instructions": {
+    "bn": "Speak your expense in Bengali",
+    "en": "Speak your expense in English",
+    "hi": "Speak your expense in Hindi"
+  },
+  "examples": {
+    "bn": "“আজ ৫০ টাকা চা খেয়েছি”",
+    "en": "“Spent 50 rupees on tea”",
+    "hi": "“आज चाय पर 50 रुपये खर्च किए”"
+  },
+  "durationLabel": "Recording time {{time}}",
+  "transcript": {
+    "label": "What we heard",
+    "empty": "Your words will appear here as you speak."
+  },
+  "mic": {
+    "start": "Start recording",
+    "stop": "Stop recording",
+    "busy": "Please wait"
+  },
+  "actions": {
+    "stop": "Stop",
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "review": "Review expense",
+    "manual": "Enter manually",
+    "openSettings": "Open settings"
+  },
+  "notice": {
+    "onDevice": "Recognized on this device — works offline.",
+    "network": "This language may need an internet connection on this device. Install the offline speech pack in your device settings to use it offline."
+  },
+  "errors": {
+    "permissionDenied": {
+      "title": "Microphone access needed",
+      "message": "Allow microphone and speech recognition to add expenses by voice. You can still enter them manually."
+    },
+    "permissionBlocked": {
+      "title": "Microphone access is off",
+      "message": "Turn on microphone and speech recognition for this app in your device settings, or enter the expense manually."
+    },
+    "unavailable": {
+      "title": "Voice entry isn't available",
+      "message": "This device has no speech recognition service. Please enter the expense manually."
+    },
+    "languageUnsupported": {
+      "title": "Language not supported",
+      "message": "Speech recognition on this device doesn't support this language. Choose another voice language or enter the expense manually."
+    },
+    "noSpeech": {
+      "title": "We didn't hear anything",
+      "message": "Tap the microphone and speak clearly, close to the phone."
+    },
+    "network": {
+      "title": "Connection problem",
+      "message": "Recognition for this language needs the internet on this device. Check your connection, or enter the expense manually."
+    },
+    "busy": {
+      "title": "Microphone is busy",
+      "message": "Another app is using speech recognition. Please try again in a moment."
+    },
+    "interrupted": {
+      "title": "Recording stopped",
+      "message": "Recording was interrupted. Please try again."
+    },
+    "unknown": {
+      "title": "Something went wrong",
+      "message": "Speech recognition failed. Please try again or enter the expense manually."
+    }
+  },
+  "review": {
+    "title": "Review Expense",
+    "heard": "Recognized speech",
+    "missing": {
+      "amount": "We couldn't catch the amount. Please enter it.",
+      "category": "Please choose a category."
+    },
+    "uncertain": {
+      "amount": "We heard more than one amount — please enter the right one.",
+      "category": "This could fit more than one category — please choose.",
+      "date": "Please check the date."
+    },
+    "confirm": "Confirm & Save",
+    "recordAgain": "Record again",
+    "cancel": "Cancel",
+    "discardTitle": "Discard this expense?",
+    "discardMessage": "Nothing has been saved yet.",
+    "discard": "Discard",
+    "keepEditing": "Keep editing",
+    "empty": {
+      "title": "Nothing to review",
+      "message": "Record an expense by voice first."
+    }
+  },
+  "toast": {
+    "saved": "Expense saved"
+  }
+}

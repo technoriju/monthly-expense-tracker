@@ -30,10 +30,6 @@
     "reports": {
       "title": "Reports",
       "message": "Monthly reports and charts will appear here."
-    },
-    "voice": {
-      "title": "Voice Entry",
-      "message": "Speak your expenses in Bengali, Hindi or English. Coming soon."
     }
   }
 }

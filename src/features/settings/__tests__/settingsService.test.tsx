@@ -58,3 +58,30 @@ describe('script-aware typography', () => {
     expect(screen.getByText('x')).toHaveStyle({ fontFamily, lineHeight });
   });
 });
+
+describe('voice language', () => {
+  it('defaults to the UI language when it is a voice language', async () => {
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().uiLanguage).toBe('bn');
+    expect(useSettingsStore.getState().voiceLanguage).toBe('bn');
+  });
+
+  it('persists the voice language without changing the UI language', async () => {
+    await settingsService.setVoiceLanguage('en');
+    expect(settingsRepository.set).toHaveBeenCalledWith('voiceLanguage', 'en');
+    expect(useSettingsStore.getState().voiceLanguage).toBe('en');
+    expect(useSettingsStore.getState().uiLanguage).toBe('bn');
+    expect(i18n.language).toBe('bn');
+  });
+
+  it('restores the saved voice language on the next hydrate', async () => {
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().voiceLanguage).toBe('en');
+    expect(useSettingsStore.getState().uiLanguage).toBe('bn');
+  });
+
+  it('rejects languages without voice support', async () => {
+    // @ts-expect-error — 'ta' is not a VoiceLanguage; the runtime guard must reject it anyway.
+    await expect(settingsService.setVoiceLanguage('ta')).rejects.toThrow();
+  });
+});

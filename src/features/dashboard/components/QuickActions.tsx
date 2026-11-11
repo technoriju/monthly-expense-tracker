@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { AppButton } from '@/components/ui';
 import { makeStyles } from '@/theme';
 
-/** Shortcuts to manual entry and voice entry (voice is a placeholder until its phase). */
+/** Shortcuts to manual entry and voice entry. */
 export function QuickActions() {
   const styles = useStyles();
   const { t } = useTranslation('dashboard');

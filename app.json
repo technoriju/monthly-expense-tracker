@@ -35,7 +35,17 @@
       "expo-localization",
       "expo-font",
       "expo-status-bar",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone so you can add expenses by voice.",
+          "speechRecognitionPermission": "Allow $(PRODUCT_NAME) to recognize your speech so you can add expenses by voice.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
