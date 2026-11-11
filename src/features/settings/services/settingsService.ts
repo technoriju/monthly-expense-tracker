@@ -1,0 +1,46 @@
+import { settingsRepository } from '@/database';
+import { changeUiLanguage } from '@/i18n';
+import { isSelectableLanguage, resolveInitialLanguage, type LanguageCode } from '@/i18n/languages';
+import { useSettingsStore } from '@/store/settingsStore';
+import type { ThemeMode } from '@/theme/theme';
+import type { CurrencyCode } from '@/types/money';
+import { CURRENCIES, DEFAULT_CURRENCY } from '@/utils/money';
+
+import { SETTING_KEYS } from '../types';
+
+function isThemeMode(value: unknown): value is ThemeMode {
+  return value === 'system' || value === 'light' || value === 'dark';
+}
+
+function isCurrencyCode(value: unknown): value is CurrencyCode {
+  return typeof value === 'string' && value in CURRENCIES;
+}
+
+export const settingsService = {
+  /**
+   * Loads persisted settings into the store and applies the UI language.
+   * Falls back to the device language, then English, when nothing is saved.
+   */
+  async hydrate(deviceLanguageCodes: readonly (string | null)[]): Promise<void> {
+    const stored = await settingsRepository.getAll();
+    const storedCurrency = stored[SETTING_KEYS.currency];
+    const storedThemeMode = stored[SETTING_KEYS.themeMode];
+
+    const uiLanguage = resolveInitialLanguage(stored[SETTING_KEYS.uiLanguage], deviceLanguageCodes);
+    const currency = isCurrencyCode(storedCurrency) ? storedCurrency : DEFAULT_CURRENCY;
+    const themeMode = isThemeMode(storedThemeMode) ? storedThemeMode : 'system';
+
+    await changeUiLanguage(uiLanguage);
+    useSettingsStore.getState().applySettings({ uiLanguage, currency, themeMode });
+  },
+
+  /** Persists the UI language (DB first), then switches it live. */
+  async setUiLanguage(code: LanguageCode): Promise<void> {
+    if (!isSelectableLanguage(code)) {
+      throw new Error(`Language "${code}" is not available yet.`);
+    }
+    await settingsRepository.set(SETTING_KEYS.uiLanguage, code);
+    await changeUiLanguage(code);
+    useSettingsStore.getState().applySettings({ uiLanguage: code });
+  },
+};

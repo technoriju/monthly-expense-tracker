@@ -1,0 +1,30 @@
+{
+  "greeting": {
+    "hello": "নমস্কার!",
+    "morning": "সুপ্রভাত",
+    "afternoon": "শুভ অপরাহ্ন",
+    "evening": "শুভ সন্ধ্যা"
+  },
+  "profileLabel": "প্রোফাইল",
+  "month": {
+    "selectorLabel": "নির্বাচিত মাস: {{month}}",
+    "calendarLabel": "ক্যালেন্ডার খুলুন"
+  },
+  "summary": {
+    "income": "আয়",
+    "expense": "খরচ",
+    "remainingBalance": "অবশিষ্ট ব্যালেন্স"
+  },
+  "chart": {
+    "title": "মাসিক খরচ",
+    "placeholder": "খরচের চার্ট শীঘ্রই আসছে"
+  },
+  "quickActions": {
+    "addTransaction": "লেনদেন যোগ",
+    "voiceExpense": "ভয়েসে খরচ"
+  },
+  "recent": {
+    "title": "সাম্প্রতিক লেনদেন",
+    "empty": "এখনও কোনো লেনদেন নেই"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "appName": "Expense Tracker",
+  "tabs": {
+    "home": "Home",
+    "reports": "Reports",
+    "add": "Add",
+    "voice": "Voice",
+    "more": "More"
+  },
+  "actions": {
+    "back": "Go back",
+    "seeAll": "See all",
+    "addTransaction": "Add transaction"
+  },
+  "status": {
+    "loading": "Loading…",
+    "comingSoon": "Coming soon"
+  },
+  "date": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "errors": {
+    "startupTitle": "Something went wrong",
+    "startupMessage": "The app could not start. Please close it and open it again."
+  },
+  "placeholders": {
+    "reports": {
+      "title": "Reports",
+      "message": "Monthly reports and charts will appear here."
+    },
+    "voice": {
+      "title": "Voice Entry",
+      "message": "Speak your expenses in Bengali, Hindi or English. Coming soon."
+    },
+    "addTransaction": {
+      "title": "Add Transaction",
+      "message": "Manual entry for income and expenses is coming soon."
+    },
+    "transactions": {
+      "title": "Transactions",
+      "message": "All your transactions will be listed here."
+    }
+  }
+}

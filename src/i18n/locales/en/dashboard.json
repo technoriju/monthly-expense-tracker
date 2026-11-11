@@ -1,0 +1,30 @@
+{
+  "greeting": {
+    "hello": "Hello!",
+    "morning": "Good Morning",
+    "afternoon": "Good Afternoon",
+    "evening": "Good Evening"
+  },
+  "profileLabel": "Profile",
+  "month": {
+    "selectorLabel": "Selected month: {{month}}",
+    "calendarLabel": "Open calendar"
+  },
+  "summary": {
+    "income": "Income",
+    "expense": "Expense",
+    "remainingBalance": "Remaining Balance"
+  },
+  "chart": {
+    "title": "Monthly Expenses",
+    "placeholder": "Spending trend chart coming soon"
+  },
+  "quickActions": {
+    "addTransaction": "Add Transaction",
+    "voiceExpense": "Voice Expense"
+  },
+  "recent": {
+    "title": "Recent Transactions",
+    "empty": "No transactions yet"
+  }
+}

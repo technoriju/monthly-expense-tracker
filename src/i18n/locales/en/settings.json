@@ -1,0 +1,29 @@
+{
+  "title": "Settings",
+  "sections": {
+    "preferences": "Preferences",
+    "about": "About"
+  },
+  "language": {
+    "label": "Language",
+    "title": "Choose Language",
+    "hint": "More Indian languages are coming soon.",
+    "selected": "Selected"
+  },
+  "currency": {
+    "label": "Currency",
+    "names": {
+      "INR": "Indian Rupee"
+    }
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "comingSoon": "Dark mode coming soon"
+  },
+  "about": {
+    "appName": "App name",
+    "version": "Version",
+    "description": "Track your income and expenses, fully offline."
+  }
+}

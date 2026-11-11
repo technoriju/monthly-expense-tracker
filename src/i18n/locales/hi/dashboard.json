@@ -1,0 +1,30 @@
+{
+  "greeting": {
+    "hello": "नमस्ते!",
+    "morning": "सुप्रभात",
+    "afternoon": "शुभ दोपहर",
+    "evening": "शुभ संध्या"
+  },
+  "profileLabel": "प्रोफ़ाइल",
+  "month": {
+    "selectorLabel": "चुना गया महीना: {{month}}",
+    "calendarLabel": "कैलेंडर खोलें"
+  },
+  "summary": {
+    "income": "आय",
+    "expense": "खर्च",
+    "remainingBalance": "शेष राशि"
+  },
+  "chart": {
+    "title": "मासिक खर्च",
+    "placeholder": "खर्च का चार्ट जल्द आ रहा है"
+  },
+  "quickActions": {
+    "addTransaction": "लेन-देन जोड़ें",
+    "voiceExpense": "बोलकर खर्च"
+  },
+  "recent": {
+    "title": "हाल के लेन-देन",
+    "empty": "अभी कोई लेन-देन नहीं"
+  }
+}
