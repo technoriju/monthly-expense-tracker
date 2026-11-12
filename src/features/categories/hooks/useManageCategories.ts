@@ -9,6 +9,8 @@ import type { CategoriesState } from './useCategories';
 export interface ManageCategoriesState extends CategoriesState {
   /** Creates a custom category of `type` and appends it. Throws `CategoryError`. */
   addCategory(name: string): Promise<Category>;
+  /** Renames a custom category in place. Throws `CategoryError`. */
+  renameCategory(category: Category, name: string): Promise<Category>;
   /** Soft-deletes a custom category and removes it from the list. */
   deleteCategory(id: number): Promise<void>;
 }
@@ -50,6 +52,12 @@ export function useManageCategories(type: TransactionType): ManageCategoriesStat
     return created;
   };
 
+  const renameCategory = async (category: Category, name: string) => {
+    const updated = await categoryService.renameCustom(category, name);
+    update((categories) => categories.map((c) => (c.id === updated.id ? updated : c)));
+    return updated;
+  };
+
   const deleteCategory = async (id: number) => {
     await categoryService.deleteCustom(id);
     update((categories) => categories.filter((c) => c.id !== id));
@@ -62,6 +70,7 @@ export function useManageCategories(type: TransactionType): ManageCategoriesStat
     error: current?.error ?? false,
     retry: () => setAttempt((n) => n + 1),
     addCategory,
+    renameCategory,
     deleteCategory,
   };
 }

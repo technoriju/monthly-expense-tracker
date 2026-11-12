@@ -8,13 +8,39 @@ import type { Category } from '../types';
 
 export const CATEGORY_NAME_MAX_LENGTH = 30;
 
-export type CategoryErrorCode = 'nameRequired' | 'nameTooLong' | 'duplicate';
+export type CategoryErrorCode = 'nameRequired' | 'nameTooLong' | 'duplicate' | 'notFound';
 
 export class CategoryError extends Error {
   constructor(readonly code: CategoryErrorCode) {
     super(`Category error: ${code}`);
     this.name = 'CategoryError';
   }
+}
+
+/**
+ * Trimmed, whitespace-collapsed name, unique (case-insensitive) among the type's categories
+ * as displayed in the active UI language. `exceptId` is the category being renamed.
+ */
+async function validName(
+  type: TransactionType,
+  rawName: string,
+  exceptId?: number,
+): Promise<string> {
+  const name = rawName.trim().replace(/\s+/g, ' ');
+  if (!name) throw new CategoryError('nameRequired');
+  if (name.length > CATEGORY_NAME_MAX_LENGTH) throw new CategoryError('nameTooLong');
+
+  const t = i18n.getFixedT(null, 'categories');
+  const needle = name.toLocaleLowerCase();
+  const existing = await categoryRepository.listByType(type);
+  if (
+    existing.some(
+      (c) => c.id !== exceptId && getCategoryName(t, c).toLocaleLowerCase() === needle,
+    )
+  ) {
+    throw new CategoryError('duplicate');
+  }
+  return name;
 }
 
 export const categoryService = {
@@ -40,20 +66,22 @@ export const categoryService = {
    * among the type's categories as displayed in the active UI language.
    */
   async createCustom(type: TransactionType, rawName: string): Promise<Category> {
-    const name = rawName.trim().replace(/\s+/g, ' ');
-    if (!name) throw new CategoryError('nameRequired');
-    if (name.length > CATEGORY_NAME_MAX_LENGTH) throw new CategoryError('nameTooLong');
-
-    const t = i18n.getFixedT(null, 'categories');
-    const needle = name.toLocaleLowerCase();
-    const existing = await categoryRepository.listByType(type);
-    if (existing.some((c) => getCategoryName(t, c).toLocaleLowerCase() === needle)) {
-      throw new CategoryError('duplicate');
-    }
-
+    const name = await validName(type, rawName);
     const created = await categoryRepository.createCustom(type, name);
     useUiStore.getState().bumpDataVersion();
     return created;
+  },
+
+  /**
+   * Renames a user category (same name rules as `createCustom`). Past transactions show the
+   * new name. System categories cannot be renamed.
+   */
+  async renameCustom(category: Category, rawName: string): Promise<Category> {
+    const name = await validName(category.type, rawName, category.id);
+    const updated = await categoryRepository.renameCustom(category.id, name);
+    if (!updated) throw new CategoryError('notFound');
+    useUiStore.getState().bumpDataVersion();
+    return updated;
   },
 
   /**

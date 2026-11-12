@@ -112,7 +112,8 @@
       "nameRequired": "Enter a category name",
       "nameTooLong": "Name can be at most {{max}} characters",
       "duplicate": "A category with this name already exists",
-      "failed": "Could not add category. Please try again."
+      "failed": "Could not add category. Please try again.",
+      "notFound": "This category no longer exists"
     }
   },
   "manageCategories": {
@@ -127,6 +128,11 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "deleted": "Category deleted",
-    "deleteFailed": "Could not delete category. Please try again."
+    "deleteFailed": "Could not delete category. Please try again.",
+    "editLabel": "Rename {{name}}",
+    "editTitle": "Rename category",
+    "save": "Save",
+    "updated": "Category updated",
+    "editFailed": "Could not update category. Please try again."
   }
 }

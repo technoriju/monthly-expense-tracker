@@ -109,6 +109,16 @@ export const categoryRepository = {
     return result.changes > 0;
   },
 
+  /** Renames an active user-created category. Returns the updated row, or `null` if none. */
+  async renameCustom(id: number, name: string): Promise<Category | null> {
+    const db = await getDatabase();
+    const result = await db.runAsync(
+      'UPDATE categories SET custom_name = ? WHERE id = ? AND is_system = 0 AND is_archived = 0',
+      [name, id],
+    );
+    return result.changes > 0 ? categoryRepository.getById(id) : null;
+  },
+
   async getById(id: number): Promise<Category | null> {
     const db = await getDatabase();
     const row = await db.getFirstAsync<CategoryRow>(

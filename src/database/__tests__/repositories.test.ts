@@ -102,6 +102,21 @@ describe('categoryRepository', () => {
     expect((await transactionRepository.getById(id))?.category.customName).toBe('Pocket money');
   });
 
+  it('renames only active custom categories; their transactions show the new name', async () => {
+    const custom = await categoryRepository.createCustom('expense', 'Pets', 5_000);
+    const txId = await transactionRepository.insert(
+      await record({ categoryId: custom.id }),
+      1_000,
+    );
+    expect((await categoryRepository.renameCustom(custom.id, 'Pet care'))?.customName).toBe(
+      'Pet care',
+    );
+    expect((await transactionRepository.getById(txId))?.category.customName).toBe('Pet care');
+    expect(await categoryRepository.renameCustom(await categoryId('food'), 'Meals')).toBeNull();
+    await categoryRepository.archiveCustom(custom.id);
+    expect(await categoryRepository.renameCustom(custom.id, 'Gone')).toBeNull();
+  });
+
   it('archives only custom categories; their transactions keep the category', async () => {
     const custom = await categoryRepository.createCustom('expense', 'Pets', 5_000);
     const txId = await transactionRepository.insert(

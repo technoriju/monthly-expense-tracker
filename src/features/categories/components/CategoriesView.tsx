@@ -1,4 +1,4 @@
-import { Plus, Trash2, TriangleAlert } from 'lucide-react-native';
+import { Pencil, Plus, Trash2, TriangleAlert } from 'lucide-react-native';
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, View } from 'react-native';
@@ -32,7 +32,8 @@ export function CategoriesView() {
   const showToast = useUiStore((s) => s.showToast);
   const [type, setType] = useState<TransactionType>('expense');
   const [addOpen, setAddOpen] = useState(false);
-  const { categories, loading, error, retry, addCategory, deleteCategory } =
+  const [editing, setEditing] = useState<Category | null>(null);
+  const { categories, loading, error, retry, addCategory, renameCategory, deleteCategory } =
     useManageCategories(type);
 
   const custom = categories.filter((c) => !c.isDefault);
@@ -71,6 +72,14 @@ export function CategoriesView() {
             <AppText variant="body" style={styles.name}>
               {nameOf(category)}
             </AppText>
+            {deletable ? (
+              <AppIconButton
+                icon={Pencil}
+                size="md"
+                accessibilityLabel={t('manageCategories.editLabel', { name: nameOf(category) })}
+                onPress={() => setEditing(category)}
+              />
+            ) : null}
             {deletable ? (
               <AppIconButton
                 icon={Trash2}
@@ -159,6 +168,24 @@ export function CategoriesView() {
         onCreated={() => {
           setAddOpen(false);
           showToast(t('manageCategories.added'));
+        }}
+      />
+
+      <AddCategorySheet
+        key={editing?.id ?? 'none'}
+        visible={editing !== null}
+        initialName={editing ? nameOf(editing) : ''}
+        title={t('manageCategories.editTitle')}
+        submitLabel={t('manageCategories.save')}
+        failedMessage={t('manageCategories.editFailed')}
+        onClose={() => setEditing(null)}
+        onSubmit={(name) => {
+          if (!editing) return Promise.reject(new Error('No category being edited'));
+          return renameCategory(editing, name);
+        }}
+        onCreated={() => {
+          setEditing(null);
+          showToast(t('manageCategories.updated'));
         }}
       />
     </AppScreen>
