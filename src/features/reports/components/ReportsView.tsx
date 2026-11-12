@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppEmptyState, AppHeader, AppIconButton, AppLoading, AppScreen } from '@/components/ui';
+import { BudgetSummaryCard } from '@/features/budgets/components/BudgetSummaryCard';
 import { SummaryCard } from '@/features/dashboard/components/SummaryCard';
 import { makeStyles } from '@/theme';
 import { fromIsoDate } from '@/utils/dates';
@@ -33,6 +34,8 @@ export function ReportsView() {
   const { exportCsv, exporting } = useExportCsv();
   const labelOf = usePeriodLabel();
   const today = new Date();
+  // Budgets are monthly: a month period uses that month, other periods the current month.
+  const budgetMonth = period.kind === 'month' ? fromIsoDate(period.month) : today;
 
   const openPoint = (point: TrendPoint) => {
     if (report?.trend.granularity === 'day') {
@@ -79,12 +82,15 @@ export function ReportsView() {
     body = <AppLoading />;
   } else if (report.summary.transactionCount === 0) {
     body = (
-      <AppEmptyState
-        icon={ChartPie}
-        title={t('empty.title')}
-        message={t('empty.message')}
-        action={{ label: t('empty.action'), onPress: () => router.push('/transaction/new') }}
-      />
+      <>
+        <AppEmptyState
+          icon={ChartPie}
+          title={t('empty.title')}
+          message={t('empty.message')}
+          action={{ label: t('empty.action'), onPress: () => router.push('/transaction/new') }}
+        />
+        <BudgetSummaryCard month={budgetMonth} />
+      </>
     );
   } else {
     body = (
@@ -102,6 +108,7 @@ export function ReportsView() {
           />
         </View>
         <NetSummaryCard summary={report.summary} />
+        <BudgetSummaryCard month={budgetMonth} />
         <CategoryBreakdownCard report={report} />
         <TrendCard trend={report.trend} onOpenPoint={openPoint} />
         <ComparisonCard

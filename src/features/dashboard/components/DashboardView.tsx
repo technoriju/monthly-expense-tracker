@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppEmptyState, AppLoading, AppScreen } from '@/components/ui';
+import { BudgetSummaryCard } from '@/features/budgets/components/BudgetSummaryCard';
 import { makeStyles } from '@/theme';
 
 import { useDashboardData } from '../hooks/useDashboardData';
@@ -50,6 +51,7 @@ export function DashboardView() {
               />
             </View>
             <BalanceCard amountMinor={summary.balanceMinor} />
+            <BudgetSummaryCard month={month} hideWhenEmpty />
           </>
         )}
       </View>

@@ -1,0 +1,102 @@
+{
+  "title": "Budgets",
+  "overall": {
+    "title": "Monthly budget",
+    "notSet": "No monthly budget set",
+    "notSetHint": "Set a limit for all expenses this month.",
+    "spentThisMonth": "Spent this month: {{amount}}",
+    "set": "Set monthly budget",
+    "editLabel": "Edit monthly budget",
+    "deleteLabel": "Delete monthly budget"
+  },
+  "labels": {
+    "budget": "Budget",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "overBy": "Over by",
+    "used": "{{percent}}% used",
+    "spentOf": "{{spent}} of {{budget}}"
+  },
+  "status": {
+    "none": "No budget",
+    "within": "Within budget",
+    "approaching": "Approaching limit",
+    "exceeded": "Budget exceeded"
+  },
+  "categories": {
+    "title": "Category budgets",
+    "add": "Add category budget",
+    "empty": "No category budgets for this month yet.",
+    "rowHint": "Opens this budget for editing"
+  },
+  "unbudgeted": {
+    "title": "Spending without a budget",
+    "rowHint": "Sets a budget for this category"
+  },
+  "alerts": {
+    "title": "Budget warnings",
+    "overall": {
+      "level80": "You have used {{percent}}% of your monthly budget.",
+      "level90": "{{percent}}% of your monthly budget is used. You are close to the limit.",
+      "level100": "Monthly budget exceeded: {{percent}}% used."
+    },
+    "category": {
+      "level80": "{{category}}: {{percent}}% of the budget used.",
+      "level90": "{{category}}: {{percent}}% used. Close to the limit.",
+      "level100": "{{category}} budget exceeded: {{percent}}% used."
+    }
+  },
+  "editor": {
+    "createOverall": "Set monthly budget",
+    "editOverall": "Edit monthly budget",
+    "createCategory": "Add category budget",
+    "editCategory": "Edit category budget",
+    "forMonth": "For {{month}}",
+    "amount": "Budget amount",
+    "amountPlaceholder": "0",
+    "category": "Expense category",
+    "noCategoriesLeft": "Every expense category already has a budget for this month.",
+    "save": "Save",
+    "delete": "Delete budget"
+  },
+  "validation": {
+    "amountRequired": "Enter a budget amount",
+    "amountInvalid": "Enter an amount greater than 0 with up to 2 decimals",
+    "categoryRequired": "Choose an expense category"
+  },
+  "errors": {
+    "duplicate": "A budget already exists for this month.",
+    "categoryNotFound": "This category no longer exists.",
+    "categoryNotExpense": "Budgets can only be set for expense categories.",
+    "notFound": "This budget no longer exists.",
+    "saveFailed": "Could not save the budget. Please try again.",
+    "loadTitle": "Could not load budgets",
+    "retry": "Try again"
+  },
+  "delete": {
+    "title": "Delete budget?",
+    "messageOverall": "The monthly budget of {{amount}} for {{month}} will be deleted. Your transactions are not affected.",
+    "messageCategory": "The {{category}} budget of {{amount}} for {{month}} will be deleted. Your transactions are not affected.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+  "toast": {
+    "saved": "Budget saved",
+    "deleted": "Budget deleted",
+    "deleteFailed": "Could not delete the budget. Please try again."
+  },
+  "empty": {
+    "title": "No budgets for this month",
+    "message": "Set a monthly budget or category budgets to keep your spending on track."
+  },
+  "summary": {
+    "title": "Monthly budget",
+    "remaining": "{{amount}} left",
+    "overBy": "{{amount}} over budget",
+    "setUp": "Set a monthly budget",
+    "setUpHint": "Track your spending against a limit.",
+    "warnings_one": "{{count}} budget warning",
+    "warnings_other": "{{count}} budget warnings",
+    "openHint": "Opens budgets"
+  }
+}

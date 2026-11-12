@@ -118,13 +118,27 @@ describe('migration 001', () => {
 });
 
 describe('migration 002', () => {
-  it('adds payment_method and indexes, ending at the latest version', async () => {
+  it('adds payment_method and indexes', async () => {
     const db = createFakeDb(1);
     const result = await runMigrations(db, MIGRATIONS);
-    expect(result.applied).toEqual(['transactions_v2']);
+    expect(result.applied).toEqual(['transactions_v2', 'budgets']);
     const sql = db.executed.join('\n');
     expect(sql).toMatch(/ALTER TABLE transactions ADD COLUMN payment_method TEXT/);
     expect(sql).toMatch(/CREATE INDEX idx_categories_type/);
-    expect(await getSchemaVersion(db)).toBe(2);
+  });
+});
+
+describe('migration 003', () => {
+  it('creates budgets with unique indexes and triggers, ending at the latest version', async () => {
+    const db = createFakeDb(2);
+    const result = await runMigrations(db, MIGRATIONS);
+    expect(result.applied).toEqual(['budgets']);
+    const sql = db.executed.join('\n');
+    expect(sql).toMatch(/CREATE TABLE budgets/);
+    expect(sql).toMatch(/amount_minor\s+INTEGER NOT NULL CHECK \(amount_minor > 0\)/);
+    expect(sql).toMatch(/CREATE UNIQUE INDEX ux_budgets_overall/);
+    expect(sql).toMatch(/CREATE UNIQUE INDEX ux_budgets_category/);
+    expect(sql).toMatch(/CREATE TRIGGER trg_budgets_expense_category_insert/);
+    expect(await getSchemaVersion(db)).toBe(3);
   });
 });

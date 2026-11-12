@@ -1,3 +1,4 @@
+import bnBudgets from './locales/bn/budgets.json';
 import bnCategories from './locales/bn/categories.json';
 import bnCommon from './locales/bn/common.json';
 import bnDashboard from './locales/bn/dashboard.json';
@@ -5,6 +6,7 @@ import bnReports from './locales/bn/reports.json';
 import bnSettings from './locales/bn/settings.json';
 import bnTransactions from './locales/bn/transactions.json';
 import bnVoice from './locales/bn/voice.json';
+import enBudgets from './locales/en/budgets.json';
 import enCategories from './locales/en/categories.json';
 import enCommon from './locales/en/common.json';
 import enDashboard from './locales/en/dashboard.json';
@@ -12,6 +14,7 @@ import enReports from './locales/en/reports.json';
 import enSettings from './locales/en/settings.json';
 import enTransactions from './locales/en/transactions.json';
 import enVoice from './locales/en/voice.json';
+import hiBudgets from './locales/hi/budgets.json';
 import hiCategories from './locales/hi/categories.json';
 import hiCommon from './locales/hi/common.json';
 import hiDashboard from './locales/hi/dashboard.json';
@@ -30,6 +33,7 @@ export const NAMESPACES = [
   'settings',
   'voice',
   'reports',
+  'budgets',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -38,6 +42,7 @@ const en = {
   common: enCommon,
   dashboard: enDashboard,
   reports: enReports,
+  budgets: enBudgets,
   transactions: enTransactions,
   categories: enCategories,
   settings: enSettings,
@@ -50,6 +55,7 @@ const bn: TranslationResources = {
   common: bnCommon,
   dashboard: bnDashboard,
   reports: bnReports,
+  budgets: bnBudgets,
   transactions: bnTransactions,
   categories: bnCategories,
   settings: bnSettings,
@@ -60,6 +66,7 @@ const hi: TranslationResources = {
   common: hiCommon,
   dashboard: hiDashboard,
   reports: hiReports,
+  budgets: hiBudgets,
   transactions: hiTransactions,
   categories: hiCategories,
   settings: hiSettings,

@@ -51,8 +51,8 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 1 | `react-hook-form`, `zod`, `@hookform/resolvers` | Forms + validation |
 | 1 | `@react-native-community/datetimepicker` | Date selector |
 | 2 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
-| 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 6) |
-| 6 | `expo-document-picker` | Backup / restore (reuses `expo-file-system`, `expo-sharing`) |
+| 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 7) |
+| 7 | `expo-document-picker` | Backup / restore (reuses `expo-file-system`, `expo-sharing`) |
 
 **Not added:** chart libraries (custom charts on `react-native-svg`), UI kits, NativeWind, ORMs, navigation libs beyond Expo Router.
 
@@ -81,6 +81,7 @@ src/
       new.tsx                   # Add (modal)
       [id].tsx                  # Edit
     transactions.tsx            # "See all"
+    budgets.tsx                 # Budget screen (?month=YYYY-MM)
     reports/
       categories.tsx            # Category breakdown
       calendar.tsx              # Monthly calendar
@@ -101,6 +102,7 @@ src/
     transactions/  { components/, hooks/, services/, schemas.ts, types.ts }
     categories/    { components/, hooks/, services/, types.ts }
     reports/       { components/, hooks/, services/, types.ts }
+    budgets/       { components/, hooks/, services/, calculations.ts, schemas.ts, types.ts }
     voice/         { components/, hooks/, engine/, parser/, types.ts }
     settings/      { components/, hooks/, services/, types.ts }
     onboarding/    { components/ }
@@ -108,7 +110,7 @@ src/
   database/
     client.ts                   # open DB, pragmas, run migrations
     migrations/                 # 001_init.ts, 002_….ts, index.ts
-    repositories/               # transactionRepository.ts, categoryRepository.ts, reportRepository.ts, settingsRepository.ts
+    repositories/               # transactionRepository.ts, categoryRepository.ts, reportRepository.ts, budgetRepository.ts, settingsRepository.ts
     seed/                       # system categories
 
   store/
@@ -188,6 +190,29 @@ CREATE TABLE settings (
 
 Settings keys: `uiLanguage`, `voiceLanguage`, `currency`, `themeMode`, `onboardingDone`, `voiceEnabled`, `profileName`.
 
+### 4.2.1 Budgets (migration 003)
+
+```sql
+CREATE TABLE budgets (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  budget_type   TEXT    NOT NULL CHECK (budget_type IN ('overall','category')),
+  category_id   INTEGER REFERENCES categories(id) ON DELETE RESTRICT,  -- NULL for overall
+  amount_minor  INTEGER NOT NULL CHECK (amount_minor > 0),
+  currency      TEXT    NOT NULL,
+  month         TEXT    NOT NULL,          -- 'YYYY-MM' (CHECK-validated)
+  created_at    INTEGER NOT NULL,
+  updated_at    INTEGER NOT NULL,
+  CHECK ((budget_type = 'overall' AND category_id IS NULL) OR
+         (budget_type = 'category' AND category_id IS NOT NULL))
+);
+CREATE UNIQUE INDEX ux_budgets_overall  ON budgets (month, currency) WHERE category_id IS NULL;
+CREATE UNIQUE INDEX ux_budgets_category ON budgets (month, currency, category_id) WHERE category_id IS NOT NULL;
+CREATE INDEX idx_budgets_category ON budgets (category_id);
+-- + BEFORE INSERT / UPDATE triggers: category budgets only on 'expense' categories.
+```
+
+Budgets are per month and never copied or overwritten, so past months keep their budgets (history). Spending is not stored: it is aggregated from `transactions` by `reportRepository` (expense type, active currency, month range).
+
 ### 4.3 Data rules
 
 - **Money:** integer minor units only. Never store or sum floats. Conversion to/from display strings happens in `utils/money.ts`.
@@ -200,6 +225,7 @@ Settings keys: `uiLanguage`, `voiceLanguage`, `currency`, `themeMode`, `onboardi
 - `transactionRepository` — `insert`, `insertMany` (single transaction, used by voice "Save all"), `update`, `remove`, `getById`, `listByMonth`, `listRecent`, `listByDate`.
 - `categoryRepository` — `listByType`, `getByKey`, `seedSystemCategories`.
 - `reportRepository` — aggregation queries for an inclusive date range + currency: totals and counts by type, by category (one type), by day, by month.
+- `budgetRepository` — `listByMonth`, `getById`, `find`, `insert`, `updateAmount`, `remove`.
 - `settingsRepository` — `get`, `set`, `getAll`.
 
 Repositories use parameterized queries only, map rows (`snake_case`) to typed domain objects (`camelCase`) internally, and contain no business rules.
@@ -252,7 +278,7 @@ Each entry: `{ code, nativeName, englishName, script, direction, fontKey, speech
 
 ### 5.2 i18next setup
 
-- Namespaces: `common`, `dashboard`, `transactions`, `categories`, `reports`, `voice`, `settings`, `onboarding`.
+- Namespaces: `common`, `dashboard`, `transactions`, `categories`, `reports`, `budgets`, `voice`, `settings`, `onboarding`.
 - Resources: static JSON in `src/i18n/locales/<code>/<ns>.json`, bundled (small; no network).
 - `fallbackLng: 'en'`; missing keys in partial languages fall back to English.
 - **Typed keys**: `i18next` module augmentation using the English resources as the schema → a misspelled key is a compile error.
@@ -262,7 +288,7 @@ Each entry: `{ code, nativeName, englishName, script, direction, fontKey, speech
 
 - **Startup:** saved `uiLanguage` → else best match from `expo-localization` `getLocales()` against registry → else `en`.
 - **Switching:** `i18n.changeLanguage()` + settings write; re-renders without restart.
-- **RTL exception** (ur, ks, sd): requires `I18nManager.forceRTL()` and an app reload — the UI warns before reloading. RTL support lands in Phase 5.
+- **RTL exception** (ur, ks, sd): requires `I18nManager.forceRTL()` and an app reload — the UI warns before reloading. RTL support lands in Phase 6.
 - **UI language and voice language are separate settings** (`uiLanguage`, `voiceLanguage`). A Bengali UI user can dictate in English and vice versa.
 
 ### 5.4 Formatting (`src/utils/format.ts`)
@@ -316,7 +342,7 @@ Maps every Indic digit set (Bengali ০-৯, Devanagari ०-९, Gujarati, Gurmu
 
 ### 6.3 Fonts
 
-- Loaded with `expo-font` at startup (splash held until ready). Phase 0 loads Inter + Noto Sans Bengali + Noto Sans Devanagari (Regular, Medium, SemiBold, Bold). Other script fonts are added in Phase 5 as languages ship.
+- Loaded with `expo-font` at startup (splash held until ready). Phase 0 loads Inter + Noto Sans Bengali + Noto Sans Devanagari (Regular, Medium, SemiBold, Bold). Other script fonts are added in Phase 6 as languages ship.
 - Custom fonts need one family name per weight, so `fontWeight` alone is not used. `<AppText variant="heading2">` resolves `fontFamily` from **(active UI language script × variant weight)** via `src/i18n/fonts.ts`.
 - Numbers/amounts: always rendered with the active script font, which includes Latin digits as fallback.
 - `allowFontScaling` stays enabled for accessibility; `maxFontSizeMultiplier` is capped on amount and tab-bar text to prevent layout breakage.
@@ -380,7 +406,7 @@ interface SpeechEngine {
 ```
 
 - `NativeSpeechEngine` — wraps `expo-speech-recognition` (Android `SpeechRecognizer`, iOS `SFSpeechRecognizer`). Ships in Phase 2 (Voice Entry).
-- `CloudSpeechEngine` — reserved slot (e.g. Google Cloud STT / Bhashini via a backend proxy). Evaluated in Phase 7 only if native coverage proves insufficient. Never required for core features.
+- `CloudSpeechEngine` — reserved slot (e.g. Google Cloud STT / Bhashini via a backend proxy). Evaluated in Phase 8 only if native coverage proves insufficient. Never required for core features.
 - The voice-language picker shows **only locales the device actually supports**, queried at runtime and intersected with the registry's `speechLocales`.
 
 ### 8.2 Parsing pipeline (`features/voice/parser/`)
@@ -438,8 +464,8 @@ Pure TypeScript, fully unit-testable, no I/O:
 ### 11.2 Other risks
 
 - **Indic text rendering:** clipping of top/bottom marks, mixed Latin+Indic strings falling back to inconsistent system fonts, font bundle size → script-aware line heights, per-script font loading, stress-test screens.
-- **RTL languages** (Urdu, Kashmiri, Sindhi): need `forceRTL` + reload and mirrored layouts (icons, charts, chevrons) → deferred to Phase 5, design with `start/end` not `left/right` from day one.
-- **Script choices:** Santali (Ol Chiki vs. Latin/Devanagari), Manipuri (Meitei Mayek vs. Bengali script), Sindhi/Kashmiri (Perso-Arabic vs. Devanagari) → decide per language in Phase 5 with native speakers.
+- **RTL languages** (Urdu, Kashmiri, Sindhi): need `forceRTL` + reload and mirrored layouts (icons, charts, chevrons) → deferred to Phase 6, design with `start/end` not `left/right` from day one.
+- **Script choices:** Santali (Ol Chiki vs. Latin/Devanagari), Manipuri (Meitei Mayek vs. Bengali script), Sindhi/Kashmiri (Perso-Arabic vs. Devanagari) → decide per language in Phase 6 with native speakers.
 - **Hermes `Intl` gaps:** some locales or `numberingSystem` may be missing → startup capability check + fallback formatter.
 - **Translation quality** for 20 additional languages → status flag per language; native-speaker review before marking `complete`.
 - **Currency change after data exists** → per-transaction currency; reports filter by active currency.

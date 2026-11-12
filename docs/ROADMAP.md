@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 3 — Reports** implemented in code (2026-11-12; the user's brief called this "Phase 4: Reports & Analytics"). Phases 1 and 2 are also implemented in code. tsc/lint/jest pass; on-device exit checks for all three are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 4 — Settings & Onboarding.
+**Current phase:** **Phase 4 — Budgets** implemented in code (2026-11-12; the user's brief called this "Phase 5: Budget Management"; inserted before Settings & Onboarding at the user's request, later phases renumbered +1). Phases 1–3 are also implemented in code. tsc/lint/jest pass; on-device exit checks for all four are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 5 — Settings & Onboarding.
 
 ## Rules for every phase
 
@@ -92,13 +92,33 @@
 - *(added)* Period filter shared by every report: this month / last month / this year / custom range (validated).
 - *(added)* Net balance, saved amount and savings rate (null without income); insights (average daily expense, highest/lowest day, top categories, count); income category breakdown.
 - *(added)* Comparison with the previous period (no percentage when the previous value is 0).
-- *(added)* CSV export of the period's transactions via the share sheet — pulls `expo-file-system` + `expo-sharing` forward from Phase 6.
+- *(added)* CSV export of the period's transactions via the share sheet — pulls `expo-file-system` + `expo-sharing` forward from Phase 7.
 
 **Exit:** aggregation tests pass (incl. empty months, single category, rounding of percentages to 100%); charts render correctly with 0, 1, and many data points.
 
 ---
 
-## Phase 4 — Settings & Onboarding
+## Phase 4 — Budgets
+
+> Inserted at the user's request (2026-11-12; the user's brief called this "Phase 5: Budget Management"). No reference panel — an "unseen screen" built from existing components and tokens (ARCHITECTURE.md §9.6). Implemented in code: tsc/lint/jest pass; on-device exit check pending a development build.
+
+**Scope**
+- Migration 003: `budgets` table (overall or expense-category budget per month `YYYY-MM` and currency, integer `amount_minor > 0`), partial unique indexes against duplicates, triggers rejecting income categories.
+- `budgetRepository` (SQL only); `budgetService` (validation, create / edit amount / delete); pure math in `features/budgets/calculations.ts`.
+- Spending reuses `reportRepository` aggregations (expense only, active currency) — no duplicated spending SQL; Dashboard, Reports and Budgets always agree.
+- Status: no budget / within (< 80%) / approaching (80–< 100%) / exceeded (≥ 100%). Integer cross-multiplication, no float money math.
+- In-app warnings at 80% / 90% / 100%: one per budget at its highest threshold, recomputed whenever data changes (`dataVersion`).
+- Budget screen (`/budgets`): month selector (any month → history), overall card, warnings, category budgets with progress, spending without a budget, create/edit sheet, delete with confirmation.
+- Entry points: Budget card on the Reports screen; budget summary card on the Dashboard when the month has budgets.
+- `budgets` i18n namespace (en, bn, hi).
+
+**Out of scope:** push notifications, background monitoring, copying/rolling budgets into a new month, income budgets.
+
+**Exit:** budget calculation, repository and service tests pass (thresholds, zero budget, income exclusion, history, transaction edits); budgets persist across restarts; screens pass the design checklist in English, Bengali and Hindi.
+
+---
+
+## Phase 5 — Settings & Onboarding
 
 **Reference:** Splash (row 1, col 1), Onboarding (row 1, col 2), Settings (row 2, col 5).
 
@@ -114,7 +134,7 @@
 
 ---
 
-## Phase 5 — Language Expansion
+## Phase 6 — Language Expansion
 
 **Scope**
 - Translations for remaining scheduled languages (status `partial` until native review).
@@ -127,7 +147,7 @@
 
 ---
 
-## Phase 6 — Backup & Restore
+## Phase 7 — Backup & Restore
 
 **Scope**
 - Add `expo-document-picker` (`expo-file-system` and `expo-sharing` were added in Phase 3 for CSV export).
@@ -138,7 +158,7 @@
 
 ---
 
-## Phase 7 — Hardening & Release
+## Phase 8 — Hardening & Release
 
 **Scope**
 - Accessibility audit (labels, roles, contrast, font scaling, touch targets).
