@@ -1,7 +1,12 @@
 import type { Transaction } from '@/features/transactions/types';
 
 import type { CsvLabels } from '../services/csvExport';
-import { buildTransactionsHtml, escapeHtml, pdfFileName, type PdfLabels } from '../services/pdfExport';
+import {
+  buildTransactionsHtml,
+  escapeHtml,
+  pdfFileName,
+  type PdfLabels,
+} from '../services/pdfExport';
 
 const base: CsvLabels = {
   headers: {

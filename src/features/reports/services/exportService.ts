@@ -131,13 +131,22 @@ export const exportService = {
     if (transactions.length === 0) return 'empty';
 
     clearCachedExports();
-    const { uri } = await Print.printToFileAsync({
+    const { uri, base64 } = await Print.printToFileAsync({
       html: buildTransactionsHtml(transactions, currentPdfLabels(period)),
       margins: { left: 24, right: 24, top: 24, bottom: 24 },
+      base64: true,
     });
-    // expo-print picks a random name; give the file a readable one before sharing.
+    // expo-print writes to its own cache folder under a random name, which expo-file-system
+    // may not be allowed to read or move. Write the returned bytes to a readable name instead.
+    if (!base64) throw new Error('PDF rendering returned no data');
     const file = new File(Paths.cache, pdfFileName(resolveRange(period)));
-    await new File(uri).move(file, { overwrite: true });
+    file.create({ overwrite: true });
+    await file.write(base64, { encoding: 'base64' });
+    try {
+      new File(uri).delete();
+    } catch {
+      // Best effort: the original stays in the app-private cache.
+    }
 
     await Sharing.shareAsync(file.uri, {
       mimeType: 'application/pdf',

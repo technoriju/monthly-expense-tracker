@@ -176,6 +176,8 @@
 
 > Pulled forward and implemented in code at the user's request (2026-11-12; the user's brief called this "Phase 7"). Done: data-integrity guards (amount ceiling on every write path, migration 004 triggers, atomic create, stricter restore validation), release config (app IDs, permissions, `allowBackup: false`, iOS privacy manifest, `eas.json`), accessibility fixes (AA text tokens, iOS announcements, inline save errors, touch targets, chart summaries, reduced motion), error-state gaps, voice-screen re-render fix, docs (`TESTING.md`, `RELEASE_CHECKLIST.md`, `STORE_LISTING.md`, `PRIVACY_POLICY.md`). Not done: notifications (not approved), `CloudSpeechEngine` (not needed), on-device verification, store builds.
 
+> *(added 2026-11-13, user request)* Settings → Export transactions offers CSV or PDF (PDF rendered on-device with `expo-print`; Reports keeps CSV only). More tab → Help & Support screen (email / WhatsApp contact via the user's own apps, FAQs). tsc/lint/jest pass; on-device check pending a new development build (`expo-print` is native).
+
 **Scope**
 - Accessibility audit (labels, roles, contrast, font scaling, touch targets).
 - Performance (long lists, startup time).

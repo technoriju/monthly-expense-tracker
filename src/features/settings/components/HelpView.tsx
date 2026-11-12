@@ -16,7 +16,16 @@ import {
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 
-const FAQS = ['add', 'voice', 'edit', 'budgets', 'export', 'backup', 'language', 'privacy'] as const;
+const FAQS = [
+  'add',
+  'voice',
+  'edit',
+  'budgets',
+  'export',
+  'backup',
+  'language',
+  'privacy',
+] as const;
 
 /** Contact options (email, WhatsApp) and answers to common questions. */
 export function HelpView() {
