@@ -1,4 +1,4 @@
-import { categoryRepository } from '@/database';
+import { budgetRepository, categoryRepository } from '@/database';
 import {
   createMigratedTestDatabase,
   type TestDatabase,
@@ -82,6 +82,14 @@ describe('budgetService writes', () => {
         amountMinor: 2,
       }),
     ).rejects.toEqual(new BudgetError('duplicate'));
+  });
+
+  it('reports a duplicate when a concurrent save slips past the existence check', async () => {
+    await overall(1_000_000);
+    // Simulate the race: the check sees no budget, the unique index still rejects the insert.
+    const find = jest.spyOn(budgetRepository, 'find').mockResolvedValueOnce(null);
+    await expect(overall(5_000)).rejects.toEqual(new BudgetError('duplicate'));
+    find.mockRestore();
   });
 
   it('rejects income and unknown categories and invalid amounts', async () => {

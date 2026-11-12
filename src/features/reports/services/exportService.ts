@@ -10,7 +10,7 @@ import { formatMoney } from '@/utils/format';
 
 import { resolveRange } from '../period';
 import type { ReportPeriod } from '../types';
-import { buildTransactionsCsv, csvFileName, type CsvLabels } from './csvExport';
+import { buildTransactionsCsv, CSV_FILE_PREFIX, csvFileName, type CsvLabels } from './csvExport';
 
 const PAGE_SIZE = 500;
 
@@ -28,6 +28,26 @@ async function loadTransactions(period: ReportPeriod): Promise<Transaction[]> {
     );
     all.push(...page.filter((tx) => tx.currency === currency));
     if (page.length < PAGE_SIZE) return all;
+  }
+}
+
+/**
+ * Removes CSV files left in the app-private cache by earlier exports, so at most the latest
+ * export's file stays on the device (the share sheet may still be reading it).
+ */
+function clearCachedExports(): void {
+  for (const entry of Paths.cache.list()) {
+    if (
+      entry instanceof File &&
+      entry.name.startsWith(CSV_FILE_PREFIX) &&
+      entry.name.endsWith('.csv')
+    ) {
+      try {
+        entry.delete();
+      } catch {
+        // Best effort: a leftover file stays in the app-private cache.
+      }
+    }
   }
 }
 
@@ -65,9 +85,9 @@ export const exportService = {
     const transactions = await loadTransactions(period);
     if (transactions.length === 0) return 'empty';
 
+    clearCachedExports();
     const file = new File(Paths.cache, csvFileName(resolveRange(period)));
-    if (file.exists) file.delete();
-    file.create();
+    file.create({ overwrite: true });
     await file.write(buildTransactionsCsv(transactions, currentLabels()));
 
     await Sharing.shareAsync(file.uri, {

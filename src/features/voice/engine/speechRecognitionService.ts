@@ -43,12 +43,18 @@ const ACTIVE: readonly VoiceSessionStatus[] = ['preparing', 'listening', 'proces
  */
 export function createSpeechRecognitionService(engine: SpeechEngine, now = () => Date.now()) {
   let state: VoiceSessionState = INITIAL_SESSION_STATE;
+  /**
+   * `state` as of its last non-volume change. Volume events arrive ~10×/s while listening;
+   * screens read this snapshot so only the waveform re-renders for them.
+   */
+  let sessionState: VoiceSessionState = state;
   const listeners = new Set<() => void>();
   /** Incremented on every start/cancel so async steps of an old session stop early. */
   let session = 0;
 
   const set = (patch: Partial<VoiceSessionState>) => {
     state = { ...state, ...patch };
+    if (Object.keys(patch).some((key) => key !== 'volume')) sessionState = state;
     for (const listener of listeners) listener();
   };
   const fail = (error: SpeechError, extra: Partial<VoiceSessionState> = {}) =>
@@ -88,6 +94,8 @@ export function createSpeechRecognitionService(engine: SpeechEngine, now = () =>
 
   return {
     getState: () => state,
+    /** Same as `getState()` but unchanged by volume-only updates (its `volume` may be stale). */
+    getSessionState: () => sessionState,
 
     subscribe(listener: () => void): () => void {
       listeners.add(listener);

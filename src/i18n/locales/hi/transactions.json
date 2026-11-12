@@ -90,5 +90,9 @@
     "title": "श्रेणी चुनें",
     "searchPlaceholder": "श्रेणी खोजें",
     "empty": "कोई श्रेणी नहीं मिली"
+  },
+  "formErrors": {
+    "categoriesFailed": "श्रेणियाँ लोड नहीं हो सकीं।",
+    "retry": "फिर से कोशिश करें"
   }
 }

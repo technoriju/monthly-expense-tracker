@@ -66,7 +66,7 @@ export function AppInput({
         />
       </View>
       {error ? (
-        <AppText variant="bodySmall" color="expense" accessibilityLiveRegion="polite">
+        <AppText variant="bodySmall" color="expenseText" accessibilityLiveRegion="polite">
           {error}
         </AppText>
       ) : helperText ? (

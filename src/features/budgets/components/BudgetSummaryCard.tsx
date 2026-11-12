@@ -3,7 +3,7 @@ import { ChevronRight, TriangleAlert } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
-import { AppCard, AppIcon, AppText } from '@/components/ui';
+import { AppButton, AppCard, AppIcon, AppText } from '@/components/ui';
 import { useFormatters } from '@/hooks/useFormatters';
 import { makeStyles } from '@/theme';
 
@@ -24,9 +24,20 @@ export function BudgetSummaryCard({ month, hideWhenEmpty = false }: BudgetSummar
   const styles = useStyles();
   const { t } = useTranslation('budgets');
   const format = useFormatters();
-  const { overview } = useBudgetOverview(month);
+  const { overview, status, reload } = useBudgetOverview(month);
 
-  if (!overview) return null;
+  if (!overview) {
+    if (status !== 'error') return null;
+    // Never hide a failure silently: the user may rely on this card for warnings.
+    return (
+      <AppCard style={styles.card}>
+        <AppText variant="bodySmall" color="expenseText" accessibilityRole="alert">
+          {t('errors.loadTitle')}
+        </AppText>
+        <AppButton label={t('errors.retry')} variant="secondary" size="sm" onPress={reload} />
+      </AppCard>
+    );
+  }
   const { overall, overallBudget, alerts } = overview;
   const hasBudgets = overallBudget !== null || overview.categories.length > 0;
   if (hideWhenEmpty && !hasBudgets) return null;
@@ -63,7 +74,7 @@ export function BudgetSummaryCard({ month, hideWhenEmpty = false }: BudgetSummar
               </AppText>
               <AppText
                 variant="bodyMedium"
-                color={remaining < 0 ? 'expense' : 'textPrimary'}
+                color={remaining < 0 ? 'expenseText' : 'textPrimary'}
                 numberOfLines={1}>
                 {remaining < 0
                   ? t('summary.overBy', { amount: format.money(-remaining) })
@@ -81,11 +92,11 @@ export function BudgetSummaryCard({ month, hideWhenEmpty = false }: BudgetSummar
             <AppIcon
               icon={TriangleAlert}
               size="sm"
-              color={alerts[0]?.level === 100 ? 'expense' : 'accent'}
+              color={alerts[0]?.level === 100 ? 'expenseText' : 'accentText'}
             />
             <AppText
               variant="bodySmall"
-              color={alerts[0]?.level === 100 ? 'expense' : 'accent'}
+              color={alerts[0]?.level === 100 ? 'expenseText' : 'accentText'}
               style={styles.flex}>
               {t('summary.warnings', { count: alerts.length })}
             </AppText>

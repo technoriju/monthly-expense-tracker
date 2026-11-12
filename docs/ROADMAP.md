@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 5 — Settings & Data Management** implemented in code (2026-11-12; the user's brief called this "Phase 6: Settings & Data Management"). It merges the old Settings phase with Backup & Restore (pulled forward from old Phase 7) and adds the dark theme; onboarding/profile moved to Phase 7. Phases 1–4 are also implemented in code. tsc/lint/jest pass; on-device exit checks are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 6 — Language Expansion.
+**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion.
 
 ## Rules for every phase
 
@@ -171,6 +171,8 @@
 ---
 
 ## Phase 8 — Hardening & Release
+
+> Pulled forward and implemented in code at the user's request (2026-11-12; the user's brief called this "Phase 7"). Done: data-integrity guards (amount ceiling on every write path, migration 004 triggers, atomic create, stricter restore validation), release config (app IDs, permissions, `allowBackup: false`, iOS privacy manifest, `eas.json`), accessibility fixes (AA text tokens, iOS announcements, inline save errors, touch targets, chart summaries, reduced motion), error-state gaps, voice-screen re-render fix, docs (`TESTING.md`, `RELEASE_CHECKLIST.md`, `STORE_LISTING.md`, `PRIVACY_POLICY.md`). Not done: notifications (not approved), `CloudSpeechEngine` (not needed), on-device verification, store builds.
 
 **Scope**
 - Accessibility audit (labels, roles, contrast, font scaling, touch targets).

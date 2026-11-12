@@ -57,7 +57,7 @@ export function TabBar({ state, emitter, navigateToTab }: BottomTabBarProps) {
               <AppIcon icon={config.icon} size="lg" color={focused ? 'primary' : 'textMuted'} />
               <AppText
                 variant="caption"
-                color={focused ? 'primary' : 'textMuted'}
+                color={focused ? 'primaryText' : 'textSecondary'}
                 numberOfLines={1}
                 constrainScale>
                 {t(config.labelKey)}

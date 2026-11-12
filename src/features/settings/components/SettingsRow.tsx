@@ -33,7 +33,7 @@ export function SettingsRow({
   trailing,
 }: SettingsRowProps) {
   const styles = useStyles();
-  const color = disabled ? 'textMuted' : tone === 'danger' ? 'expense' : 'textPrimary';
+  const color = disabled ? 'textMuted' : tone === 'danger' ? 'expenseText' : 'textPrimary';
   const a11yLabel = [label, value, hint].filter(Boolean).join(', ');
 
   const content = (
@@ -44,7 +44,7 @@ export function SettingsRow({
           {label}
         </AppText>
         {hint ? (
-          <AppText variant="caption" color="textMuted">
+          <AppText variant="caption" color="textSecondary">
             {hint}
           </AppText>
         ) : null}

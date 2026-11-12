@@ -76,7 +76,8 @@ export function useBudgetEditor(target: BudgetEditorTarget, month: Date, onSaved
         form.setError(field, { message: `errors.${error.code}` });
       } else {
         console.error('Saving budget failed', error);
-        showToast(t('errors.saveFailed'), 'error');
+        // Shown inside the sheet: a toast would render underneath the modal.
+        form.setError('root', { message: 'errors.saveFailed' });
       }
     } finally {
       submitting.current = false;

@@ -1,6 +1,8 @@
 import { Directory, File, Paths, type PickSingleFileResult } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
+import { MAX_BACKUP_BYTES } from '../backupValidation';
+
 import type {
   BackupDestination,
   BackupFile,
@@ -80,6 +82,9 @@ export class LocalFileBackupProvider implements BackupProvider {
       throw error;
     }
     if (result.canceled) return null;
-    return { name: result.result.name, contents: await result.result.text() };
+    const { name, size } = result.result;
+    // Checked before reading so an oversized file never lands in memory.
+    if (size !== null && size > MAX_BACKUP_BYTES) return { name, tooLarge: true };
+    return { name, contents: await result.result.text() };
   }
 }

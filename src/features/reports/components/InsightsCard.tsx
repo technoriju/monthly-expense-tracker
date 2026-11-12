@@ -26,7 +26,7 @@ function InsightRow({ label, value, caption }: InsightRowProps) {
           {label}
         </AppText>
         {caption ? (
-          <AppText variant="caption" color="textMuted">
+          <AppText variant="caption" color="textSecondary">
             {caption}
           </AppText>
         ) : null}

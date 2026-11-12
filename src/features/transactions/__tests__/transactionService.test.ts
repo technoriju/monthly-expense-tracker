@@ -3,7 +3,8 @@ import {
   createMigratedTestDatabase,
   type TestDatabase,
 } from '@/database/testing/createTestDatabase';
-import { categoryRepository } from '@/database';
+import { categoryRepository, transactionRepository } from '@/database';
+import { MAX_AMOUNT_MINOR } from '@/utils/money';
 import { useUiStore } from '@/store/uiStore';
 
 import { groupByDate } from '../grouping';
@@ -88,6 +89,22 @@ describe('transactionService.create', () => {
   it('rejects non-integer or non-positive amounts before touching the DB', async () => {
     await expect(transactionService.create(await input({ amountMinor: 10.5 }))).rejects.toThrow();
     await expect(transactionService.create(await input({ amountMinor: 0 }))).rejects.toThrow();
+    await expect(
+      transactionService.create(await input({ amountMinor: MAX_AMOUNT_MINOR + 1 })),
+    ).rejects.toThrow();
+    await expect(
+      transactionService.create(await input({ amountMinor: MAX_AMOUNT_MINOR })),
+    ).resolves.toMatchObject({ amountMinor: MAX_AMOUNT_MINOR });
+  });
+
+  it('commits nothing when the saved row cannot be read back, so a retry adds no duplicate', async () => {
+    const getById = jest
+      .spyOn(transactionRepository, 'getById')
+      .mockRejectedValueOnce(new Error('read failed'));
+    await expect(transactionService.create(await input())).rejects.toThrow('read failed');
+    getById.mockRestore();
+    const rows = await transactionRepository.list({}, { limit: 10, offset: 0 });
+    expect(rows).toHaveLength(0);
   });
 });
 

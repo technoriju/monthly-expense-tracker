@@ -61,7 +61,7 @@ export function CustomRangeSheet({ visible, onClose, initial, onApply }: CustomR
         minimumDate={from ?? undefined}
       />
       {submitted && error ? (
-        <AppText variant="bodySmall" color="expense" accessibilityRole="alert">
+        <AppText variant="bodySmall" color="expenseText" accessibilityRole="alert">
           {t(`period.custom.errors.${error}`)}
         </AppText>
       ) : null}

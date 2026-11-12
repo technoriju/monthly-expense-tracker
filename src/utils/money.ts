@@ -39,6 +39,12 @@ export function minorToMajorForDisplay(amountMinor: MinorAmount, currency: Curre
 const MAX_MAJOR_DIGITS = 10;
 
 /**
+ * Largest accepted single amount in minor units (₹99,99,99,999.99) — the same ceiling the
+ * form parser enforces. Every write path (service schemas, restore, DB triggers) uses it.
+ */
+export const MAX_AMOUNT_MINOR = 999_999_999_999;
+
+/**
  * Parses a user-typed amount ("1,250.5", "১২৫০", "₹ 500") into integer minor units.
  * Uses string arithmetic only — no float multiplication. Returns null when the input is
  * not a valid positive amount with at most `minorDigits` decimals.

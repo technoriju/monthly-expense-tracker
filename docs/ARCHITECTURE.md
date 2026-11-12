@@ -1,6 +1,6 @@
 # Architecture — Monthly Expense Tracker
 
-> Status: approved planning document. No application code exists yet beyond the `create-expo-app` starter.
+> Status: living architecture document. Phases 0–5 and the Hardening & Release pass (ROADMAP Phase 8, pulled forward) are implemented; see [`ROADMAP.md`](./ROADMAP.md) for status.
 > Companion docs: [`ROADMAP.md`](./ROADMAP.md), [`design.md`](./design.md), [`design-reference.png`](./design-reference.png), [`../AGENTS.md`](../AGENTS.md).
 
 ---
@@ -50,7 +50,7 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 0 (dev) | `jest-expo`, `jest`, `@testing-library/react-native`, `@types/jest` | Tests |
 | 1 | `react-hook-form`, `zod`, `@hookform/resolvers` | Forms + validation |
 | 1 | `@react-native-community/datetimepicker` | Date selector |
-| 2 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
+| 2 | `expo-speech-recognition` | Device speech-to-text via the OS recognizer — on-device when the locale's offline pack is installed, otherwise the OS service may use the network (config plugin → **development build required; does not run in Expo Go**) |
 | 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 7) |
 | 5 | `expo-application` | Native version / build number on the About screen |
 
@@ -215,9 +215,14 @@ CREATE INDEX idx_budgets_category ON budgets (category_id);
 
 Budgets are per month and never copied or overwritten, so past months keep their budgets (history). Spending is not stored: it is aggregated from `transactions` by `reportRepository` (expense type, active currency, month range).
 
+### 4.2.2 Amount guards (migration 004)
+
+The tables are not `STRICT`, so `CHECK (amount_minor > 0)` alone accepts `1.5` or text. Migration 004 adds `BEFORE INSERT` / `BEFORE UPDATE OF amount_minor` triggers on `transactions` and `budgets` that abort with `amount_minor_invalid` unless `typeof(amount_minor) = 'integer'` and `amount_minor <= 999999999999` (the app ceiling, frozen as a literal). Existing rows are not rewritten. It also adds `idx_budgets_month_currency` for the per-month budget lookup.
+
 ### 4.3 Data rules
 
-- **Money:** integer minor units only. Never store or sum floats. Conversion to/from display strings happens in `utils/money.ts`.
+- **Money:** integer minor units only. Never store or sum floats. Conversion to/from display strings happens in `utils/money.ts`. Every write path caps a single amount at `MAX_AMOUNT_MINOR` (₹99,99,99,999.99): form parser, service Zod schemas, backup validation and the DB triggers — so sums stay far below 2^53.
+- **Atomic create:** `transactionRepository.insertAndGet` inserts and reads the row back in one transaction, so a reported save failure never hides a committed row (no duplicate on retry).
 - **Dates:** transactions store a local calendar date string (`YYYY-MM-DD`), so a month filter is `occurred_on BETWEEN '2025-05-01' AND '2025-05-31'` with no timezone drift. Audit timestamps are epoch ms.
 - **Currency:** stored per transaction. Reports aggregate only the active currency; changing currency never rewrites history.
 - **Categories:** system category names come from i18n (`categories:<key>`); `custom_name` is used only for user-created categories. Deletion = archive (keeps history intact).
@@ -230,6 +235,7 @@ Budgets are per month and never copied or overwritten, so past months keep their
 - `budgetRepository` — `listByMonth`, `getById`, `find`, `insert`, `updateAmount`, `remove`.
 - `settingsRepository` — `get`, `set`, `getAll`.
 - `dataRepository` — `exportSnapshot` (every column of categories, transactions, budgets + `user_version`), `counts`, `replaceAll(tables, settings)` (full replacement keeping original ids), `clearUserData` (keeps settings, reseeds system categories). Each runs in `withExclusiveTransactionAsync`; because `foreign_keys` is a per-connection setting, `PRAGMA foreign_key_check` runs before commit and any violation rolls everything back.
+- `database/client.ts` opens the single connection once (shared promise); if migration or seeding fails, the connection is closed and the next call retries from scratch. The startup error screen offers that retry.
 
 ### 4.4.1 Backup format (Phase 5)
 
@@ -241,7 +247,7 @@ Versioned UTF-8 JSON, built and validated by pure code in `features/data-managem
   categories: [...], transactions: [...], budgets: [...] }   // camelCase copies of every column
 ```
 
-`parseBackup(text)` returns `tooLarge | invalidJson | notBackup | unsupportedVersion | invalidStructure | inconsistent`, or a validated document (Zod: integer paise > 0, real `YYYY-MM-DD`, `YYYY-MM`, enums; cross-checks: unique ids/keys, transaction → category, budget → expense category, one budget per slot). Unknown or invalid preferences are dropped, not fatal. A newer `schemaVersion` is rejected. Restore = full replacement of data and preferences, then `settingsService.hydrate` and a `dataVersion` bump.
+`parseBackup(text)` returns `tooLarge | invalidJson | notBackup | unsupportedVersion | invalidStructure | inconsistent`, or a validated document (Zod: integer paise in `1 … MAX_AMOUNT_MINOR`, real `YYYY-MM-DD`, `YYYY-MM`, enums, row caps of 1,000 categories / 100,000 transactions / 50,000 budgets; cross-checks: unique ids/keys, transaction → category **of the same type**, budget → expense category, one budget per slot). Files over 50 MB are rejected by size **before** they are read into memory. Unknown or invalid preferences are dropped, not fatal. A newer `schemaVersion` is rejected. Restore = full replacement of data and preferences in one exclusive transaction, then `settingsService.hydrate` and a `dataVersion` bump. Once the replacement has committed, a failure to apply preferences is logged and restore still reports success (the preferences are stored and apply on next start). Rejected files are logged by error code only — never by content.
 
 Destinations go through a `BackupProvider` interface. `LocalFileBackupProvider` (share sheet / system folder picker / file picker) is the only active one. `GoogleDriveBackupProvider` is a disabled placeholder: Google Drive API policy restricts app-content backup without express prior written consent, so no OAuth, Drive permission, token storage or sync exists until that is resolved.
 
@@ -254,6 +260,8 @@ Repositories use parameterized queries only, map rows (`snake_case`) to typed do
   - `settingsStore` — in-memory cache of settings, hydrated once from SQLite at startup; writes go through `settingsService` (DB first, then store).
   - `uiStore` — `selectedMonth`, and a `dataVersion` counter bumped after every write so data hooks refetch.
 - DB rows are **not** mirrored into Zustand. Feature hooks (`useMonthlySummary`, `useRecentTransactions`) query services and depend on `dataVersion` + `selectedMonth`.
+- Transaction history keeps its loaded depth after a write (reloads as many rows as were shown) and shows a retry footer if a further page fails.
+- Known cost (not changed, no measured impact): a write refetches every *mounted* data hook, including tabs that are not focused. Revisit with on-device profiling if lists grow large.
 
 ---
 
@@ -337,15 +345,17 @@ Maps every Indic digit set (Bengali ০-৯, Devanagari ०-९, Gujarati, Gurmu
   | `primarySoft` | `#EDE7FF` | `#2A2050` |
   | `onPrimary` | `#FFFFFF` | `#FFFFFF` |
   | `textPrimary` | `#17152A` | `#F4F2FA` |
-  | `textSecondary` | `#77758A` | `#A8A5BC` |
-  | `textMuted` | `#A09CB3` | `#6F6B86` |
+  | `textSecondary` | `#706E82` | `#A8A5BC` |
+  | `textMuted` (icons, placeholders, inactive only) | `#8F8BA3` | `#6F6B86` |
+  | `primaryText` (text/links in brand hue) | `#5B2ED6` | `#9C84FF` |
+  | `incomeText` / `expenseText` / `accentText` | `#11813B` / `#DE1313` / `#A35E00` | = dark `income` / `expense` / `accent` |
   | `border` | `#E9E5F3` | `#2E2A45` |
   | `income` / `incomeSoft` | `#16A34A` / `#E9F9EF` | `#22C55E` / `#12301F` |
   | `expense` / `expenseSoft` | `#EF4444` / `#FFF0F1` | `#F87171` / `#3A1A1E` |
   | `accent` / `accentSoft` | `#FF9F1C` / `#FFF0D9` | `#FFB04D` / `#3A2A12` |
   | chart series | design.md chart colors | same hues, +10% lightness |
 
-  > Dark palette approved and implemented in Phase 5 (2026-11-12) with one change: dark `primary` is `#7857FA` (not `#7C5CFF`) so white text on primary fills meets 4.5:1. Added tokens `inverseSurface` / `onInverseSurface` (toast). `theme/__tests__/theme.test.tsx` enforces contrast. The light `textSecondary` (#77758A, from the reference) is ≈4.2–4.5:1 and is left as designed.
+  > Dark palette approved and implemented in Phase 5 (2026-11-12) with one change: dark `primary` is `#7857FA` (not `#7C5CFF`) so white text on primary fills meets 4.5:1. Added tokens `inverseSurface` / `onInverseSurface` (toast). `theme/__tests__/theme.test.tsx` enforces contrast. Hardening pass (accessibility audit): light `textSecondary` darkened from the reference `#77758A` to `#706E82` and `textMuted` from `#A09CB3` to `#8F8BA3` (now reserved for non-text, ≥ 3:1); text-only tokens `primaryText`, `incomeText`, `expenseText`, `accentText` added so readable text meets 4.5:1 while fills, bars and charts keep the brand hues. The test asserts every text token on every surface it is drawn on, in both themes.
 
 - `typography.ts` — scale from design.md §3 (`display 32/Bold` … `caption 11/Regular`, `amountLarge 28/Bold`, `amountMedium 20/Bold`) with explicit line heights: ≈1.3× for Latin, ≈1.5× for Indic scripts (prevents clipping of matras, conjuncts, and descenders).
 - `spacing.ts`, `radius.ts` — verbatim from design.md §4–5.
@@ -457,9 +467,9 @@ Pure TypeScript, fully unit-testable, no I/O:
 
 ## 10. Testing & Quality Gates
 
-- **Unit tests (jest-expo):** `utils/` (money, digits, format, dates), voice parser (multi-language fixtures), services (repositories mocked).
-- **Repository tests:** kept thin; verified on device during each phase (expo-sqlite native module is not available in Jest without mocking).
-- **Every phase exit:** `npx tsc --noEmit`, `npx expo lint`, `npx jest` — all actually executed and reported honestly — plus a manual device run.
+- **Unit tests (jest-expo):** `utils/` (money, digits, format, dates), voice parser (multi-language fixtures), services, analytics, budget math, backup validation.
+- **Repository / service tests run real SQL** on Node's built-in `node:sqlite` (`database/testing/createTestDatabase.ts`) with every migration applied. Limits: no WAL, and `withExclusiveTransactionAsync` runs on the same connection — native expo-sqlite behaviour is verified on device. See [`TESTING.md`](./TESTING.md).
+- **Every phase exit:** `npx tsc --noEmit`, `npx expo lint`, `npx jest` — all actually executed and reported honestly — plus a manual device run (checklist in `TESTING.md`).
 - `tsconfig` additions in Phase 0: `noUncheckedIndexedAccess`, `noImplicitOverride`.
 
 ---
@@ -489,3 +499,23 @@ Pure TypeScript, fully unit-testable, no I/O:
 - **Dark palette** is not in the reference → approved 2026-11-12; contrast enforced by tests.
 - **Expo SDK 58 API drift** vs. model training data → always read the v58 docs (`AGENTS.md`).
 - **design.md gaps:** Maithili and Nepali missing from the language list.
+
+---
+
+## 12. Security & Privacy
+
+- **No backend, no account, no analytics.** `src` contains no `fetch`/HTTP client, WebSocket or remote URL, and no secrets or API keys. The only network use is the OS speech recognizer (below); `INTERNET` is declared because React Native requires it.
+- **The local database is not encrypted by the app.** SQLite lives in the app's private storage and relies on the OS sandbox, the device lock screen and platform storage encryption. No encryption dependency is added (single-device personal data, no credentials stored).
+- **OS backup:** Android `allowBackup` is **false**, so Google Auto Backup does not copy the database. On iOS, an iCloud/computer *device* backup includes app data unless the user disables it — the in-app privacy text says so ("unless your device's own system backup kept a copy").
+- **Backup / CSV files** are plaintext and created only on request. Shared copies are written to the app cache and the previous one is deleted on the next export; files saved to a user-picked folder are outside the app's control. Restore validates everything before writing and is all-or-nothing.
+- **Voice:** recognition runs through the OS service (Google on Android, Apple on iOS). `requiresOnDeviceRecognition` is set only when the locale's offline pack is installed; otherwise audio may be sent to that provider. The app keeps only the reviewed text (`voice_transcript`) of saved entries; audio is never stored.
+- **Permissions:** Android requests only `RECORD_AUDIO` (+ `INTERNET`); `SYSTEM_ALERT_WINDOW`, `READ/WRITE_EXTERNAL_STORAGE` and `VIBRATE` are removed with `blockedPermissions`. iOS asks for microphone and speech recognition with usage strings that disclose possible Apple processing.
+- **Logging:** `console.*` calls log fixed messages plus error objects only — no amounts, notes or transcripts. Rejected backups log the error code only.
+- **Future tokens** (e.g. a Drive provider) must use `expo-secure-store`, never SQLite or settings.
+
+## 13. Release
+
+- Identifiers: `com.rijukarar.expensetracker` (Android `package`, iOS `bundleIdentifier`). Versions are local (`eas.json` `appVersionSource: "local"`): bump `expo.version`, `android.versionCode` and `ios.buildNumber` in `app.json` for every store upload.
+- `eas.json` profiles: `development` (debug, internal), `preview` (internal APK), `production` (AAB / App Store build). Signing credentials are managed by EAS and never committed (`*.jks`, `*.p8`, `*.p12`, `*.key` are gitignored).
+- `android/` and `ios/` are generated by `npx expo prebuild` and gitignored; never edit them by hand. A local `assembleRelease` is signed with the debug keystore and is for verification only.
+- Steps and store metadata: [`RELEASE_CHECKLIST.md`](./RELEASE_CHECKLIST.md), [`STORE_LISTING.md`](./STORE_LISTING.md), [`PRIVACY_POLICY.md`](./PRIVACY_POLICY.md).

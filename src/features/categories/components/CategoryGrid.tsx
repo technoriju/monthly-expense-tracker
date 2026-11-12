@@ -38,7 +38,7 @@ export function CategoryGrid({
             key={category.id}
             onPress={() => onSelect(category)}
             accessibilityRole="radio"
-            accessibilityState={{ selected }}
+            accessibilityState={{ checked: selected }}
             accessibilityLabel={name}
             style={({ pressed }) => [
               styles.cell,
@@ -48,7 +48,7 @@ export function CategoryGrid({
             <CategoryIcon category={category} />
             <AppText
               variant="bodySmall"
-              color={selected ? 'primary' : 'textPrimary'}
+              color={selected ? 'primaryText' : 'textPrimary'}
               align="center"
               numberOfLines={2}>
               {name}

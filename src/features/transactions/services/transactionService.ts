@@ -64,15 +64,13 @@ export const transactionService = {
    */
   async create(input: TransactionInput, options: CreateOptions = {}): Promise<Transaction> {
     const valid = await validate(input);
-    const id = await transactionRepository.insert({
+    const created = await transactionRepository.insertAndGet({
       ...valid,
       currency: useSettingsStore.getState().currency,
       source: options.source ?? 'manual',
       voiceTranscript: options.voiceTranscript ?? null,
     });
     dataChanged();
-    const created = await transactionRepository.getById(id);
-    if (!created) throw new TransactionError('notFound');
     return created;
   },
 

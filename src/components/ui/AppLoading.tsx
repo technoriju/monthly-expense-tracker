@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 
 import { makeStyles, useTheme } from '@/theme';
@@ -5,7 +6,7 @@ import { makeStyles, useTheme } from '@/theme';
 import { AppText } from './AppText';
 
 export interface AppLoadingProps {
-  /** Already-translated label; omit before i18n is ready. */
+  /** Already-translated visible label. Without it, screen readers still hear "Loading…". */
   label?: string;
   fullScreen?: boolean;
 }
@@ -13,11 +14,13 @@ export interface AppLoadingProps {
 export function AppLoading({ label, fullScreen = false }: AppLoadingProps) {
   const styles = useStyles();
   const { colors } = useTheme();
+  const { t } = useTranslation('common');
   return (
     <View
       style={[styles.root, fullScreen && styles.fullScreen]}
       accessibilityRole="progressbar"
-      accessibilityLabel={label}
+      // Screen readers always get a name, even when no visible label is shown.
+      accessibilityLabel={label ?? t('status.loading')}
       accessibilityState={{ busy: true }}>
       <ActivityIndicator size="large" color={colors.primary} />
       {label ? (

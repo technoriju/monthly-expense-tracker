@@ -9,6 +9,8 @@ export interface CategoriesState {
   categories: Category[];
   loading: boolean;
   error: boolean;
+  /** Loads the list again (after an error). */
+  retry(): void;
 }
 
 interface Loaded {
@@ -19,7 +21,8 @@ interface Loaded {
 
 /** Active categories of one type (`type`), or of every type when omitted. */
 export function useCategories(type?: TransactionType): CategoriesState {
-  const key = type ?? 'all';
+  const [attempt, setAttempt] = useState(0);
+  const key = `${type ?? 'all'}:${attempt}`;
   const [loaded, setLoaded] = useState<Loaded | null>(null);
 
   useEffect(() => {
@@ -42,5 +45,6 @@ export function useCategories(type?: TransactionType): CategoriesState {
     categories: current?.categories ?? [],
     loading: current === null,
     error: current?.error ?? false,
+    retry: () => setAttempt((n) => n + 1),
   };
 }

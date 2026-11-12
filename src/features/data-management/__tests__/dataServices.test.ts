@@ -3,6 +3,7 @@ import {
   createMigratedTestDatabase,
   type TestDatabase,
 } from '@/database/testing/createTestDatabase';
+import { settingsService } from '@/features/settings/services/settingsService';
 import { i18n } from '@/i18n';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
@@ -111,6 +112,34 @@ describe('backup → clear → restore', () => {
       error: 'unsupportedVersion',
     });
     expect((await restoreService.currentCounts()).transactions).toBe(1);
+  });
+
+  it('rejects an oversized file without reading it', async () => {
+    (localBackupProvider.pick as jest.Mock).mockResolvedValueOnce({
+      name: 'huge.json',
+      tooLarge: true,
+    });
+    expect(await restoreService.pickBackup()).toEqual({ status: 'invalid', error: 'tooLarge' });
+  });
+
+  it('reports success once data is committed, even if applying preferences fails', async () => {
+    await addExpense('restored');
+    const file = await backupService.createBackupFile(new Date('2026-11-12T10:00:00Z'));
+    const parsed = parseBackup(file.contents);
+    if (!parsed.ok) throw new Error(parsed.error);
+    await resetService.clearAllData();
+
+    const hydrate = jest
+      .spyOn(settingsService, 'hydrate')
+      .mockRejectedValueOnce(new Error('settings unavailable'));
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const version = useUiStore.getState().dataVersion;
+
+    await expect(restoreService.restore(parsed.backup)).resolves.toBeUndefined();
+    expect((await restoreService.currentCounts()).transactions).toBe(1);
+    expect(useUiStore.getState().dataVersion).toBeGreaterThan(version);
+    hydrate.mockRestore();
+    error.mockRestore();
   });
 
   it('returns cancelled when no file is chosen', async () => {

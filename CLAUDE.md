@@ -82,16 +82,20 @@ npx expo start
 npx tsc --noEmit
 npx expo lint
 npx jest
+npx expo install --check # dependency versions vs SDK
 ```
+
+Release: identifiers, versioning (`appVersionSource: local` — bump `version`, `android.versionCode`, `ios.buildNumber`), EAS profiles and store steps are in `docs/RELEASE_CHECKLIST.md`. Manual device checklist: `docs/TESTING.md`.
 
 ### Rules
 - **Phase discipline:** work only on the current phase in `docs/ROADMAP.md`. Do not implement later phases early.
 - **Layering:** route screen → feature hook → feature service → repository → SQLite. No SQL outside `src/database/`. Screens never import repositories.
-- **Money** is integer minor units (`amount_minor`). Never floats. Format only at display time.
+- **Money** is integer minor units (`amount_minor`). Never floats. Format only at display time. Cap every new write path at `MAX_AMOUNT_MINOR` (`src/utils/money.ts`).
 - **Dates:** transactions use local `YYYY-MM-DD` strings.
 - **Strings:** every user-facing string is a typed i18n key. Never translate category keys or DB values.
 - **UI language and voice language are separate settings.**
-- **Styling:** tokens from `src/theme` only — no raw hex colors, font sizes, or magic spacing in `src/app` or `src/features`. Do not redesign; match `docs/design-reference.png`.
+- **Styling:** tokens from `src/theme` only — no raw hex colors, font sizes, or magic spacing in `src/app` or `src/features`. Do not redesign; match `docs/design-reference.png`. Readable text uses `textPrimary`/`textSecondary`/`primaryText`/`incomeText`/`expenseText`/`accentText`; `textMuted` and the plain status hues are for icons, fills and charts only (WCAG AA, enforced by `theme.test.tsx`).
+- **Privacy:** no network calls, analytics or logging of amounts/notes/transcripts. Never put user data in logs. Native config (permissions, `allowBackup`) lives in `app.json`; `android/`/`ios/` are generated.
 - **Voice:** parsed entries always go through the Review screen; voice never writes to the DB directly.
 - `.tsx` for components, `.ts` for everything else. No `any` without a justification comment.
 - Ask before destructive operations (deleting files, removing deps, wiping data).

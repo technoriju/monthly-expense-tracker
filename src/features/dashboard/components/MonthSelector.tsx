@@ -5,7 +5,7 @@ import { Pressable, View } from 'react-native';
 
 import { AppIcon, AppText } from '@/components/ui';
 import { useFormatters } from '@/hooks/useFormatters';
-import { makeStyles } from '@/theme';
+import { makeStyles, useTheme } from '@/theme';
 
 import { MonthPickerSheet } from './MonthPickerSheet';
 
@@ -18,6 +18,7 @@ export interface MonthSelectorProps {
 /** Month pill + calendar badge (design-reference Dashboard). Both open the month picker. */
 export function MonthSelector({ month, onChange, today }: MonthSelectorProps) {
   const styles = useStyles();
+  const { spacing } = useTheme();
   const { t } = useTranslation('dashboard');
   const format = useFormatters();
   const [open, setOpen] = useState(false);
@@ -29,6 +30,7 @@ export function MonthSelector({ month, onChange, today }: MonthSelectorProps) {
         onPress={() => setOpen(true)}
         accessibilityRole="button"
         accessibilityLabel={t('month.selectorLabel', { month: label })}
+        hitSlop={{ top: spacing.sm, bottom: spacing.sm }}
         style={({ pressed }) => [styles.pill, pressed && styles.pressed]}>
         <AppText variant="bodyMedium" numberOfLines={1}>
           {label}
@@ -39,6 +41,8 @@ export function MonthSelector({ month, onChange, today }: MonthSelectorProps) {
         onPress={() => setOpen(true)}
         accessibilityRole="button"
         accessibilityLabel={t('month.calendarLabel')}
+        // ≈38pt visually; extended to ≥ 48pt without overlapping the month pill.
+        hitSlop={{ top: spacing.sm, bottom: spacing.sm, left: spacing.xs, right: spacing.sm }}
         style={({ pressed }) => [styles.calendar, pressed && styles.pressed]}>
         <AppIcon icon={CalendarDays} size="md" color="textSecondary" />
       </Pressable>

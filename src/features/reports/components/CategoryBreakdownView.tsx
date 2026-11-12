@@ -59,7 +59,7 @@ function ShareRow({
         })
       }
       accessibilityRole="button"
-      accessibilityLabel={`${name}, ${share.percent}%, ${amount}, ${count}`}
+      accessibilityLabel={`${name}, ${format.percentBp(share.percent * 100)}, ${amount}, ${count}`}
       accessibilityHint={t('breakdown.rowHint')}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
       <CategoryIcon category={share.category} />
@@ -82,7 +82,7 @@ function ShareRow({
             {count}
           </AppText>
           <AppText variant="caption" color="textSecondary">
-            {`${share.percent}%`}
+            {format.percentBp(share.percent * 100)}
           </AppText>
         </View>
       </View>

@@ -74,7 +74,7 @@
     "appName": "App name",
     "version": "Version",
     "build": "Build",
-    "description": "Track your income and expenses, fully offline.",
+    "description": "Track your income and expenses — works offline.",
     "longDescription": "A simple income and expense tracker. Add entries by hand or by voice in English, Bengali or Hindi, set monthly budgets and see reports. Your data stays on your device.",
     "privacy": "Privacy",
     "licenses": "Open-source licenses"
@@ -83,7 +83,7 @@
     "title": "Privacy",
     "local": {
       "title": "Your data stays on this device",
-      "body": "Transactions, categories, budgets and preferences are stored only in this app's local database on your device."
+      "body": "Transactions, categories, budgets and preferences are stored only in this app's local database on your device. The app does not encrypt this database itself: it relies on your device's screen lock and storage protection, and it is excluded from Android's automatic cloud backup."
     },
     "account": {
       "title": "No account needed",
@@ -110,5 +110,8 @@
     "title": "Open-source licenses",
     "intro": "This app is built with these open-source packages. Each is used under its own license.",
     "unknown": "License not specified"
+  },
+  "errors": {
+    "saveFailed": "Could not save this setting. Please try again."
   }
 }

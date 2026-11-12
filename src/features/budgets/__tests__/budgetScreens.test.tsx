@@ -120,7 +120,7 @@ describe('BudgetView', () => {
 
     expect(await screen.findByText('Food budget exceeded: 120% used.')).toBeTruthy();
     expect(screen.getByText('Budget exceeded')).toBeTruthy();
-    expect(screen.getByText('Over by ₹100')).toBeTruthy();
+    expect(screen.getByText('₹100 over budget')).toBeTruthy();
     expect(screen.getByText('Spending without a budget')).toBeTruthy();
     expect(screen.getByText('Bazar')).toBeTruthy();
   });

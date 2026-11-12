@@ -13,7 +13,8 @@ import { getSpeechRecognitionService } from '../engine';
  */
 export function useVoiceRecorder(language: VoiceLanguage) {
   const service = getSpeechRecognitionService();
-  const state = useSyncExternalStore(service.subscribe, service.getState);
+  // Volume-only updates don't re-render the screen; `LiveWaveform` reads the volume itself.
+  const state = useSyncExternalStore(service.subscribe, service.getSessionState);
   const elapsedSeconds = useElapsedSeconds(state.status === 'listening' ? state.startedAt : null);
 
   useFocusEffect(
@@ -45,6 +46,12 @@ export function useVoiceRecorder(language: VoiceLanguage) {
       start();
     },
   };
+}
+
+/** Current input volume while listening (−2 … 10). Re-renders on every volume event. */
+export function useVoiceVolume(): number {
+  const service = getSpeechRecognitionService();
+  return useSyncExternalStore(service.subscribe, () => service.getState().volume);
 }
 
 function useElapsedSeconds(startedAt: number | null): number {

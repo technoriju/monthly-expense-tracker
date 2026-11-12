@@ -78,58 +78,62 @@ export function LineChart({
   const selected = selectedIndex !== null ? points[selectedIndex] : undefined;
 
   return (
-    <View onLayout={onLayout} accessibilityLabel={accessibilityLabel}>
+    <View onLayout={onLayout}>
       <View style={{ height }}>
         {width > 0 ? (
-          <Svg width={width} height={height}>
-            <Line
-              x1={0}
-              x2={width}
-              y1={height - layout.hairline}
-              y2={height - layout.hairline}
-              stroke={colors.border}
-              strokeWidth={layout.hairline}
-            />
-            {area ? <Path d={area} fill={color} fillOpacity={layout.chartAreaOpacity} /> : null}
-            {count > 1 ? (
-              <Path d={line} stroke={color} strokeWidth={layout.chartStrokeWidth} fill="none" />
-            ) : null}
-            {count <= MAX_DOTS
-              ? points.map((p, i) =>
-                  (values[i] ?? 0) > 0 || count === 1 ? (
-                    <Circle
-                      key={i}
-                      cx={p.x}
-                      cy={p.y}
-                      r={layout.chartPointRadius}
-                      fill={colors.surface}
-                      stroke={color}
-                      strokeWidth={layout.chartStrokeWidth}
-                    />
-                  ) : null,
-                )
-              : null}
-            {selected ? (
-              <>
-                <Line
-                  x1={selected.x}
-                  x2={selected.x}
-                  y1={0}
-                  y2={height}
-                  stroke={colors.border}
-                  strokeWidth={layout.hairline}
-                />
-                <Circle
-                  cx={selected.x}
-                  cy={selected.y}
-                  r={layout.chartSelectedPointRadius}
-                  fill={color}
-                  stroke={colors.surface}
-                  strokeWidth={layout.chartStrokeWidth}
-                />
-              </>
-            ) : null}
-          </Svg>
+          // The plot itself is one image element carrying the chart summary; the optional
+          // per-point buttons below stay separately focusable.
+          <View accessible accessibilityRole="image" accessibilityLabel={accessibilityLabel}>
+            <Svg width={width} height={height}>
+              <Line
+                x1={0}
+                x2={width}
+                y1={height - layout.hairline}
+                y2={height - layout.hairline}
+                stroke={colors.border}
+                strokeWidth={layout.hairline}
+              />
+              {area ? <Path d={area} fill={color} fillOpacity={layout.chartAreaOpacity} /> : null}
+              {count > 1 ? (
+                <Path d={line} stroke={color} strokeWidth={layout.chartStrokeWidth} fill="none" />
+              ) : null}
+              {count <= MAX_DOTS
+                ? points.map((p, i) =>
+                    (values[i] ?? 0) > 0 || count === 1 ? (
+                      <Circle
+                        key={i}
+                        cx={p.x}
+                        cy={p.y}
+                        r={layout.chartPointRadius}
+                        fill={colors.surface}
+                        stroke={color}
+                        strokeWidth={layout.chartStrokeWidth}
+                      />
+                    ) : null,
+                  )
+                : null}
+              {selected ? (
+                <>
+                  <Line
+                    x1={selected.x}
+                    x2={selected.x}
+                    y1={0}
+                    y2={height}
+                    stroke={colors.border}
+                    strokeWidth={layout.hairline}
+                  />
+                  <Circle
+                    cx={selected.x}
+                    cy={selected.y}
+                    r={layout.chartSelectedPointRadius}
+                    fill={color}
+                    stroke={colors.surface}
+                    strokeWidth={layout.chartStrokeWidth}
+                  />
+                </>
+              ) : null}
+            </Svg>
+          </View>
         ) : null}
         {onSelect && width > 0 ? (
           <View style={styles.hitRow}>

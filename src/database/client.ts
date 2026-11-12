@@ -11,10 +11,16 @@ let lastMigration: MigrationResult | null = null;
 
 async function openAndMigrate(): Promise<SQLiteDatabase> {
   const db = await openDatabaseAsync(DATABASE_NAME);
-  await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
-  lastMigration = await runMigrations(db, MIGRATIONS);
-  await seedSystemCategories(db);
-  return db;
+  try {
+    await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
+    lastMigration = await runMigrations(db, MIGRATIONS);
+    await seedSystemCategories(db);
+    return db;
+  } catch (error) {
+    // Don't leak this connection: a retry opens a fresh one.
+    await db.closeAsync().catch(() => {});
+    throw error;
+  }
 }
 
 /**

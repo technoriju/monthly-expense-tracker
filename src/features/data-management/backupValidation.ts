@@ -28,6 +28,8 @@ export type ParseBackupResult =
 
 /** Larger files are rejected before parsing (far above any realistic personal backup). */
 export const MAX_BACKUP_CHARS = 50 * 1024 * 1024;
+/** Same limit on the file size in bytes, checked before the file is read into memory. */
+export const MAX_BACKUP_BYTES = MAX_BACKUP_CHARS;
 
 const fail = (error: BackupErrorCode, detail?: string): ParseBackupResult => ({
   ok: false,
@@ -59,7 +61,10 @@ function findInconsistency(doc: BackupDocument): string | null {
 
   const categoryType = new Map(categories.map((c) => [c.id, c.type]));
   for (const t of transactions) {
-    if (!categoryType.has(t.categoryId)) return `transaction ${t.id}: unknown category`;
+    const type = categoryType.get(t.categoryId);
+    if (type === undefined) return `transaction ${t.id}: unknown category`;
+    // The app never saves an expense under an income category (or vice versa).
+    if (type !== t.type) return `transaction ${t.id}: type does not match its category`;
   }
   for (const b of budgets) {
     if (b.categoryId !== null && categoryType.get(b.categoryId) !== 'expense') {

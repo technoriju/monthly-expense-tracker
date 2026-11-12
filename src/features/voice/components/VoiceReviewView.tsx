@@ -51,8 +51,17 @@ function NoDraft() {
 function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
   const styles = useStyles();
   const { t } = useTranslation('voice');
-  const { form, categories, categoriesLoading, submit, isSubmitting, recordAgain, discard } =
-    useVoiceReview(draft);
+  const {
+    form,
+    categories,
+    categoriesLoading,
+    categoriesError,
+    retryCategories,
+    submit,
+    isSubmitting,
+    recordAgain,
+    discard,
+  } = useVoiceReview(draft);
   const [amount, categoryId] = useWatch({ control: form.control, name: ['amount', 'categoryId'] });
 
   const uncertain = new Set(draft.uncertainFields);
@@ -83,7 +92,7 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
         <AppCard variant="muted" style={styles.heard}>
           <View style={styles.heardLabel}>
             <AppIcon icon={Mic} size="sm" color="primary" />
-            <AppText variant="caption" color="primary">
+            <AppText variant="caption" color="primaryText">
               {t('review.heard')}
             </AppText>
           </View>
@@ -96,6 +105,8 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
           control={form.control}
           categories={categories}
           categoriesLoading={categoriesLoading}
+          categoriesError={categoriesError}
+          onRetryCategories={retryCategories}
           hints={hints}
         />
 

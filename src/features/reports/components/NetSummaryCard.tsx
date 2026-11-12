@@ -36,7 +36,7 @@ export function NetSummaryCard({ summary }: { summary: ReportSummary }) {
         </View>
         <AppText
           variant="amountMedium"
-          color={summary.netBalanceMinor < 0 ? 'expense' : 'textPrimary'}
+          color={summary.netBalanceMinor < 0 ? 'expenseText' : 'textPrimary'}
           numberOfLines={1}
           constrainScale>
           {net}
@@ -48,7 +48,7 @@ export function NetSummaryCard({ summary }: { summary: ReportSummary }) {
           <AppText variant="caption" color="textSecondary">
             {t('summary.saved')}
           </AppText>
-          <AppText variant="bodyMedium" color="income" numberOfLines={1} constrainScale>
+          <AppText variant="bodyMedium" color="incomeText" numberOfLines={1} constrainScale>
             {saved}
           </AppText>
         </View>
@@ -64,7 +64,7 @@ export function NetSummaryCard({ summary }: { summary: ReportSummary }) {
           </AppText>
         </View>
       </View>
-      <AppText variant="caption" color="textMuted" style={styles.caption}>
+      <AppText variant="caption" color="textSecondary" style={styles.caption}>
         {t('summary.savedCaption')}
       </AppText>
     </AppCard>

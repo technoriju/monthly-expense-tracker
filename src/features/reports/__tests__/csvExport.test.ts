@@ -28,23 +28,36 @@ jest.mock('@/database/client', () => ({
   getDatabase: async () => mockDb,
 }));
 
-jest.mock('expo-file-system', () => ({
-  Paths: { cache: 'file:///cache' },
-  File: class {
+const mockDeleted: string[] = [];
+let mockCacheNames: string[] = [];
+
+jest.mock('expo-file-system', () => {
+  class MockFile {
     uri: string;
     name: string;
     exists = false;
-    constructor(dir: string, name: string) {
+    constructor(dir: unknown, name: string) {
       this.name = name;
-      this.uri = `${dir}/${name}`;
+      this.uri = `${String(dir)}/${name}`;
     }
     create() {}
-    delete() {}
+    delete() {
+      mockDeleted.push(this.name);
+    }
     async write(content: string) {
       written.push({ name: this.name, content });
     }
-  },
-}));
+  }
+  return {
+    File: MockFile,
+    Paths: {
+      cache: {
+        toString: () => 'file:///cache',
+        list: () => mockCacheNames.map((name) => new MockFile('file:///cache', name)),
+      },
+    },
+  };
+});
 
 jest.mock('expo-sharing', () => ({
   isAvailableAsync: async () => mockSharingAvailable,
@@ -167,6 +180,8 @@ describe('exportService.exportTransactionsCsv', () => {
   beforeEach(async () => {
     mockDb = await createMigratedTestDatabase();
     written.length = 0;
+    mockDeleted.length = 0;
+    mockCacheNames = [];
     mockShare.mockClear();
     mockSharingAvailable = true;
   });
@@ -221,6 +236,13 @@ describe('exportService.exportTransactionsCsv', () => {
     expect(content).toContain('2025-05-10,খরচ,');
     expect(content).toContain(',100.00,');
     expect(content).toContain(',মাছ\r\n');
+  });
+
+  it('removes earlier CSV exports from the cache but leaves other files', async () => {
+    await add({ key: 'food' });
+    mockCacheNames = ['transactions_2025-04-01_2025-04-30.csv', 'other.json'];
+    await exportService.exportTransactionsCsv(MAY);
+    expect(mockDeleted).toEqual(['transactions_2025-04-01_2025-04-30.csv']);
   });
 
   it('does not create a file when the period is empty or sharing is unavailable', async () => {

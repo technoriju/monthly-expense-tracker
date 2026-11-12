@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, RefreshControl, ScrollView, View } from 'react-native';
 
 import {
+  AppButton,
   AppCard,
   AppChip,
   AppEmptyState,
@@ -133,6 +134,7 @@ export function TransactionHistoryView({
               router.push({ pathname: '/transaction/[id]', params: { id: String(tx.id) } })
             }
             onLongPress={() => confirmDelete(tx)}
+            longPressActionLabel={t('delete.label')}
           />
         ))}
       </AppCard>
@@ -241,7 +243,23 @@ export function TransactionHistoryView({
         renderItem={renderGroup}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={listEmpty}
-        ListFooterComponent={history.loadingMore ? <AppLoading /> : undefined}
+        ListFooterComponent={
+          history.loadingMore ? (
+            <AppLoading />
+          ) : history.loadMoreFailed ? (
+            <View style={styles.footerError}>
+              <AppText variant="bodySmall" color="expenseText" accessibilityRole="alert">
+                {t('history.error.title')}
+              </AppText>
+              <AppButton
+                label={t('history.retry')}
+                variant="secondary"
+                size="sm"
+                onPress={() => void history.loadMore(true)}
+              />
+            </View>
+          ) : undefined
+        }
         onEndReached={() => void history.loadMore()}
         onEndReachedThreshold={0.5}
         keyboardShouldPersistTaps="handled"
@@ -280,4 +298,5 @@ const useStyles = makeStyles((t) => ({
   list: { flex: 1 },
   listContent: { flexGrow: 1, gap: t.spacing.lg, paddingBottom: t.spacing.xxxl },
   group: { gap: t.spacing.sm },
+  footerError: { gap: t.spacing.sm, alignItems: 'center', paddingVertical: t.spacing.md },
 }));

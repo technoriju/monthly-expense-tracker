@@ -14,7 +14,7 @@ type Metric = 'income' | 'expense' | 'net';
 function toneOf(metric: Metric, c: MetricComparison): TextColorToken {
   if (c.direction === 'same') return 'textSecondary';
   const good = metric === 'expense' ? c.direction === 'down' : c.direction === 'up';
-  return good ? 'income' : 'expense';
+  return good ? 'incomeText' : 'expenseText';
 }
 
 function ComparisonRow({ metric, comparison }: { metric: Metric; comparison: MetricComparison }) {
@@ -105,7 +105,7 @@ export function ComparisonCard({
         <ComparisonRow key={metric} metric={metric} comparison={comparison[metric]} />
       ))}
       {!comparison.hasPreviousData ? (
-        <AppText variant="caption" color="textMuted">
+        <AppText variant="caption" color="textSecondary">
           {t('comparison.noPreviousData')}
         </AppText>
       ) : null}

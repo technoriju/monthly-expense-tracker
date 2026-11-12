@@ -83,11 +83,10 @@ export const reportService = {
 
   /** Transactions on one date in the active currency, newest first. */
   async getDayTransactions(date: IsoDate): Promise<Transaction[]> {
-    const currency = activeCurrency();
-    const rows = await transactionRepository.list(
-      { dateFrom: date, dateTo: date },
+    // Currency is filtered in SQL so the limit applies to the rows actually shown.
+    return transactionRepository.list(
+      { dateFrom: date, dateTo: date, currency: activeCurrency() },
       { limit: DAY_TRANSACTIONS_LIMIT, offset: 0 },
     );
-    return rows.filter((tx) => tx.currency === currency);
   },
 };

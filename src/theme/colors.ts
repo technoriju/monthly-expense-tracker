@@ -14,8 +14,11 @@ export const palette = {
   surface: '#FFFFFF',
 
   textPrimary: '#17152A',
-  textSecondary: '#77758A',
-  textMuted: '#A09CB3',
+  // Reference #77758A / #A09CB3, darkened for WCAG AA (Phase 8 accessibility audit):
+  // textSecondary is body text (≥ 4.5:1); textMuted is for icons, placeholders and
+  // inactive items only (≥ 3:1) — never for readable text.
+  textSecondary: '#706E82',
+  textMuted: '#8F8BA3',
 
   border: '#E9E5F3',
 
@@ -24,6 +27,12 @@ export const palette = {
 
   expense: '#EF4444',
   expenseBackground: '#FFF0F1',
+
+  // Text-only shades of the status hues: ≥ 4.5:1 on white, background and their soft fills.
+  // The brighter hues above stay for fills, bars, dots and charts.
+  incomeText: '#11813B',
+  expenseText: '#DE1313',
+  accentText: '#A35E00',
 
   info: '#2563EB',
   infoBackground: '#EAF2FF',
@@ -50,6 +59,8 @@ export const darkPalette = {
   surfaceMuted: '#231F36',
   // §6.1 proposed #7C5CFF; darkened so white text on primary fills meets 4.5:1.
   primary: '#7857FA',
+  // Text-only purple: #7857FA is ≈3.2–4.2:1 on dark surfaces, below AA for text.
+  primaryText: '#9C84FF',
   primaryPressed: '#5B2ED6',
   primarySoft: '#2A2050',
   onPrimaryMuted: '#E4DCFF',
@@ -83,6 +94,8 @@ export interface ColorTokens {
   primary: string;
   primaryPressed: string;
   primarySoft: string;
+  /** Readable text/links in the brand hue (WCAG AA on surfaces and primarySoft). */
+  primaryText: string;
   onPrimary: string;
   onPrimaryMuted: string;
   textPrimary: string;
@@ -95,6 +108,10 @@ export interface ColorTokens {
   expenseSoft: string;
   accent: string;
   accentSoft: string;
+  /** Readable text in the income / expense / warning hues (WCAG AA). */
+  incomeText: string;
+  expenseText: string;
+  accentText: string;
   info: string;
   infoSoft: string;
   shadow: string;
@@ -119,6 +136,7 @@ export const lightColors: ColorTokens = {
   primary: palette.primary,
   primaryPressed: palette.primaryDark,
   primarySoft: palette.primaryLight,
+  primaryText: palette.primary,
   onPrimary: palette.white,
   onPrimaryMuted: palette.primaryLight,
   textPrimary: palette.textPrimary,
@@ -131,6 +149,9 @@ export const lightColors: ColorTokens = {
   expenseSoft: palette.expenseBackground,
   accent: palette.secondary,
   accentSoft: palette.secondaryLight,
+  incomeText: palette.incomeText,
+  expenseText: palette.expenseText,
+  accentText: palette.accentText,
   info: palette.info,
   infoSoft: palette.infoBackground,
   shadow: palette.shadow,
@@ -153,6 +174,7 @@ export const darkColors: ColorTokens = {
   primary: darkPalette.primary,
   primaryPressed: darkPalette.primaryPressed,
   primarySoft: darkPalette.primarySoft,
+  primaryText: darkPalette.primaryText,
   onPrimary: palette.white,
   onPrimaryMuted: darkPalette.onPrimaryMuted,
   textPrimary: darkPalette.textPrimary,
@@ -165,6 +187,10 @@ export const darkColors: ColorTokens = {
   expenseSoft: darkPalette.expenseSoft,
   accent: darkPalette.accent,
   accentSoft: darkPalette.accentSoft,
+  // The dark hues already meet 4.5:1 on dark surfaces and their soft fills.
+  incomeText: darkPalette.income,
+  expenseText: darkPalette.expense,
+  accentText: darkPalette.accent,
   info: darkPalette.info,
   infoSoft: darkPalette.infoSoft,
   shadow: darkPalette.shadow,

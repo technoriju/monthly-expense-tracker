@@ -68,7 +68,7 @@ export function MicButton({
         disabled={disabled}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-        accessibilityState={{ disabled, busy: disabled }}
+        accessibilityState={{ disabled }}
         style={({ pressed }) => [
           styles.button,
           pressed && { backgroundColor: colors.primaryPressed },

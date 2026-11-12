@@ -90,5 +90,9 @@
     "title": "Choose category",
     "searchPlaceholder": "Search categories",
     "empty": "No categories found"
+  },
+  "formErrors": {
+    "categoriesFailed": "Could not load categories.",
+    "retry": "Try again"
   }
 }

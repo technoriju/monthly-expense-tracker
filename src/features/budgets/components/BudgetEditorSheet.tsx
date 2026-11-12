@@ -7,6 +7,7 @@ import { CategoryGrid } from '@/features/categories/components/CategoryGrid';
 import { CategoryIcon } from '@/features/categories/components/CategoryIcon';
 import { useCategoryName } from '@/features/categories/hooks/useCategoryName';
 import type { Category } from '@/features/categories/types';
+import { useAnnounce } from '@/hooks/useAnnounce';
 import { useFormatters } from '@/hooks/useFormatters';
 import { useSettingsStore } from '@/store/settingsStore';
 import { makeStyles } from '@/theme';
@@ -64,7 +65,6 @@ function EditorSheet({
   const currency = useSettingsStore((s) => s.currency);
   const { form, submit } = useBudgetEditor(target, month, onClose);
   const budgetType = useWatch({ control: form.control, name: 'budgetType' });
-  const rootError = form.formState.errors.root?.message;
 
   // Field errors carry schema ids (`validation.<id>`) or service codes (`errors.<code>`).
   const errorText = (message: string | undefined): string | undefined => {
@@ -74,6 +74,8 @@ function EditorSheet({
     const code = ERROR_CODES.find((c) => `errors.${c}` === message);
     return code ? t(`errors.${code}`) : t('errors.saveFailed');
   };
+  const rootError = form.formState.errors.root?.message;
+  useAnnounce(errorText(rootError));
 
   const title =
     target.mode === 'edit'
@@ -135,7 +137,7 @@ function EditorSheet({
                   />
                 )}
                 {fieldState.error ? (
-                  <AppText variant="bodySmall" color="expense" accessibilityLiveRegion="polite">
+                  <AppText variant="bodySmall" color="expenseText" accessibilityLiveRegion="polite">
                     {errorText(fieldState.error.message)}
                   </AppText>
                 ) : null}
@@ -168,7 +170,11 @@ function EditorSheet({
       />
 
       {rootError ? (
-        <AppText variant="bodySmall" color="expense" accessibilityLiveRegion="polite">
+        <AppText
+          variant="bodySmall"
+          color="expenseText"
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite">
           {errorText(rootError)}
         </AppText>
       ) : null}

@@ -115,7 +115,7 @@ export function MonthlyCalendarView({ initialDate }: { initialDate: IsoDate | nu
             <AppText variant="caption" color="textSecondary">
               {t('calendar.income')}
             </AppText>
-            <AppText variant="bodyMedium" color="income" numberOfLines={1} constrainScale>
+            <AppText variant="bodyMedium" color="incomeText" numberOfLines={1} constrainScale>
               {format.money(dayIncome)}
             </AppText>
           </AppCard>
@@ -123,7 +123,7 @@ export function MonthlyCalendarView({ initialDate }: { initialDate: IsoDate | nu
             <AppText variant="caption" color="textSecondary">
               {t('calendar.expense')}
             </AppText>
-            <AppText variant="bodyMedium" color="expense" numberOfLines={1} constrainScale>
+            <AppText variant="bodyMedium" color="expenseText" numberOfLines={1} constrainScale>
               {format.money(dayExpense)}
             </AppText>
           </AppCard>

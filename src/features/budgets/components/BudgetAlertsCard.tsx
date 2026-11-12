@@ -34,7 +34,7 @@ export function BudgetAlertsCard({ alerts }: { alerts: readonly BudgetAlert[] })
         {t('alerts.title')}
       </AppText>
       {alerts.map((alert) => {
-        const color = alert.level === 100 ? 'expense' : 'accent';
+        const color = alert.level === 100 ? 'expenseText' : 'accentText';
         return (
           <View key={alert.budgetId} style={styles.row}>
             <AppIcon icon={TriangleAlert} size="sm" color={color} />

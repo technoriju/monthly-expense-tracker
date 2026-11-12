@@ -47,7 +47,12 @@ export function useTransactionForm(
   });
 
   const type = useWatch({ control: form.control, name: 'type' });
-  const { categories, loading: categoriesLoading } = useCategories(type);
+  const {
+    categories,
+    loading: categoriesLoading,
+    error: categoriesError,
+    retry: retryCategories,
+  } = useCategories(type);
 
   /** Switching Expense ↔ Income clears the category: it belongs to the other type. */
   const changeType = (next: TransactionFormValues['type']) => {
@@ -83,7 +88,8 @@ export function useTransactionForm(
         router.back();
       } else {
         console.error('Saving transaction failed', error);
-        showToast(t('toast.saveFailed'), 'error');
+        // Shown inline (the form may be a modal, above the toast). Input stays as typed.
+        form.setError('root.save', { message: t('toast.saveFailed') });
       }
     } finally {
       submitting.current = false;
@@ -97,6 +103,8 @@ export function useTransactionForm(
     form,
     categories,
     categoriesLoading,
+    categoriesError,
+    retryCategories,
     changeType,
     submit,
     isSubmitting: form.formState.isSubmitting,

@@ -1,6 +1,9 @@
 import { View } from 'react-native';
+import { useReducedMotion } from 'react-native-reanimated';
 
 import { makeStyles, useTheme } from '@/theme';
+
+import { useVoiceVolume } from '../hooks/useVoiceRecorder';
 
 /** Relative bar heights: a symmetric waveform silhouette like the reference. */
 const SHAPE = [
@@ -18,13 +21,28 @@ export interface WaveformProps {
   active: boolean;
 }
 
-/** Volume-driven bar waveform. Flat and muted while not listening. Decorative only. */
+/** Level shown while listening when the user asked the system to reduce motion. */
+const STATIC_LEVEL = 0.6;
+
+/** The waveform bound to the live recording volume. */
+export function LiveWaveform({ active }: { active: boolean }) {
+  const volume = useVoiceVolume();
+  return <Waveform volume={volume} active={active} />;
+}
+
+/**
+ * Volume-driven bar waveform. Flat and muted while not listening; a still silhouette when
+ * reduced motion is on. Decorative only.
+ */
 export function Waveform({ volume, active }: WaveformProps) {
   const styles = useStyles();
   const { layout } = useTheme();
-  const level = active
-    ? Math.min(1, Math.max(0, (volume - VOLUME_MIN) / (VOLUME_MAX - VOLUME_MIN)))
-    : 0;
+  const reduceMotion = useReducedMotion();
+  const level = !active
+    ? 0
+    : reduceMotion
+      ? STATIC_LEVEL
+      : Math.min(1, Math.max(0, (volume - VOLUME_MIN) / (VOLUME_MAX - VOLUME_MIN)));
 
   return (
     <View

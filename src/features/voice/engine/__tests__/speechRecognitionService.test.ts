@@ -68,6 +68,20 @@ describe('speechRecognitionService', () => {
     });
   });
 
+  it('keeps the session snapshot stable across volume-only updates', async () => {
+    const { engine, service } = setup();
+    await service.start('en-IN');
+    engine.emit({ type: 'start' });
+    const before = service.getSessionState();
+    engine.emit({ type: 'volume', level: 4 });
+    engine.emit({ type: 'volume', level: 7 });
+    expect(service.getSessionState()).toBe(before);
+    expect(service.getState().volume).toBe(7);
+    engine.emit({ type: 'partial', text: 'tea 20' });
+    expect(service.getSessionState()).not.toBe(before);
+    expect(service.getSessionState().transcript).toBe('tea 20');
+  });
+
   it('ignores a duplicate start while a session is running', async () => {
     const { engine, service } = setup();
     await service.start('en-IN');

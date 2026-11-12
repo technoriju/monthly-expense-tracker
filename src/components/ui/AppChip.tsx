@@ -33,7 +33,7 @@ export function AppChip({
     <Pressable
       onPress={onPress}
       accessibilityRole={role}
-      accessibilityState={{ selected }}
+      accessibilityState={role === 'radio' ? { checked: selected } : { selected }}
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       hitSlop={{ top: spacing.xs, bottom: spacing.xs }}

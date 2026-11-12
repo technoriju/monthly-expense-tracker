@@ -12,9 +12,9 @@ export const STATUS_TONES: Record<
   { foreground: TextColorToken; background: TextColorToken; bar: TextColorToken }
 > = {
   none: { foreground: 'textSecondary', background: 'primarySoft', bar: 'primary' },
-  within: { foreground: 'income', background: 'incomeSoft', bar: 'primary' },
-  approaching: { foreground: 'accent', background: 'accentSoft', bar: 'accent' },
-  exceeded: { foreground: 'expense', background: 'expenseSoft', bar: 'expense' },
+  within: { foreground: 'incomeText', background: 'incomeSoft', bar: 'primary' },
+  approaching: { foreground: 'accentText', background: 'accentSoft', bar: 'accent' },
+  exceeded: { foreground: 'expenseText', background: 'expenseSoft', bar: 'expense' },
 };
 
 /** Track + fill; the fill is clamped to 100% even when spending exceeds the budget. */

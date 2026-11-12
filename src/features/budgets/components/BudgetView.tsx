@@ -35,7 +35,11 @@ export function BudgetView({ initialMonth }: { initialMonth: Date }) {
   const [month, setMonth] = useState(initialMonth);
   const [editor, setEditor] = useState<BudgetEditorTarget | null>(null);
   const { overview, status, reload } = useBudgetOverview(month);
-  const { categories: expenseCategories } = useCategories('expense');
+  const {
+    categories: expenseCategories,
+    error: categoriesError,
+    retry: retryCategories,
+  } = useCategories('expense');
   const confirmDelete = useDeleteBudget();
   const today = new Date();
 
@@ -46,13 +50,18 @@ export function BudgetView({ initialMonth }: { initialMonth: Date }) {
   const addOverallBudget = () => setEditor({ mode: 'create', budgetType: 'overall' });
 
   let body;
-  if (status === 'error') {
+  // Without categories the editor would offer no choices, so both loads must succeed.
+  if (status === 'error' || categoriesError) {
+    const retry = () => {
+      if (status === 'error') reload();
+      if (categoriesError) retryCategories();
+    };
     body = (
       <AppEmptyState
         icon={TriangleAlert}
         tone="error"
         title={t('errors.loadTitle')}
-        action={{ label: t('errors.retry'), onPress: reload }}
+        action={{ label: t('errors.retry'), onPress: retry }}
       />
     );
   } else if (overview === null) {

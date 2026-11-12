@@ -91,7 +91,7 @@ async function renderReview(draft: VoiceExpenseDraft) {
   await renderScreen(<VoiceReviewView />);
   // Category list loads asynchronously from the DB; wait for the parsed one to be selected.
   if (draft.categoryKey) {
-    await waitFor(() => expect(screen.getByRole('radio', { selected: true })).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole('radio', { checked: true })).toBeTruthy());
   }
 }
 
@@ -116,7 +116,7 @@ describe('Voice review → save', () => {
     await renderReview(draftFor('I spent 50 rupees on tea'));
     expect(screen.getAllByText('I spent 50 rupees on tea').length).toBeGreaterThan(0);
     expect(screen.getByLabelText('Amount')).toHaveDisplayValue('50');
-    expect(screen.getByRole('radio', { selected: true })).toHaveAccessibleName('Food');
+    expect(screen.getByRole('radio', { checked: true })).toHaveAccessibleName('Food');
     expect(await rows()).toHaveLength(0); // nothing is saved before confirmation
   });
 
@@ -167,9 +167,7 @@ describe('Voice review → save', () => {
     await renderReview(draftFor('Spent 120 on lunch today'));
 
     await fireEvent.press(confirmButton());
-    await waitFor(() =>
-      expect(useUiStore.getState().toast?.message).toBe('Could not save. Please try again.'),
-    );
+    expect(await screen.findByText('Could not save. Please try again.')).toBeTruthy();
     expect(await rows()).toHaveLength(0);
     expect(useVoiceDraftStore.getState().draft).not.toBeNull();
     expect(screen.getByLabelText('Amount')).toHaveDisplayValue('120');
@@ -201,7 +199,7 @@ describe('Voice review → save', () => {
     expect(
       await screen.findByText('This could fit more than one category — please choose.'),
     ).toBeTruthy();
-    expect(screen.queryByRole('radio', { selected: true })).toBeNull();
+    expect(screen.queryByRole('radio', { checked: true })).toBeNull();
 
     await fireEvent.press(confirmButton());
     expect(await screen.findByText('Choose a category')).toBeTruthy();
@@ -244,7 +242,7 @@ describe('Voice review → save', () => {
     await renderReview(draftFor('আজ ৫০ টাকা চা খেয়েছি', 'bn'));
     expect(screen.getByText('খরচ যাচাই করুন')).toBeTruthy();
     expect(screen.getByText('আজ ৫০ টাকা চা খেয়েছি')).toBeTruthy();
-    expect(screen.getByRole('radio', { selected: true })).toHaveAccessibleName('খাবার');
+    expect(screen.getByRole('radio', { checked: true })).toHaveAccessibleName('খাবার');
     expect(screen.getByRole('button', { name: 'নিশ্চিত করে সেভ করুন' })).toBeTruthy();
   });
 });

@@ -86,7 +86,7 @@ export function DateField({
         <AppIcon icon={CalendarDays} size="md" color="textSecondary" />
       </Pressable>
       {error ? (
-        <AppText variant="bodySmall" color="expense" accessibilityLiveRegion="polite">
+        <AppText variant="bodySmall" color="expenseText" accessibilityLiveRegion="polite">
           {error}
         </AppText>
       ) : null}

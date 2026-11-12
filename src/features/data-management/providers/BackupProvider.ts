@@ -18,10 +18,8 @@ export type BackupDestination = 'share' | 'folder';
 
 export type SaveOutcome = 'saved' | 'cancelled' | 'unavailable';
 
-export interface PickedBackup {
-  name: string;
-  contents: string;
-}
+/** A chosen file: its text, or `tooLarge` when it was not read because of its size. */
+export type PickedBackup = { name: string; contents: string } | { name: string; tooLarge: true };
 
 export interface BackupProvider {
   readonly id: BackupProviderId;

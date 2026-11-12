@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useAnnounce } from '@/hooks/useAnnounce';
 import { useUiStore } from '@/store/uiStore';
 import { makeStyles, useTheme } from '@/theme';
 
@@ -18,6 +19,7 @@ export function AppToast() {
   const { layout } = useTheme();
   const toast = useUiStore((s) => s.toast);
   const hideToast = useUiStore((s) => s.hideToast);
+  useAnnounce(toast?.message);
 
   useEffect(() => {
     if (!toast) return;

@@ -90,13 +90,23 @@ export const budgetService = {
       throw new BudgetError('duplicate');
     }
 
-    const id = await budgetRepository.insert({
-      budgetType: input.budgetType,
-      categoryId,
-      amountMinor,
-      currency,
-      month,
-    });
+    let id: number;
+    try {
+      id = await budgetRepository.insert({
+        budgetType: input.budgetType,
+        categoryId,
+        amountMinor,
+        currency,
+        month,
+      });
+    } catch (error) {
+      // A concurrent save can pass the check above; the unique index still rejects it.
+      const message = (error as { message?: unknown } | null)?.message;
+      if (typeof message === 'string' && /UNIQUE constraint failed/i.test(message)) {
+        throw new BudgetError('duplicate');
+      }
+      throw error;
+    }
     dataChanged();
     const created = await budgetRepository.getById(id);
     if (!created) throw new BudgetError('notFound');

@@ -7,6 +7,7 @@ import {
 } from '../backupFormat';
 import { MAX_BACKUP_CHARS, parseBackup } from '../backupValidation';
 import type { DataSnapshot } from '../types';
+import { MAX_AMOUNT_MINOR } from '@/utils/money';
 
 const snapshot: DataSnapshot = {
   databaseVersion: 3,
@@ -173,6 +174,11 @@ describe('parseBackup', () => {
       'unknown currency',
       (d) => ((d.transactions[0] as unknown as Record<string, unknown>).currency = 'USD'),
     ],
+    [
+      'amount above the app ceiling',
+      (d) => (d.transactions[0]!.amountMinor = MAX_AMOUNT_MINOR + 1),
+    ],
+    ['budget above the app ceiling', (d) => (d.budgets[0]!.amountMinor = MAX_AMOUNT_MINOR + 1)],
     ['bad budget month', (d) => (d.budgets[0]!.month = '2026-13')],
     ['overall budget with a category', (d) => (d.budgets[0]!.categoryId = 1)],
     [
@@ -185,6 +191,7 @@ describe('parseBackup', () => {
 
   it.each<[string, (d: BackupDocument) => void]>([
     ['transaction with an unknown category', (d) => (d.transactions[0]!.categoryId = 99)],
+    ['expense filed under an income category', (d) => (d.transactions[0]!.categoryId = 2)],
     ['budget on an income category', (d) => (d.budgets[1]!.categoryId = 2)],
     ['duplicate transaction ids', (d) => d.transactions.push({ ...d.transactions[0]! })],
     ['duplicate category keys', (d) => d.categories.push({ ...d.categories[0]!, id: 3 })],

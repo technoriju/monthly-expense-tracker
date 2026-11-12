@@ -54,6 +54,8 @@ export interface TransactionFilter {
 /** Repository-level filter: search is split into a note pattern and matching category ids. */
 export interface TransactionQuery extends Omit<TransactionFilter, 'search'> {
   search?: { text: string; categoryIds: readonly number[] };
+  /** Only rows stored in this currency. */
+  currency?: CurrencyCode;
 }
 
 export interface Page {

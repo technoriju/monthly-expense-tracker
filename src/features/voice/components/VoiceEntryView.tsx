@@ -12,6 +12,7 @@ import {
   AppSegmentedControl,
   AppText,
 } from '@/components/ui';
+import { useAnnounce } from '@/hooks/useAnnounce';
 import { getLanguage, VOICE_LANGUAGES, type VoiceLanguage } from '@/i18n/languages';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useVoiceDraftStore } from '@/store/voiceDraftStore';
@@ -22,7 +23,7 @@ import { useVoiceLanguage } from '../hooks/useVoiceLanguage';
 import { useVoiceRecorder } from '../hooks/useVoiceRecorder';
 import { parseVoiceExpense } from '../parser/voiceExpenseParser';
 import { MicButton } from './MicButton';
-import { Waveform } from './Waveform';
+import { LiveWaveform } from './Waveform';
 
 type ErrorKey = Exclude<SpeechErrorCode, 'aborted'> | 'permissionBlocked';
 
@@ -83,6 +84,15 @@ export function VoiceEntryView() {
 
   const statusText =
     status === 'error' ? t(`errors.${errorKey(state)}.title`) : t(`status.${status}`);
+  // iOS has no live regions. Nothing is announced while the microphone is open, so the
+  // screen reader's speech is never recorded — only the outcome.
+  useAnnounce(
+    status === 'error'
+      ? `${statusText}. ${t(`errors.${errorKey(state)}.message`)}`
+      : status === 'done'
+        ? state.transcript
+        : null,
+  );
 
   return (
     <AppScreen header={<AppHeader title={t('title')} />}>
@@ -106,7 +116,11 @@ export function VoiceEntryView() {
               <AppText variant="body" color="textSecondary" align="center">
                 {t(`instructions.${voiceLanguage}`)}
               </AppText>
-              <AppText variant="bodySmall" color="textMuted" align="center" script={voiceScript}>
+              <AppText
+                variant="bodySmall"
+                color="textSecondary"
+                align="center"
+                script={voiceScript}>
                 {t(`examples.${voiceLanguage}`)}
               </AppText>
             </>
@@ -114,7 +128,7 @@ export function VoiceEntryView() {
           {listening ? (
             <AppText
               variant="bodyMedium"
-              color="primary"
+              color="primaryText"
               align="center"
               constrainScale
               accessibilityLabel={t('durationLabel', { time: formatDuration(elapsedSeconds) })}>
@@ -134,7 +148,7 @@ export function VoiceEntryView() {
         })}
       />
 
-      <Waveform volume={state.volume} active={listening} />
+      <LiveWaveform active={listening} />
 
       {state.localeSupport === 'onDevice' || state.localeSupport === 'network' ? (
         <AppText variant="bodySmall" color="textSecondary" align="center">
@@ -157,11 +171,15 @@ export function VoiceEntryView() {
             {t('transcript.label')}
           </AppText>
           {state.transcript ? (
-            <AppText variant="bodyMedium" script={voiceScript} accessibilityLiveRegion="polite">
+            <AppText
+              variant="bodyMedium"
+              script={voiceScript}
+              // Announce the final text once, not every partial result while speaking.
+              accessibilityLiveRegion={status === 'done' ? 'polite' : 'none'}>
               {state.transcript}
             </AppText>
           ) : (
-            <AppText variant="body" color="textMuted">
+            <AppText variant="body" color="textSecondary">
               {t('transcript.empty')}
             </AppText>
           )}

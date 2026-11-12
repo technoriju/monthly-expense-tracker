@@ -17,6 +17,8 @@ export interface TransactionRowProps {
   showDate?: boolean;
   onPress?: () => void;
   onLongPress?: () => void;
+  /** Screen-reader name of the long-press action (long press itself is not discoverable). */
+  longPressActionLabel?: string;
 }
 
 export function TransactionRow({
@@ -25,6 +27,7 @@ export function TransactionRow({
   showDate = true,
   onPress,
   onLongPress,
+  longPressActionLabel,
 }: TransactionRowProps) {
   const styles = useStyles();
   const { t } = useTranslation();
@@ -48,6 +51,14 @@ export function TransactionRow({
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityHint={onPress ? tTx('row.editHint') : undefined}
       accessibilityLabel={[title, subtitle, amountLabel].filter(Boolean).join(', ')}
+      accessibilityActions={
+        onLongPress && longPressActionLabel
+          ? [{ name: 'longpress', label: longPressActionLabel }]
+          : undefined
+      }
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'longpress') onLongPress?.();
+      }}
       style={({ pressed }) => [styles.root, pressed && styles.pressed]}>
       <CategoryIcon category={category} />
       <View style={styles.text}>
@@ -62,7 +73,7 @@ export function TransactionRow({
       </View>
       <AppText
         variant="bodyMedium"
-        color={type === 'expense' ? 'expense' : 'income'}
+        color={type === 'expense' ? 'expenseText' : 'incomeText'}
         constrainScale>
         {amountLabel}
       </AppText>

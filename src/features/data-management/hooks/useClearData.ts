@@ -1,4 +1,5 @@
 import { router } from 'expo-router';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';
 
@@ -14,13 +15,20 @@ export function useClearData() {
   const { t } = useTranslation('dataManagement');
   const showToast = useUiStore((s) => s.showToast);
 
+  const clearing = useRef(false);
+
   const clear = () => {
+    if (clearing.current) return;
+    clearing.current = true;
     resetService
       .clearAllData()
       .then(() => showToast(t('clear.success')))
       .catch((error: unknown) => {
         console.error('Clearing data failed', error);
         showToast(t('clear.failed'), 'error');
+      })
+      .finally(() => {
+        clearing.current = false;
       });
   };
 

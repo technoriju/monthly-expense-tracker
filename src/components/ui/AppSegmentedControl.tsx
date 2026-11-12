@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 
 import type { Script } from '@/i18n/languages';
-import { makeStyles } from '@/theme';
+import { makeStyles, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 
@@ -29,6 +29,7 @@ export function AppSegmentedControl<T extends string>({
   accessibilityLabel,
 }: AppSegmentedControlProps<T>) {
   const styles = useStyles();
+  const { spacing } = useTheme();
   return (
     <View
       style={styles.root}
@@ -41,8 +42,10 @@ export function AppSegmentedControl<T extends string>({
             key={option.value}
             onPress={() => onChange(option.value)}
             accessibilityRole="radio"
-            accessibilityState={{ selected }}
+            accessibilityState={{ checked: selected }}
             accessibilityLabel={option.label}
+            // Segments are 40pt tall; extend the touch area to the 48pt minimum.
+            hitSlop={{ top: spacing.xs, bottom: spacing.xs }}
             style={({ pressed }) => [
               styles.segment,
               selected ? styles.selected : styles.unselected,
@@ -50,7 +53,7 @@ export function AppSegmentedControl<T extends string>({
             ]}>
             <AppText
               variant="button"
-              color={selected ? 'onPrimary' : 'primary'}
+              color={selected ? 'onPrimary' : 'primaryText'}
               numberOfLines={1}
               align="center"
               script={option.script}>

@@ -16,7 +16,7 @@ export interface OverallBudgetCardProps {
   onDelete: () => void;
 }
 
-function Figure({ label, value, color }: { label: string; value: string; color?: 'expense' }) {
+function Figure({ label, value, color }: { label: string; value: string; color?: 'expenseText' }) {
   const styles = useStyles();
   return (
     <View style={styles.figure}>
@@ -100,7 +100,7 @@ export function OverallBudgetCard({
         <Figure
           label={over ? t('labels.overBy') : t('labels.remaining')}
           value={format.money(Math.abs(overall.remainingMinor))}
-          color={over ? 'expense' : undefined}
+          color={over ? 'expenseText' : undefined}
         />
       </View>
     </AppCard>

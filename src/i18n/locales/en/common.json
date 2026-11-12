@@ -24,7 +24,8 @@
   },
   "errors": {
     "startupTitle": "Something went wrong",
-    "startupMessage": "The app could not start. Please close it and open it again."
+    "startupMessage": "The app could not start. Please close it and open it again.",
+    "retry": "Try again"
   },
   "placeholders": {
     "reports": {

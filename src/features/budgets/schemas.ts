@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import type { CurrencyCode, MinorAmount } from '@/types/money';
-import { parseAmountToMinor } from '@/utils/money';
+import { MAX_AMOUNT_MINOR, parseAmountToMinor } from '@/utils/money';
 
 import type { BudgetMonth, BudgetType } from './types';
 
@@ -50,7 +50,7 @@ export interface BudgetInput {
 /** Service-level schema: already-converted values. */
 export const budgetInputSchema = z.object({
   month: z.string().regex(BUDGET_MONTH_PATTERN),
-  amountMinor: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  amountMinor: z.number().int().positive().max(MAX_AMOUNT_MINOR),
 }) satisfies z.ZodType<BudgetInput>;
 
 /** Rupees text → integer paise. Throws if called with a value the form schema rejects. */

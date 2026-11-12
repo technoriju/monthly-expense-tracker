@@ -93,6 +93,10 @@ function buildWhere(query: TransactionQuery): { sql: string; params: SQLiteBindV
       params.push(...query.categoryIds);
     }
   }
+  if (query.currency) {
+    clauses.push('t.currency = ?');
+    params.push(query.currency);
+  }
   if (query.dateFrom) {
     clauses.push('t.occurred_on >= ?');
     params.push(query.dateFrom);
@@ -138,6 +142,23 @@ export const transactionRepository = {
       ],
     );
     return result.lastInsertRowId;
+  },
+
+  /**
+   * Inserts and reads the stored row back in one transaction: if anything fails, nothing is
+   * committed, so a "save failed" message never hides a saved row (no duplicate on retry).
+   */
+  async insertAndGet(record: TransactionRecord, now: number = Date.now()): Promise<Transaction> {
+    const db = await getDatabase();
+    const result: { created?: Transaction } = {};
+    await db.withTransactionAsync(async () => {
+      const id = await transactionRepository.insert(record, now);
+      const row = await transactionRepository.getById(id);
+      if (!row) throw new Error('Inserted transaction could not be read back');
+      result.created = row;
+    });
+    if (!result.created) throw new Error('Inserted transaction could not be read back');
+    return result.created;
   },
 
   /** Updates editable fields and `updated_at`. Returns false when the row no longer exists. */
@@ -212,4 +233,7 @@ export const transactionRepository = {
   },
 };
 
-export type TransactionRecordUpdate = Omit<TransactionRecord, 'source' | 'currency' | 'voiceTranscript'>;
+export type TransactionRecordUpdate = Omit<
+  TransactionRecord,
+  'source' | 'currency' | 'voiceTranscript'
+>;

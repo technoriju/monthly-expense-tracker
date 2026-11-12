@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { PAYMENT_METHODS, type CurrencyCode, type PaymentMethod } from '@/types/money';
 import { isIsoDate } from '@/utils/dates';
-import { parseAmountToMinor } from '@/utils/money';
+import { MAX_AMOUNT_MINOR, parseAmountToMinor } from '@/utils/money';
 
 import type { TransactionInput } from './types';
 
@@ -58,7 +58,7 @@ export function createTransactionFormSchema(currency: CurrencyCode) {
 /** Service-level schema: the canonical, already-converted transaction input. */
 export const transactionInputSchema = z.object({
   type: transactionType,
-  amountMinor: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  amountMinor: z.number().int().positive().max(MAX_AMOUNT_MINOR),
   categoryId: z.number().int().positive(),
   occurredOn: isoDate,
   note: z.string().max(NOTE_MAX_LENGTH).nullable(),

@@ -74,7 +74,7 @@ export function MonthPickerSheet({
                 onClose();
               }}
               accessibilityRole="radio"
-              accessibilityState={{ selected, disabled }}
+              accessibilityState={{ checked: selected, disabled }}
               accessibilityLabel={format.monthYear(month)}
               style={({ pressed }) => [
                 styles.cell,

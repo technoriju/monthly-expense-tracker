@@ -1,0 +1,72 @@
+# Privacy Policy — Expense Tracker (DRAFT)
+
+> **Draft for the owner's review.** It describes what the app's code does as of version 1.0.0.
+> It is not legal advice. Fill in the bracketed fields, have it reviewed, and host it at a
+> public URL before store submission. Update it whenever the app's data handling changes.
+
+**Last updated:** [date]
+**Developer / contact:** [name], [contact email]
+
+## Summary
+
+Expense Tracker stores your income, expenses, budgets and preferences only on your device. The
+app has no account, no server, no advertising and no analytics. The developer does not receive
+any of your data.
+
+## Data the app stores on your device
+
+- Transactions you enter: amount, type, category, date, optional note and payment method, and —
+  for entries added by voice — the recognized text you reviewed and saved.
+- Budgets, categories and your preferences (app language, voice language, theme, currency).
+
+This data is kept in the app's private database on your device. The app does not encrypt this
+database itself; it relies on your device's screen lock and storage protection. On Android, the
+database is excluded from Google's automatic app backup. On iOS, a device backup to iCloud or a
+computer may include app data, depending on your device settings.
+
+## Voice entry and the microphone
+
+Voice entry is optional. When you use it, the app uses your device's microphone and your device's
+speech recognition service (Google on Android, Apple on iOS) to turn speech into text:
+
+- Depending on your device and language, recognition happens on the device or the audio is sent
+  to that provider over the internet. The provider's own privacy policy applies to that processing.
+- The app does not record or store audio. It keeps only the text you review and save.
+- You can use the app fully without voice entry, and you can deny or revoke microphone access in
+  your device settings at any time.
+
+## Backups and exports
+
+Backup (JSON) and CSV export files are created only when you ask. They are not encrypted and go
+only where you choose to save or share them (for example a folder, a cloud drive app or a
+messaging app). The app itself does not upload them.
+
+## Data sharing
+
+The app does not sell, share or transfer your data to the developer or to third parties. It
+contains no advertising or analytics SDKs.
+
+## Permissions
+
+- **Microphone** (and **Speech Recognition** on iOS): only for voice entry, only while you record.
+- **Internet** (Android): required by the app framework and used by the system speech service; the
+  app itself makes no network requests.
+
+## Deleting your data
+
+- **Settings → Clear all data** deletes all transactions and budgets in the app.
+- Uninstalling the app deletes its local data from the device (except copies kept by your device's
+  own system backup).
+- Backup or export files you saved elsewhere are not affected; delete them separately.
+
+## Children
+
+The app is not directed at children and does not knowingly collect personal information from them.
+
+## Changes
+
+If this policy changes, the new version will be published at this URL with a new "Last updated" date.
+
+## Contact
+
+[contact email]

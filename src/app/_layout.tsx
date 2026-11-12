@@ -15,7 +15,7 @@ import { ThemeProvider, useTheme } from '@/theme';
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const status = useAppBootstrap();
+  const { status, retry } = useAppBootstrap();
 
   useEffect(() => {
     if (status !== 'loading') void SplashScreen.hideAsync();
@@ -27,7 +27,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <SystemBars />
-      {status === 'error' ? <StartupError /> : <RootNavigator />}
+      {status === 'error' ? <StartupError onRetry={retry} /> : <RootNavigator />}
       <AppToast />
     </ThemeProvider>
   );
@@ -70,7 +70,7 @@ function RootNavigator() {
   );
 }
 
-function StartupError() {
+function StartupError({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
   return (
     <AppScreen scroll={false}>
@@ -79,6 +79,7 @@ function StartupError() {
         tone="error"
         title={t('errors.startupTitle')}
         message={t('errors.startupMessage')}
+        action={{ label: t('errors.retry'), onPress: onRetry }}
       />
     </AppScreen>
   );

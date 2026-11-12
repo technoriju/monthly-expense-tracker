@@ -26,9 +26,9 @@ export interface AppButtonProps {
 
 const FOREGROUND: Record<AppButtonVariant, TextColorToken> = {
   primary: 'onPrimary',
-  secondary: 'primary',
-  danger: 'expense',
-  ghost: 'primary',
+  secondary: 'primaryText',
+  danger: 'expenseText',
+  ghost: 'primaryText',
 };
 
 export function AppButton({

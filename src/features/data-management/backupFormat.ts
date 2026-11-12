@@ -16,7 +16,7 @@ import type { LanguageCode, VoiceLanguage } from '@/i18n/languages';
 import type { ThemeMode } from '@/theme/theme';
 import { PAYMENT_METHODS, type CurrencyCode } from '@/types/money';
 import { isIsoDate } from '@/utils/dates';
-import { isCurrencyCode } from '@/utils/money';
+import { isCurrencyCode, MAX_AMOUNT_MINOR } from '@/utils/money';
 
 import type { DataSnapshot, DataTables } from './types';
 
@@ -80,9 +80,14 @@ export function backupFileName(date: Date): string {
 
 // ---- v1 schema --------------------------------------------------------------------------
 
+export const MAX_BACKUP_CATEGORIES = 1_000;
+export const MAX_BACKUP_TRANSACTIONS = 100_000;
+export const MAX_BACKUP_BUDGETS = 50_000;
+
 const id = z.number().int().positive().max(Number.MAX_SAFE_INTEGER);
 const timestamp = z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER);
-const amountMinor = z.number().int().positive().max(Number.MAX_SAFE_INTEGER);
+// Same ceiling as every other write path, so restored data can't overflow sums the app trusts.
+const amountMinor = z.number().int().positive().max(MAX_AMOUNT_MINOR);
 const currency = z.string().refine(isCurrencyCode);
 const txType = z.enum(['expense', 'income']);
 const isoDate = z.string().refine(isIsoDate);
@@ -137,7 +142,8 @@ export const backupDocumentSchemaV1 = z.object({
   databaseVersion: z.number().int().nonnegative(),
   // Each setting is checked individually during restore; unknown values are ignored there.
   settings: z.record(z.string(), z.unknown()),
-  categories: z.array(categorySchema),
-  transactions: z.array(transactionSchema),
-  budgets: z.array(budgetSchema),
+  // Row caps sit far above any realistic personal history; they bound memory and SQL work.
+  categories: z.array(categorySchema).max(MAX_BACKUP_CATEGORIES),
+  transactions: z.array(transactionSchema).max(MAX_BACKUP_TRANSACTIONS),
+  budgets: z.array(budgetSchema).max(MAX_BACKUP_BUDGETS),
 });

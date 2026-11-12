@@ -53,8 +53,16 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
           paymentMethod: null,
         };
 
-  const { form, categories, categoriesLoading, changeType, submit, isSubmitting } =
-    useTransactionForm(defaults, mode.kind === 'edit' ? mode.transaction.id : undefined);
+  const {
+    form,
+    categories,
+    categoriesLoading,
+    categoriesError,
+    retryCategories,
+    changeType,
+    submit,
+    isSubmitting,
+  } = useTransactionForm(defaults, mode.kind === 'edit' ? mode.transaction.id : undefined);
   const { control, formState } = form;
 
   const title = mode.kind === 'edit' ? t('edit.title') : t('add.title');
@@ -103,6 +111,8 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
           control={control}
           categories={categories}
           categoriesLoading={categoriesLoading}
+          categoriesError={categoriesError}
+          onRetryCategories={retryCategories}
         />
 
         <View style={styles.actions}>

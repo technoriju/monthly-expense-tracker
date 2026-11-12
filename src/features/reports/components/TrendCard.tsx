@@ -114,13 +114,13 @@ export function TrendCard({ trend, onOpenPoint }: TrendCardProps) {
                   amount: format.money(amountOf(selectedPoint, series)),
                 })}
               </AppText>
-              <AppText variant="bodySmall" color="primary">
+              <AppText variant="bodySmall" color="primaryText">
                 {t('trend.open')}
               </AppText>
               <AppIcon icon={ArrowRight} size="sm" color="primary" mirrorInRTL />
             </Pressable>
           ) : (
-            <AppText variant="caption" color="textMuted" align="center">
+            <AppText variant="caption" color="textSecondary" align="center">
               {t('trend.tapHint')}
             </AppText>
           )}

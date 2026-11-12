@@ -30,10 +30,11 @@ export function CategoryBudgetRow({
   });
   const used = t('labels.used', { percent: progress.percent ?? 0 });
   const remaining = progress.remainingMinor ?? 0;
+  // Whole-sentence keys: word order differs between languages.
   const remainingText =
     remaining < 0
-      ? `${t('labels.overBy')} ${format.money(-remaining)}`
-      : `${t('labels.remaining')} ${format.money(remaining)}`;
+      ? t('summary.overBy', { amount: format.money(-remaining) })
+      : t('summary.remaining', { amount: format.money(remaining) });
 
   return (
     <Pressable
@@ -60,7 +61,7 @@ export function CategoryBudgetRow({
           </AppText>
           <AppText
             variant="caption"
-            color={remaining < 0 ? 'expense' : 'textSecondary'}
+            color={remaining < 0 ? 'expenseText' : 'textSecondary'}
             numberOfLines={1}>
             {remainingText}
           </AppText>

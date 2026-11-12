@@ -14,6 +14,14 @@ function flattenKeys(obj: object, prefix = ''): string[] {
   );
 }
 
+function flattenEntries(obj: object, prefix = ''): [string, unknown][] {
+  return Object.entries(obj).flatMap(([key, value]): [string, unknown][] =>
+    typeof value === 'object' && value !== null
+      ? flattenEntries(value as object, `${prefix}${key}.`)
+      : [[`${prefix}${key}`, value]],
+  );
+}
+
 function flattenValues(obj: object): unknown[] {
   return Object.values(obj).flatMap((v) =>
     typeof v === 'object' && v !== null ? flattenValues(v as object) : [v],
@@ -46,6 +54,17 @@ describe('translation resources', () => {
 
   it.each(['bn', 'hi'] as const)('%s has the same keys as English', (code) => {
     expect(flattenKeys(resources[code] ?? {}).sort()).toEqual(englishKeys);
+  });
+
+  it.each(['bn', 'hi'] as const)('%s uses the same {{placeholders}} as English', (code) => {
+    const placeholders = (obj: object) =>
+      Object.fromEntries(
+        flattenEntries(obj).map(([key, value]) => [
+          key,
+          [...String(value).matchAll(/{{\s*(\w+)/g)].map((m) => m[1]).sort(),
+        ]),
+      );
+    expect(placeholders(resources[code] ?? {})).toEqual(placeholders(englishResources));
   });
 
   it.each(['en', 'bn', 'hi'] as const)('%s has no empty strings', (code) => {

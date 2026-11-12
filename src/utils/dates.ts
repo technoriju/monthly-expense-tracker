@@ -30,7 +30,7 @@ export function getGreetingKey(date: Date): GreetingKey {
 }
 
 /**
- * "May 2025" / "মে ২০২৫" etc. Uses a date-fns locale when one exists, otherwise Intl,
+ * "May 2025" / "মে 2025" etc. (digits stay Latin in every language). Uses a date-fns locale when one exists, otherwise Intl,
  * otherwise English.
  */
 export function formatMonthYear(date: Date, language: LanguageCode, intlLocale: string): string {

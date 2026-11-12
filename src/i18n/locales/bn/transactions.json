@@ -90,5 +90,9 @@
     "title": "বিভাগ বাছুন",
     "searchPlaceholder": "বিভাগ খুঁজুন",
     "empty": "কোনো বিভাগ পাওয়া যায়নি"
+  },
+  "formErrors": {
+    "categoriesFailed": "বিভাগগুলো লোড করা যায়নি।",
+    "retry": "আবার চেষ্টা করুন"
   }
 }

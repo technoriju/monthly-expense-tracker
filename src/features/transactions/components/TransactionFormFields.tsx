@@ -1,10 +1,11 @@
-import { Controller, type Control } from 'react-hook-form';
+import { Controller, useFormState, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { AppInput, AppLoading, AppText } from '@/components/ui';
+import { AppButton, AppInput, AppLoading, AppText } from '@/components/ui';
 import { CategoryGrid } from '@/features/categories/components/CategoryGrid';
 import type { Category } from '@/features/categories/types';
+import { useAnnounce } from '@/hooks/useAnnounce';
 import { useSettingsStore } from '@/store/settingsStore';
 import { makeStyles } from '@/theme';
 import { getCurrencyInfo } from '@/utils/money';
@@ -33,6 +34,9 @@ export interface TransactionFormFieldsProps {
   control: Control<TransactionFormValues>;
   categories: Category[];
   categoriesLoading: boolean;
+  /** Categories failed to load: shows a message and a retry button instead of the grid. */
+  categoriesError?: boolean;
+  onRetryCategories?: () => void;
   hints?: TransactionFieldHints;
 }
 
@@ -44,6 +48,8 @@ export function TransactionFormFields({
   control,
   categories,
   categoriesLoading,
+  categoriesError = false,
+  onRetryCategories,
   hints = {},
 }: TransactionFormFieldsProps) {
   const styles = useStyles();
@@ -62,6 +68,20 @@ export function TransactionFormFields({
             <AppText variant="bodyMedium">{t('fields.category')}</AppText>
             {categoriesLoading ? (
               <AppLoading />
+            ) : categoriesError ? (
+              <View style={styles.inlineError}>
+                <AppText variant="bodySmall" color="expenseText" accessibilityRole="alert">
+                  {t('formErrors.categoriesFailed')}
+                </AppText>
+                {onRetryCategories ? (
+                  <AppButton
+                    label={t('formErrors.retry')}
+                    variant="secondary"
+                    size="sm"
+                    onPress={onRetryCategories}
+                  />
+                ) : null}
+              </View>
             ) : (
               <CategoryGrid
                 accessibilityLabel={t('fields.category')}
@@ -71,11 +91,11 @@ export function TransactionFormFields({
               />
             )}
             {fieldState.error ? (
-              <AppText variant="bodySmall" color="expense" accessibilityLiveRegion="polite">
+              <AppText variant="bodySmall" color="expenseText" accessibilityLiveRegion="polite">
                 {errorText(fieldState.error.message)}
               </AppText>
             ) : hints.category ? (
-              <AppText variant="bodySmall" color="accent">
+              <AppText variant="bodySmall" color="accentText">
                 {hints.category}
               </AppText>
             ) : null}
@@ -120,7 +140,7 @@ export function TransactionFormFields({
                 error={errorText(fieldState.error?.message)}
               />
               {!fieldState.error && hints.date ? (
-                <AppText variant="bodySmall" color="accent">
+                <AppText variant="bodySmall" color="accentText">
                   {hints.date}
                 </AppText>
               ) : null}
@@ -153,11 +173,31 @@ export function TransactionFormFields({
           )}
         />
       </View>
+      <SaveError control={control} />
     </>
+  );
+}
+
+/** The last save failure (set by the form hook as `root.save`), shown above the buttons. */
+function SaveError({ control }: { control: Control<TransactionFormValues> }) {
+  const { errors } = useFormState({ control });
+  const message = errors.root?.save?.message;
+  useAnnounce(message);
+
+  if (!message) return null;
+  return (
+    <AppText
+      variant="bodySmall"
+      color="expenseText"
+      accessibilityRole="alert"
+      accessibilityLiveRegion="assertive">
+      {message}
+    </AppText>
   );
 }
 
 const useStyles = makeStyles((t) => ({
   group: { gap: t.spacing.sm },
   fields: { gap: t.spacing.lg },
+  inlineError: { gap: t.spacing.sm, alignItems: 'flex-start' },
 }));

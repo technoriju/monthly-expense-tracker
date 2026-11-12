@@ -28,9 +28,11 @@ export const restoreService = {
   async pickBackup(): Promise<PickBackupResult> {
     const picked = await localBackupProvider.pick();
     if (!picked) return { status: 'cancelled' };
+    if ('tooLarge' in picked) return { status: 'invalid', error: 'tooLarge' };
     const result = parseBackup(picked.contents);
     if (!result.ok) {
-      console.warn('Backup rejected', result.error, result.detail);
+      // Only the error code: the detail can quote record ids or parts of the file.
+      console.warn('Backup rejected', result.error);
       return { status: 'invalid', error: result.error };
     }
     return { status: 'valid', backup: result.backup, fileName: picked.name };
@@ -49,7 +51,13 @@ export const restoreService = {
     const { categories, transactions, budgets, settings } = backup;
     // BackupSettings keys are the persisted setting keys (uiLanguage, voiceLanguage, …).
     await dataRepository.replaceAll({ categories, transactions, budgets }, { ...settings });
-    await settingsService.hydrate(getLocales().map((l) => l.languageCode));
+    // The data is committed at this point, so a failure below must not report "restore
+    // failed": the restored preferences are stored and applied on the next start anyway.
+    try {
+      await settingsService.hydrate(getLocales().map((l) => l.languageCode));
+    } catch (error) {
+      console.error('Applying restored preferences failed', error);
+    }
     useVoiceDraftStore.getState().clearDraft();
     useUiStore.getState().bumpDataVersion();
   },

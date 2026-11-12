@@ -57,7 +57,7 @@ export function CategoryBreakdownCard({ report }: { report: Report }) {
                 key: String(s.category.id),
                 color: shareColor(rank, colors),
                 label: nameOf(s.category),
-                values: [`${s.percent}%`],
+                values: [format.percentBp(s.percent * 100)],
               }))}
             />
             {shares.length > LEGEND_ROWS ? (

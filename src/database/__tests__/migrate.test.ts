@@ -1,3 +1,5 @@
+import { MAX_AMOUNT_MINOR } from '@/utils/money';
+
 import {
   getSchemaVersion,
   runMigrations,
@@ -5,6 +7,7 @@ import {
   type MigrationDatabase,
 } from '../migrate';
 import { MIGRATIONS, type Migration } from '../migrations';
+import { createMigratedTestDatabase } from '../testing/createTestDatabase';
 
 /**
  * In-memory fake of the expo-sqlite methods the runner uses. Records executed SQL and
@@ -121,7 +124,7 @@ describe('migration 002', () => {
   it('adds payment_method and indexes', async () => {
     const db = createFakeDb(1);
     const result = await runMigrations(db, MIGRATIONS);
-    expect(result.applied).toEqual(['transactions_v2', 'budgets']);
+    expect(result.applied).toEqual(['transactions_v2', 'budgets', 'amount_guards']);
     const sql = db.executed.join('\n');
     expect(sql).toMatch(/ALTER TABLE transactions ADD COLUMN payment_method TEXT/);
     expect(sql).toMatch(/CREATE INDEX idx_categories_type/);
@@ -129,9 +132,9 @@ describe('migration 002', () => {
 });
 
 describe('migration 003', () => {
-  it('creates budgets with unique indexes and triggers, ending at the latest version', async () => {
+  it('creates budgets with unique indexes and triggers', async () => {
     const db = createFakeDb(2);
-    const result = await runMigrations(db, MIGRATIONS);
+    const result = await runMigrations(db, MIGRATIONS.slice(0, 3));
     expect(result.applied).toEqual(['budgets']);
     const sql = db.executed.join('\n');
     expect(sql).toMatch(/CREATE TABLE budgets/);
@@ -140,5 +143,53 @@ describe('migration 003', () => {
     expect(sql).toMatch(/CREATE UNIQUE INDEX ux_budgets_category/);
     expect(sql).toMatch(/CREATE TRIGGER trg_budgets_expense_category_insert/);
     expect(await getSchemaVersion(db)).toBe(3);
+  });
+});
+
+describe('migration 004', () => {
+  it('adds amount guard triggers and the budget month index, ending at the latest version', async () => {
+    const db = createFakeDb(3);
+    const result = await runMigrations(db, MIGRATIONS);
+    expect(result.applied).toEqual(['amount_guards']);
+    const sql = db.executed.join('\n');
+    expect(sql).toMatch(/CREATE TRIGGER trg_transactions_amount_insert/);
+    expect(sql).toMatch(/CREATE TRIGGER trg_budgets_amount_update/);
+    expect(sql).toMatch(/CREATE INDEX idx_budgets_month_currency/);
+    expect(await getSchemaVersion(db)).toBe(4);
+  });
+
+  it('rejects non-integer and out-of-range amounts in real SQL', async () => {
+    const db = await createMigratedTestDatabase();
+    const category = await db.getFirstAsync<{ id: number }>(
+      "SELECT id FROM categories WHERE type = 'expense' LIMIT 1",
+    );
+    const insertTx = (amount: unknown) =>
+      db.runAsync(
+        `INSERT INTO transactions (type, amount_minor, currency, category_id, occurred_on,
+           source, created_at, updated_at)
+         VALUES ('expense', ?, 'INR', ?, '2026-01-01', 'manual', 0, 0)`,
+        [amount as number, category!.id],
+      );
+    await expect(insertTx(1.5)).rejects.toThrow(/amount_minor_invalid/);
+    await expect(insertTx('abc')).rejects.toThrow(/amount_minor_invalid/);
+    await expect(insertTx(MAX_AMOUNT_MINOR + 1)).rejects.toThrow(/amount_minor_invalid/);
+    const ok = await insertTx(MAX_AMOUNT_MINOR);
+    await expect(
+      db.runAsync('UPDATE transactions SET amount_minor = ? WHERE id = ?', [
+        2.5,
+        ok.lastInsertRowId,
+      ]),
+    ).rejects.toThrow(/amount_minor_invalid/);
+
+    const insertBudget = (amount: unknown) =>
+      db.runAsync(
+        `INSERT INTO budgets (budget_type, category_id, amount_minor, currency, month,
+           created_at, updated_at)
+         VALUES ('overall', NULL, ?, 'INR', '2026-01', 0, 0)`,
+        [amount as number],
+      );
+    await expect(insertBudget(10.25)).rejects.toThrow(/amount_minor_invalid/);
+    await expect(insertBudget(MAX_AMOUNT_MINOR)).resolves.toBeDefined();
+    db.close();
   });
 });

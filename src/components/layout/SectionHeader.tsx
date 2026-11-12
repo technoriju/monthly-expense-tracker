@@ -26,7 +26,7 @@ export function SectionHeader({ title, onSeeAll }: SectionHeaderProps) {
           accessibilityLabel={t('actions.seeAll')}
           hitSlop={12}
           style={styles.link}>
-          <AppText variant="bodySmall" color="primary">
+          <AppText variant="bodySmall" color="primaryText">
             {t('actions.seeAll')}
           </AppText>
           <AppIcon icon={ArrowRight} size="sm" color="primary" mirrorInRTL />

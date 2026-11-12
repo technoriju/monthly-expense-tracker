@@ -104,7 +104,7 @@ function Option({
     <Pressable
       onPress={onPress}
       accessibilityRole="radio"
-      accessibilityState={{ selected }}
+      accessibilityState={{ checked: selected }}
       accessibilityLabel={label}
       style={({ pressed }) => [styles.option, pressed && styles.pressed]}>
       {leading}

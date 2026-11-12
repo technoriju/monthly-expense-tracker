@@ -69,6 +69,8 @@ export function buildTransactionsCsv(
   return `${CSV_BOM}${lines.join(CRLF)}${CRLF}`;
 }
 
+export const CSV_FILE_PREFIX = 'transactions_';
+
 export function csvFileName(range: DateRange): string {
-  return `transactions_${range.from}_${range.to}.csv`;
+  return `${CSV_FILE_PREFIX}${range.from}_${range.to}.csv`;
 }

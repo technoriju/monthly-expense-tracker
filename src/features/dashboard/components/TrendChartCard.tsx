@@ -31,6 +31,12 @@ export function TrendChartCard({ trend, month }: { trend: Trend; month: Date }) 
     <Pressable
       onPress={openReports}
       accessibilityRole="button"
+      // A button hides its children from screen readers, so it carries the chart summary.
+      accessibilityLabel={
+        total === 0
+          ? `${t('chart.title')}, ${t('chart.empty')}`
+          : t('chart.label', { total: format.money(total) })
+      }
       accessibilityHint={t('chart.openReports')}
       style={({ pressed }) => pressed && styles.pressed}>
       <AppCard style={styles.card}>
@@ -38,7 +44,7 @@ export function TrendChartCard({ trend, month }: { trend: Trend; month: Date }) 
           {t('chart.title')}
         </AppText>
         {total === 0 ? (
-          <AppText variant="bodySmall" color="textMuted" align="center" style={styles.empty}>
+          <AppText variant="bodySmall" color="textSecondary" align="center" style={styles.empty}>
             {t('chart.empty')}
           </AppText>
         ) : (

@@ -1,5 +1,6 @@
 import type { DataTables } from '@/features/data-management/types';
 
+import { MIGRATIONS } from '../migrations';
 import { budgetRepository } from '../repositories/budgetRepository';
 import { categoryRepository } from '../repositories/categoryRepository';
 import { dataRepository } from '../repositories/dataRepository';
@@ -86,7 +87,7 @@ describe('dataRepository.exportSnapshot', () => {
     await seedSampleData();
     const snapshot = await dataRepository.exportSnapshot();
 
-    expect(snapshot.databaseVersion).toBe(3);
+    expect(snapshot.databaseVersion).toBe(MIGRATIONS.length);
     expect(snapshot.categories).toHaveLength(SYSTEM_CATEGORIES.length);
     expect(snapshot.categories[0]).toEqual(
       expect.objectContaining({ isSystem: true, isArchived: false, customName: null }),

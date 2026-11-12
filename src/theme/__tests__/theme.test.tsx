@@ -49,14 +49,40 @@ describe.each([
   });
 });
 
-describe('dark palette secondary text', () => {
-  // The light textSecondary (#77758A) is the reference design color (≈4.2–4.5:1) and is
-  // deliberately not changed here; the dark palette is ours, so it must meet AA.
+/** Every token used for readable text, on every surface it is drawn on. */
+function readableTextPairs(c: ColorTokens): [string, string, string][] {
+  return [
+    ['textSecondary on background', c.textSecondary, c.background],
+    ['textSecondary on surface', c.textSecondary, c.surface],
+    ['incomeText on surface', c.incomeText, c.surface],
+    ['incomeText on background', c.incomeText, c.background],
+    ['incomeText on incomeSoft', c.incomeText, c.incomeSoft],
+    ['expenseText on surface', c.expenseText, c.surface],
+    ['expenseText on background', c.expenseText, c.background],
+    ['expenseText on expenseSoft', c.expenseText, c.expenseSoft],
+    ['accentText on surface', c.accentText, c.surface],
+    ['accentText on background', c.accentText, c.background],
+    ['accentText on accentSoft', c.accentText, c.accentSoft],
+    ['primaryText on surface', c.primaryText, c.surface],
+    ['primaryText on background', c.primaryText, c.background],
+    ['primaryText on primarySoft', c.primaryText, c.primarySoft],
+  ];
+}
+
+describe.each([
+  ['light', lightColors],
+  ['dark', darkColors],
+] as const)('%s palette readable text (WCAG AA 4.5:1)', (_name, c: ColorTokens) => {
+  it.each(readableTextPairs(c))('%s', (_label, fg, bg) => {
+    expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  // textMuted is reserved for icons, placeholders and inactive items (non-text, 3:1).
   it.each([
-    ['background', darkColors.background],
-    ['surface', darkColors.surface],
-  ])('textSecondary on %s', (_label, bg) => {
-    expect(contrast(darkColors.textSecondary, bg)).toBeGreaterThanOrEqual(4.5);
+    ['background', c.background],
+    ['surface', c.surface],
+  ])('textMuted on %s stays at least 3:1', (_label, bg) => {
+    expect(contrast(c.textMuted, bg)).toBeGreaterThanOrEqual(3);
   });
 });
 

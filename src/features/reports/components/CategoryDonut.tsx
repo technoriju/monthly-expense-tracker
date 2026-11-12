@@ -27,7 +27,9 @@ export function CategoryDonut({ type, shares, totalMinor, size = 'regular' }: Ca
   const totalLabel = type === 'expense' ? t('breakdown.totalExpense') : t('breakdown.totalIncome');
   const a11y = t('breakdown.chartLabel', {
     type: t(`breakdown.${type}`),
-    slices: shares.map((s) => `${nameOf(s.category)} ${s.percent}%`).join(', '),
+    slices: shares
+      .map((s) => `${nameOf(s.category)} ${format.percentBp(s.percent * 100)}`)
+      .join(', '),
   });
 
   return (
