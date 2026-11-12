@@ -1,6 +1,6 @@
-import Constants from 'expo-constants';
+import { getAppInfo } from '../appInfo';
 
-/** Static app metadata from app.json. */
+/** Static app metadata (version, build). */
 export function useAppInfo() {
-  return { version: Constants.expoConfig?.version ?? '—' };
+  return getAppInfo();
 }

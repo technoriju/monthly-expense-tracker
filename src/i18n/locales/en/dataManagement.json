@@ -1,0 +1,72 @@
+{
+  "backup": {
+    "title": "Back Up Data",
+    "intro": "Creates one file with all your transactions, categories, budgets and preferences.",
+    "includesTitle": "Included in the backup",
+    "includes": {
+      "transactions": "All transactions, including notes",
+      "categories": "Categories",
+      "budgets": "Budgets for every month",
+      "preferences": "Language, voice language and theme"
+    },
+    "privacyNote": "The file is not encrypted. It is saved only where you choose — the app never uploads it. Keep it somewhere safe.",
+    "share": "Share backup",
+    "shareHint": "Send to Files, Google Drive, email or another app",
+    "saveToFolder": "Save to a folder",
+    "saveToFolderHint": "Choose a folder on this device",
+    "success": "Backup created",
+    "savedToFolder": "Backup saved to the folder",
+    "failed": "Could not create the backup. Please try again.",
+    "unavailable": "Sharing is not available on this device"
+  },
+  "restore": {
+    "title": "Restore Data",
+    "intro": "Replace all data in the app with the contents of a backup file created by this app.",
+    "choose": "Choose backup file",
+    "chooseAnother": "Choose another file",
+    "checking": "Checking file…",
+    "previewTitle": "Backup contents",
+    "file": "File",
+    "created": "Created",
+    "appVersion": "App version",
+    "transactions": "Transactions",
+    "categories": "Categories",
+    "budgets": "Budgets",
+    "preferencesNote": "Preferences saved in the backup (language, voice language, theme) will also be restored.",
+    "warningTitle": "Your current data will be replaced",
+    "warningMessage": "Current data on this device — transactions: {{transactions}}, budgets: {{budgets}} — will be deleted and replaced. This cannot be undone.",
+    "backupFirst": "Back up current data first",
+    "restore": "Restore",
+    "confirmTitle": "Replace all data?",
+    "confirmMessage": "All current data will be replaced by this backup. This cannot be undone.",
+    "confirm": "Replace data",
+    "cancel": "Cancel",
+    "success": "Data restored",
+    "failed": "Restore failed. Your existing data was not changed.",
+    "errors": {
+      "tooLarge": "This file is too large to be a backup.",
+      "invalidJson": "This file is damaged or is not a backup file.",
+      "notBackup": "This is not an Expense Tracker backup file.",
+      "unsupportedVersion": "This backup was made by a newer version of the app. Update the app and try again.",
+      "invalidStructure": "This backup is incomplete or damaged.",
+      "inconsistent": "This backup contains inconsistent data and cannot be restored.",
+      "readFailed": "Could not open the file."
+    }
+  },
+  "export": {
+    "title": "Export Transactions",
+    "intro": "Choose a period. Transactions are exported as a CSV file (UTF-8) that spreadsheet apps can open."
+  },
+  "clear": {
+    "title": "Clear all data?",
+    "message": "This deletes all transactions and budgets from this device. Default categories and your preferences (language, theme) are kept.\n\nBack up first if you may need this data later.",
+    "backupFirst": "Back up first",
+    "continue": "Continue",
+    "confirmTitle": "Delete permanently?",
+    "confirmMessage": "All transactions and budgets will be permanently deleted. This cannot be undone.",
+    "confirm": "Delete everything",
+    "cancel": "Cancel",
+    "success": "All data cleared",
+    "failed": "Could not clear data. Nothing was deleted."
+  }
+}

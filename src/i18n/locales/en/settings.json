@@ -1,7 +1,9 @@
 {
   "title": "Settings",
   "sections": {
-    "preferences": "Preferences",
+    "general": "General",
+    "voice": "Voice",
+    "data": "Data management",
     "about": "About"
   },
   "language": {
@@ -12,18 +14,101 @@
   },
   "currency": {
     "label": "Currency",
+    "hint": "Only Indian Rupee (INR) is supported for now",
     "names": {
       "INR": "Indian Rupee"
     }
   },
   "theme": {
     "label": "Theme",
+    "title": "Theme",
+    "system": "System default",
+    "systemHint": "Follows your device's light or dark setting",
     "light": "Light",
-    "comingSoon": "Dark mode coming soon"
+    "dark": "Dark"
+  },
+  "voice": {
+    "label": "Voice recognition",
+    "title": "Voice Settings",
+    "languageTitle": "Voice recognition language",
+    "languageHint": "The language you speak when adding expenses by voice. It is separate from the app language.",
+    "statusTitle": "Speech recognition on this device",
+    "checking": "Checking…",
+    "recognizer": "Speech recognizer",
+    "available": "Available",
+    "unavailable": "Not available",
+    "permission": "Microphone permission",
+    "granted": "Allowed",
+    "denied": "Not allowed yet",
+    "blocked": "Blocked in system settings",
+    "languageSupport": "Selected language",
+    "support": {
+      "onDevice": "Works offline on this device",
+      "network": "Supported; may need internet",
+      "unsupported": "Not supported on this device",
+      "unknown": "The device did not report support"
+    },
+    "allow": "Allow",
+    "openSettings": "Open settings",
+    "recheck": "Check again",
+    "unavailableTitle": "Voice entry is not available",
+    "unavailableMessage": "This device has no compatible speech recognition service, or this version of the app does not include it. You can still add every expense manually.",
+    "languageUnsupportedMessage": "This device cannot recognize the selected language. Choose another voice language or add the expense manually.",
+    "blockedMessage": "Microphone access is blocked. Allow it in your device settings to use voice entry.",
+    "addManually": "Add manually",
+    "serviceNote": "Speech is recognized by your device's speech service (for example Google on Android or Apple on iOS). Depending on the device and language, it may work offline or may send audio to that service over the internet."
+  },
+  "data": {
+    "backup": "Back up data",
+    "backupHint": "Save all data to a file",
+    "restore": "Restore data",
+    "restoreHint": "Replace data from a backup file",
+    "export": "Export transactions",
+    "exportHint": "CSV file for spreadsheets",
+    "clear": "Clear all data",
+    "clearHint": "Delete transactions and budgets"
   },
   "about": {
+    "label": "About the app",
+    "title": "About",
     "appName": "App name",
     "version": "Version",
-    "description": "Track your income and expenses, fully offline."
+    "build": "Build",
+    "description": "Track your income and expenses, fully offline.",
+    "longDescription": "A simple income and expense tracker. Add entries by hand or by voice in English, Bengali or Hindi, set monthly budgets and see reports. Your data stays on your device.",
+    "privacy": "Privacy",
+    "licenses": "Open-source licenses"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "local": {
+      "title": "Your data stays on this device",
+      "body": "Transactions, categories, budgets and preferences are stored only in this app's local database on your device."
+    },
+    "account": {
+      "title": "No account needed",
+      "body": "The app does not ask you to sign in or create an account."
+    },
+    "cloud": {
+      "title": "No cloud sync",
+      "body": "The app has no server. It does not sync or upload your data, and nothing is sent to the developer."
+    },
+    "voice": {
+      "title": "Voice entry uses your device's speech service",
+      "body": "When you use voice entry, your speech is processed by the speech recognition service of your device or operating system (for example Google on Android or Apple on iOS), not by this app. That service may work offline or may send audio over the internet, depending on your device and language, and its provider's privacy policy applies. The app saves only the recognized text, and only after you review and save the entry."
+    },
+    "backups": {
+      "title": "You control backup files",
+      "body": "Backup and CSV files are created only when you ask. They are not encrypted and go only where you choose to save or share them."
+    },
+    "deletion": {
+      "title": "Deleting your data",
+      "body": "“Clear all data” deletes all transactions and budgets from the app. Uninstalling the app removes its local data from the device, unless your device's own system backup kept a copy. Backup or exported files you saved elsewhere are not affected — delete them separately."
+    }
+  },
+  "licenses": {
+    "title": "Open-source licenses",
+    "intro": "This app is built with these open-source packages. Each is used under its own license.",
+    "unknown": "License not specified"
   }
 }

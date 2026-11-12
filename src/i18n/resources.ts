@@ -1,6 +1,7 @@
 import bnBudgets from './locales/bn/budgets.json';
 import bnCategories from './locales/bn/categories.json';
 import bnCommon from './locales/bn/common.json';
+import bnDataManagement from './locales/bn/dataManagement.json';
 import bnDashboard from './locales/bn/dashboard.json';
 import bnReports from './locales/bn/reports.json';
 import bnSettings from './locales/bn/settings.json';
@@ -9,6 +10,7 @@ import bnVoice from './locales/bn/voice.json';
 import enBudgets from './locales/en/budgets.json';
 import enCategories from './locales/en/categories.json';
 import enCommon from './locales/en/common.json';
+import enDataManagement from './locales/en/dataManagement.json';
 import enDashboard from './locales/en/dashboard.json';
 import enReports from './locales/en/reports.json';
 import enSettings from './locales/en/settings.json';
@@ -17,6 +19,7 @@ import enVoice from './locales/en/voice.json';
 import hiBudgets from './locales/hi/budgets.json';
 import hiCategories from './locales/hi/categories.json';
 import hiCommon from './locales/hi/common.json';
+import hiDataManagement from './locales/hi/dataManagement.json';
 import hiDashboard from './locales/hi/dashboard.json';
 import hiReports from './locales/hi/reports.json';
 import hiSettings from './locales/hi/settings.json';
@@ -34,6 +37,7 @@ export const NAMESPACES = [
   'voice',
   'reports',
   'budgets',
+  'dataManagement',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -46,6 +50,7 @@ const en = {
   transactions: enTransactions,
   categories: enCategories,
   settings: enSettings,
+  dataManagement: enDataManagement,
   voice: enVoice,
 };
 
@@ -59,6 +64,7 @@ const bn: TranslationResources = {
   transactions: bnTransactions,
   categories: bnCategories,
   settings: bnSettings,
+  dataManagement: bnDataManagement,
   voice: bnVoice,
 };
 
@@ -70,6 +76,7 @@ const hi: TranslationResources = {
   transactions: hiTransactions,
   categories: hiCategories,
   settings: hiSettings,
+  dataManagement: hiDataManagement,
   voice: hiVoice,
 };
 

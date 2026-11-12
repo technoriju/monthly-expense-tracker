@@ -37,7 +37,7 @@ export function DateField({
 }: DateFieldProps) {
   const styles = useStyles();
   const { t } = useTranslation('transactions');
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
   const format = useFormatters();
   const language = useActiveLanguage();
   const [iosOpen, setIosOpen] = useState(false);
@@ -112,7 +112,7 @@ export function DateField({
             display="inline"
             locale={language.locale}
             accentColor={colors.primary}
-            themeVariant="light"
+            themeVariant={scheme}
             minimumDate={min}
             maximumDate={max}
             onValueChange={(_event, date) => setIosDraft(date)}

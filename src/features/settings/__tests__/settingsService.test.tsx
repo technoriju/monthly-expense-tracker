@@ -85,3 +85,20 @@ describe('voice language', () => {
     await expect(settingsService.setVoiceLanguage('ta')).rejects.toThrow();
   });
 });
+
+describe('theme mode', () => {
+  it('persists the theme and restores it on the next hydrate', async () => {
+    await settingsService.setThemeMode('dark');
+    expect(settingsRepository.set).toHaveBeenCalledWith('themeMode', 'dark');
+    expect(useSettingsStore.getState().themeMode).toBe('dark');
+
+    useSettingsStore.getState().applySettings({ themeMode: 'system' });
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().themeMode).toBe('dark');
+  });
+
+  it('rejects unknown theme modes', async () => {
+    // @ts-expect-error — runtime guard must reject values outside ThemeMode.
+    await expect(settingsService.setThemeMode('neon')).rejects.toThrow();
+  });
+});

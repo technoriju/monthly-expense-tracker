@@ -2,6 +2,7 @@ import '@/i18n';
 
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
 import { TriangleAlert } from 'lucide-react-native';
 import { useEffect } from 'react';
@@ -25,11 +26,22 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <StatusBar style="dark" />
+      <SystemBars />
       {status === 'error' ? <StartupError /> : <RootNavigator />}
       <AppToast />
     </ThemeProvider>
   );
+}
+
+/** Status bar icons and the native root background follow the active theme. */
+function SystemBars() {
+  const { scheme, colors } = useTheme();
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(colors.background).catch(() => {
+      // Cosmetic only (visible during transitions); ignore failures.
+    });
+  }, [colors.background]);
+  return <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />;
 }
 
 function RootNavigator() {
@@ -46,6 +58,14 @@ function RootNavigator() {
       <Stack.Screen name="budgets" />
       <Stack.Screen name="voice/review" />
       <Stack.Screen name="settings/language" />
+      <Stack.Screen name="settings/theme" />
+      <Stack.Screen name="settings/voice" />
+      <Stack.Screen name="settings/backup" />
+      <Stack.Screen name="settings/restore" />
+      <Stack.Screen name="settings/export" />
+      <Stack.Screen name="settings/about" />
+      <Stack.Screen name="settings/privacy" />
+      <Stack.Screen name="settings/licenses" />
     </Stack>
   );
 }

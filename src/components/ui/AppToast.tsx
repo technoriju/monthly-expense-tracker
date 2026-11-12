@@ -40,7 +40,7 @@ export function AppToast() {
           size="md"
           color={isError ? 'expense' : 'income'}
         />
-        <AppText variant="bodyMedium" color="onPrimary" style={styles.text}>
+        <AppText variant="bodyMedium" color="onInverseSurface" style={styles.text}>
           {toast.message}
         </AppText>
       </View>
@@ -63,7 +63,7 @@ const useStyles = makeStyles((t) => ({
     paddingHorizontal: t.spacing.lg,
     paddingVertical: t.spacing.md,
     borderRadius: t.radius.lg,
-    backgroundColor: t.colors.textPrimary,
+    backgroundColor: t.colors.inverseSurface,
     ...t.shadows.card,
   },
   text: { flexShrink: 1 },

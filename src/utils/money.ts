@@ -14,6 +14,10 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyInfo> = {
 
 export const DEFAULT_CURRENCY: CurrencyCode = 'INR';
 
+export function isCurrencyCode(value: unknown): value is CurrencyCode {
+  return typeof value === 'string' && Object.hasOwn(CURRENCIES, value);
+}
+
 export function getCurrencyInfo(currency: CurrencyCode): CurrencyInfo {
   return CURRENCIES[currency];
 }

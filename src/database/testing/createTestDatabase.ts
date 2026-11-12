@@ -23,7 +23,12 @@ interface NodeDatabase {
 
 type TestDatabaseApi = Pick<
   SQLiteDatabase,
-  'execAsync' | 'runAsync' | 'getFirstAsync' | 'getAllAsync' | 'withTransactionAsync'
+  | 'execAsync'
+  | 'runAsync'
+  | 'getFirstAsync'
+  | 'getAllAsync'
+  | 'withTransactionAsync'
+  | 'withExclusiveTransactionAsync'
 >;
 
 export type TestDatabase = TestDatabaseApi & { close(): void };
@@ -63,6 +68,10 @@ export function createTestDatabase(): TestDatabase {
         db.exec('ROLLBACK');
         throw error;
       }
+    },
+    // One in-memory connection: the "exclusive" transaction runs on it and passes itself.
+    async withExclusiveTransactionAsync(task: (txn: unknown) => Promise<void>) {
+      await api.withTransactionAsync(() => task(api));
     },
     close: () => db.close(),
   };

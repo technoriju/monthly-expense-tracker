@@ -52,7 +52,9 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 1 | `@react-native-community/datetimepicker` | Date selector |
 | 2 | `expo-speech-recognition` | On-device speech-to-text (config plugin → **development build required; does not run in Expo Go**) |
 | 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 7) |
-| 7 | `expo-document-picker` | Backup / restore (reuses `expo-file-system`, `expo-sharing`) |
+| 5 | `expo-application` | Native version / build number on the About screen |
+
+Backup / restore (Phase 5) reuses `expo-file-system` (including its `File.pickFileAsync` / `Directory.pickDirectoryAsync` pickers) and `expo-sharing`; `expo-document-picker` is not needed.
 
 **Not added:** chart libraries (custom charts on `react-native-svg`), UI kits, NativeWind, ORMs, navigation libs beyond Expo Router.
 
@@ -88,10 +90,9 @@ src/
     voice/
       review.tsx                # Review parsed entries
     settings/
-      language.tsx
-      currency.tsx
-      voice.tsx
-      theme.tsx
+      language.tsx  theme.tsx  voice.tsx
+      backup.tsx  restore.tsx  export.tsx
+      about.tsx  privacy.tsx  licenses.tsx
 
   components/
     ui/                         # Design-system primitives (Button, Card, AppText…)
@@ -104,7 +105,8 @@ src/
     reports/       { components/, hooks/, services/, types.ts }
     budgets/       { components/, hooks/, services/, calculations.ts, schemas.ts, types.ts }
     voice/         { components/, hooks/, engine/, parser/, types.ts }
-    settings/      { components/, hooks/, services/, types.ts }
+    settings/      { components/, hooks/, services/, appInfo.ts, licenses.json, types.ts }
+    data-management/ { backupFormat.ts, backupValidation.ts, providers/, services/, hooks/, components/, types.ts }
     onboarding/    { components/ }
 
   database/
@@ -227,6 +229,21 @@ Budgets are per month and never copied or overwritten, so past months keep their
 - `reportRepository` — aggregation queries for an inclusive date range + currency: totals and counts by type, by category (one type), by day, by month.
 - `budgetRepository` — `listByMonth`, `getById`, `find`, `insert`, `updateAmount`, `remove`.
 - `settingsRepository` — `get`, `set`, `getAll`.
+- `dataRepository` — `exportSnapshot` (every column of categories, transactions, budgets + `user_version`), `counts`, `replaceAll(tables, settings)` (full replacement keeping original ids), `clearUserData` (keeps settings, reseeds system categories). Each runs in `withExclusiveTransactionAsync`; because `foreign_keys` is a per-connection setting, `PRAGMA foreign_key_check` runs before commit and any violation rolls everything back.
+
+### 4.4.1 Backup format (Phase 5)
+
+Versioned UTF-8 JSON, built and validated by pure code in `features/data-management/` (never touches SQLite):
+
+```
+{ format: "monthly-expense-tracker-backup", schemaVersion: 1, appVersion, exportedAt (ISO UTC),
+  databaseVersion, settings: { uiLanguage?, voiceLanguage?, themeMode?, currency? },
+  categories: [...], transactions: [...], budgets: [...] }   // camelCase copies of every column
+```
+
+`parseBackup(text)` returns `tooLarge | invalidJson | notBackup | unsupportedVersion | invalidStructure | inconsistent`, or a validated document (Zod: integer paise > 0, real `YYYY-MM-DD`, `YYYY-MM`, enums; cross-checks: unique ids/keys, transaction → category, budget → expense category, one budget per slot). Unknown or invalid preferences are dropped, not fatal. A newer `schemaVersion` is rejected. Restore = full replacement of data and preferences, then `settingsService.hydrate` and a `dataVersion` bump.
+
+Destinations go through a `BackupProvider` interface. `LocalFileBackupProvider` (share sheet / system folder picker / file picker) is the only active one. `GoogleDriveBackupProvider` is a disabled placeholder: Google Drive API policy restricts app-content backup without express prior written consent, so no OAuth, Drive permission, token storage or sync exists until that is resolved.
 
 Repositories use parameterized queries only, map rows (`snake_case`) to typed domain objects (`camelCase`) internally, and contain no business rules.
 
@@ -328,7 +345,7 @@ Maps every Indic digit set (Bengali ০-৯, Devanagari ०-९, Gujarati, Gurmu
   | `accent` / `accentSoft` | `#FF9F1C` / `#FFF0D9` | `#FFB04D` / `#3A2A12` |
   | chart series | design.md chart colors | same hues, +10% lightness |
 
-  > ⚠ **Dark palette is proposed, not from the reference. Requires approval before Phase 0 implementation.** Dark contrast must be checked (WCAG AA 4.5:1 for body text).
+  > Dark palette approved and implemented in Phase 5 (2026-11-12) with one change: dark `primary` is `#7857FA` (not `#7C5CFF`) so white text on primary fills meets 4.5:1. Added tokens `inverseSurface` / `onInverseSurface` (toast). `theme/__tests__/theme.test.tsx` enforces contrast. The light `textSecondary` (#77758A, from the reference) is ≈4.2–4.5:1 and is left as designed.
 
 - `typography.ts` — scale from design.md §3 (`display 32/Bold` … `caption 11/Regular`, `amountLarge 28/Bold`, `amountMedium 20/Bold`) with explicit line heights: ≈1.3× for Latin, ≈1.5× for Indic scripts (prevents clipping of matras, conjuncts, and descenders).
 - `spacing.ts`, `radius.ts` — verbatim from design.md §4–5.
@@ -469,6 +486,6 @@ Pure TypeScript, fully unit-testable, no I/O:
 - **Hermes `Intl` gaps:** some locales or `numberingSystem` may be missing → startup capability check + fallback formatter.
 - **Translation quality** for 20 additional languages → status flag per language; native-speaker review before marking `complete`.
 - **Currency change after data exists** → per-transaction currency; reports filter by active currency.
-- **Dark palette** is not in the reference → requires approval.
+- **Dark palette** is not in the reference → approved 2026-11-12; contrast enforced by tests.
 - **Expo SDK 58 API drift** vs. model training data → always read the v58 docs (`AGENTS.md`).
 - **design.md gaps:** Maithili and Nepali missing from the language list.

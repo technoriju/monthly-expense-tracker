@@ -1,26 +1,39 @@
 import { router } from 'expo-router';
-import { Globe, IndianRupee, Info, Smartphone, SunMoon } from 'lucide-react-native';
+import {
+  DatabaseBackup,
+  FileSpreadsheet,
+  Globe,
+  History,
+  IndianRupee,
+  Info,
+  Mic,
+  ShieldCheck,
+  SunMoon,
+  Trash2,
+} from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppHeader, AppScreen, AppText } from '@/components/ui';
+import { useClearData } from '@/features/data-management/hooks/useClearData';
 import { useActiveLanguage } from '@/hooks/useActiveLanguage';
+import { getLanguage } from '@/i18n/languages';
 import { useSettingsStore } from '@/store/settingsStore';
 import { getCurrencyInfo } from '@/utils/money';
 
-import { useAppInfo } from '../hooks/useAppInfo';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 
 export function SettingsView() {
   const { t } = useTranslation('settings');
-  const { t: tc } = useTranslation('common');
   const language = useActiveLanguage();
   const currency = useSettingsStore((s) => s.currency);
-  const { version } = useAppInfo();
+  const themeMode = useSettingsStore((s) => s.themeMode);
+  const voiceLanguage = getLanguage(useSettingsStore((s) => s.voiceLanguage));
+  const confirmClear = useClearData();
 
   return (
     <AppScreen header={<AppHeader title={t('title')} />}>
-      <SettingsSection title={t('sections.preferences')}>
+      <SettingsSection title={t('sections.general')}>
         <SettingsRow
           icon={Globe}
           label={t('language.label')}
@@ -29,22 +42,68 @@ export function SettingsView() {
           onPress={() => router.push('/settings/language')}
         />
         <SettingsRow
+          icon={SunMoon}
+          label={t('theme.label')}
+          value={t(`theme.${themeMode}`)}
+          onPress={() => router.push('/settings/theme')}
+        />
+        <SettingsRow
           icon={IndianRupee}
           label={t('currency.label')}
           value={`${getCurrencyInfo(currency).symbol} ${t(`currency.names.${currency}`)}`}
+          hint={t('currency.hint')}
+        />
+      </SettingsSection>
+
+      <SettingsSection title={t('sections.voice')}>
+        <SettingsRow
+          icon={Mic}
+          label={t('voice.label')}
+          value={voiceLanguage.nativeName}
+          valueScript={voiceLanguage.script}
+          onPress={() => router.push('/settings/voice')}
+        />
+      </SettingsSection>
+
+      <SettingsSection title={t('sections.data')}>
+        <SettingsRow
+          icon={DatabaseBackup}
+          label={t('data.backup')}
+          hint={t('data.backupHint')}
+          onPress={() => router.push('/settings/backup')}
         />
         <SettingsRow
-          icon={SunMoon}
-          label={t('theme.label')}
-          value={t('theme.light')}
-          hint={t('theme.comingSoon')}
-          disabled
+          icon={History}
+          label={t('data.restore')}
+          hint={t('data.restoreHint')}
+          onPress={() => router.push('/settings/restore')}
+        />
+        <SettingsRow
+          icon={FileSpreadsheet}
+          label={t('data.export')}
+          hint={t('data.exportHint')}
+          onPress={() => router.push('/settings/export')}
+        />
+        <SettingsRow
+          icon={Trash2}
+          label={t('data.clear')}
+          hint={t('data.clearHint')}
+          tone="danger"
+          onPress={confirmClear}
         />
       </SettingsSection>
 
       <SettingsSection title={t('sections.about')}>
-        <SettingsRow icon={Info} label={t('about.appName')} value={tc('appName')} />
-        <SettingsRow icon={Smartphone} label={t('about.version')} value={version} />
+        <SettingsRow
+          icon={Info}
+          label={t('about.label')}
+          onPress={() => router.push('/settings/about')}
+        />
+        <SettingsRow
+          icon={ShieldCheck}
+          label={t('about.privacy')}
+          onPress={() => router.push('/settings/privacy')}
+        />
       </SettingsSection>
       <AppText variant="bodySmall" color="textSecondary" align="center">
         {t('about.description')}

@@ -1,4 +1,4 @@
-import { lightColors, type ColorTokens } from './colors';
+import { darkColors, lightColors, type ColorTokens } from './colors';
 import { layout } from './layout';
 import { radius } from './radius';
 import { createShadows, type ShadowTokens } from './shadows';
@@ -6,8 +6,13 @@ import { spacing } from './spacing';
 import { typography } from './typography';
 
 export type ColorScheme = 'light' | 'dark';
-/** User preference. Only `light` is implemented; the dark palette awaits approval. */
+/** User preference; `system` follows the device appearance. */
 export type ThemeMode = 'system' | 'light' | 'dark';
+export const THEME_MODES: readonly ThemeMode[] = ['system', 'light', 'dark'];
+
+export function isThemeMode(value: unknown): value is ThemeMode {
+  return THEME_MODES.includes(value as ThemeMode);
+}
 
 export interface Theme {
   scheme: ColorScheme;
@@ -24,11 +29,13 @@ function createTheme(scheme: ColorScheme, colors: ColorTokens): Theme {
 }
 
 export const lightTheme = createTheme('light', lightColors);
+export const darkTheme = createTheme('dark', darkColors);
 
 /**
- * Resolves the active theme for a preference. Dark tokens are not approved yet
- * (ARCHITECTURE.md §6.1), so every mode currently resolves to the light theme.
+ * Resolves the active theme for a preference. `system` follows the device appearance and
+ * falls back to light when the device does not report one.
  */
-export function resolveTheme(_mode: ThemeMode): Theme {
-  return lightTheme;
+export function resolveTheme(mode: ThemeMode, systemScheme: ColorScheme | null | undefined): Theme {
+  const scheme = mode === 'system' ? (systemScheme ?? 'light') : mode;
+  return scheme === 'dark' ? darkTheme : lightTheme;
 }

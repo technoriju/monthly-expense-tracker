@@ -9,19 +9,10 @@ import {
   type VoiceLanguage,
 } from '@/i18n/languages';
 import { useSettingsStore } from '@/store/settingsStore';
-import type { ThemeMode } from '@/theme/theme';
-import type { CurrencyCode } from '@/types/money';
-import { CURRENCIES, DEFAULT_CURRENCY } from '@/utils/money';
+import { isThemeMode, type ThemeMode } from '@/theme/theme';
+import { DEFAULT_CURRENCY, isCurrencyCode } from '@/utils/money';
 
 import { SETTING_KEYS } from '../types';
-
-function isThemeMode(value: unknown): value is ThemeMode {
-  return value === 'system' || value === 'light' || value === 'dark';
-}
-
-function isCurrencyCode(value: unknown): value is CurrencyCode {
-  return typeof value === 'string' && value in CURRENCIES;
-}
 
 export const settingsService = {
   /**
@@ -55,6 +46,15 @@ export const settingsService = {
     await settingsRepository.set(SETTING_KEYS.uiLanguage, code);
     await changeUiLanguage(code);
     useSettingsStore.getState().applySettings({ uiLanguage: code });
+  },
+
+  /** Persists the theme preference (DB first), then applies it live. */
+  async setThemeMode(mode: ThemeMode): Promise<void> {
+    if (!isThemeMode(mode)) {
+      throw new Error(`Theme mode "${String(mode)}" is not supported.`);
+    }
+    await settingsRepository.set(SETTING_KEYS.themeMode, mode);
+    useSettingsStore.getState().applySettings({ themeMode: mode });
   },
 
   /** Persists the voice-recognition language. Never changes the UI language. */

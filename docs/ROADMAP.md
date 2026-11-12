@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 4 — Budgets** implemented in code (2026-11-12; the user's brief called this "Phase 5: Budget Management"; inserted before Settings & Onboarding at the user's request, later phases renumbered +1). Phases 1–3 are also implemented in code. tsc/lint/jest pass; on-device exit checks for all four are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 5 — Settings & Onboarding.
+**Current phase:** **Phase 5 — Settings & Data Management** implemented in code (2026-11-12; the user's brief called this "Phase 6: Settings & Data Management"). It merges the old Settings phase with Backup & Restore (pulled forward from old Phase 7) and adds the dark theme; onboarding/profile moved to Phase 7. Phases 1–4 are also implemented in code. tsc/lint/jest pass; on-device exit checks are pending a development build (Expo Go lacks `ExpoSQLite` and `ExpoSpeechRecognition`). Next: Phase 6 — Language Expansion.
 
 ## Rules for every phase
 
@@ -118,19 +118,27 @@
 
 ---
 
-## Phase 5 — Settings & Onboarding
+## Phase 5 — Settings & Data Management
 
-**Reference:** Splash (row 1, col 1), Onboarding (row 1, col 2), Settings (row 2, col 5).
+> Implemented in code (2026-11-12; the user's brief called this "Phase 6"). Merges the settings scope of the old "Settings & Onboarding" phase with "Backup & Restore" (old Phase 7). Onboarding and profile moved to Phase 7. tsc/lint/jest pass; on-device exit check pending a development build.
+
+**Reference:** Settings (row 2, col 5). Sub-screens are unseen screens built from existing components (ARCHITECTURE.md §9.6).
 
 **Scope**
-- Splash/intro with language shortcut; onboarding pager; `onboardingDone` flag.
-- Settings hub: profile name, UI language, currency, voice input toggle, voice language, theme mode, about.
-- Currency default derived from device locale (`expo-localization`), user-changeable.
-- Language picker shows `complete`/`partial` languages by native name.
+- Settings hub: General (UI language, theme, currency ₹ INR), Voice (voice language + recognition status), Data management (backup, restore, CSV export, clear all data), About (about, privacy, licenses).
+- Theme: light / dark / system, persisted, live switch. Dark palette = ARCHITECTURE.md §6.1 (approved; dark primary `#7857FA` for 4.5:1 on fills).
+- Voice settings: voice language (bn/en/hi, independent of UI language), recognizer availability, permission status (allow / open system settings), locale support (offline / network / unsupported / unknown), manual-entry fallback.
+- Backup: versioned JSON (`schemaVersion` 1) with all categories, transactions, budgets and preferences; share sheet or system folder picker; nothing is uploaded by the app.
+- Restore: pick file → validate (`parseBackup`) → preview (date, version, counts) → warning + "back up first" → confirm → full replacement in one exclusive transaction with rollback.
+- CSV export shortcut reusing the Reports export with its own period.
+- Clear all data: two confirmations; deletes transactions, budgets and user categories, reseeds default categories, keeps preferences.
+- Privacy and About screens; open-source licenses from `scripts/generate-licenses.mjs` (`npm run licenses`).
+- `GoogleDriveBackupProvider` exists only as a disabled placeholder (no OAuth, no Drive API) — Drive API backup of app content needs express prior written consent under Google's policy.
+- Adds `expo-application` (build number). `expo-document-picker` is not needed (`expo-file-system` pickers).
 
-**Out of scope:** notifications, backup/restore (rows shown but disabled or hidden until their phase), help/support content.
+**Out of scope:** onboarding/profile (Phase 7), notifications, Google Drive API integration, merge restore, multi-currency.
 
-**Exit:** first launch → onboarding → dashboard; settings persist across restarts; UI language and voice language independent.
+**Exit:** settings persist across restarts; theme and UI language switch live; UI language and voice language independent; export → wipe → import round-trip restores identical data (repository test passes; on-device check pending); invalid backups are rejected without writing.
 
 ---
 
@@ -147,14 +155,18 @@
 
 ---
 
-## Phase 7 — Backup & Restore
+## Phase 7 — Onboarding & Profile
+
+> Moved from the old Phase 5 at the user's request (2026-11-12). Backup & Restore, previously Phase 7, is now part of Phase 5.
+
+**Reference:** Splash (row 1, col 1), Onboarding (row 1, col 2), Settings profile row (row 2, col 5).
 
 **Scope**
-- Add `expo-document-picker` (`expo-file-system` and `expo-sharing` were added in Phase 3 for CSV export).
-- Export versioned JSON (schema version + data); share sheet.
-- Import with validation (Zod), preview, and explicit confirmation before replacing data.
+- Splash/intro with language shortcut; onboarding pager; `onboardingDone` flag.
+- Profile name in Settings.
+- Currency default derived from device locale (`expo-localization`), once more currencies exist.
 
-**Exit:** export → wipe → import round-trip restores identical data.
+**Exit:** first launch → onboarding → dashboard; later launches go straight to the dashboard.
 
 ---
 

@@ -40,6 +40,41 @@ export const palette = {
   overlay: 'rgba(23, 21, 42, 0.4)',
 } as const;
 
+/**
+ * Dark palette — ARCHITECTURE.md §6.1 (proposed there, approved 2026-11-12). Not from the
+ * reference image; body-text contrast is enforced by `theme/__tests__/contrast.test.ts`.
+ */
+export const darkPalette = {
+  background: '#0F0D1A',
+  surface: '#1A1729',
+  surfaceMuted: '#231F36',
+  // §6.1 proposed #7C5CFF; darkened so white text on primary fills meets 4.5:1.
+  primary: '#7857FA',
+  primaryPressed: '#5B2ED6',
+  primarySoft: '#2A2050',
+  onPrimaryMuted: '#E4DCFF',
+  textPrimary: '#F4F2FA',
+  textSecondary: '#A8A5BC',
+  textMuted: '#6F6B86',
+  border: '#2E2A45',
+  income: '#22C55E',
+  incomeSoft: '#12301F',
+  expense: '#F87171',
+  expenseSoft: '#3A1A1E',
+  accent: '#FFB04D',
+  accentSoft: '#3A2A12',
+  info: '#60A5FA',
+  infoSoft: '#142640',
+  shadow: '#000000',
+  overlay: 'rgba(0, 0, 0, 0.6)',
+  // Chart series: the light hues, lightened for a dark background.
+  chartBlue: '#5C86FF',
+  chartPurple: '#9563F0',
+  chartOrange: '#FFB066',
+  chartPink: '#E26BF3',
+  chartCyan: '#4DD0E1',
+} as const;
+
 /** Semantic color tokens consumed by components. */
 export interface ColorTokens {
   background: string;
@@ -65,6 +100,9 @@ export interface ColorTokens {
   shadow: string;
   /** Modal / sheet backdrop. */
   overlay: string;
+  /** High-emphasis surface with inverted contrast (toast). */
+  inverseSurface: string;
+  onInverseSurface: string;
   chart: {
     blue: string;
     purple: string;
@@ -97,11 +135,47 @@ export const lightColors: ColorTokens = {
   infoSoft: palette.infoBackground,
   shadow: palette.shadow,
   overlay: palette.overlay,
+  inverseSurface: palette.textPrimary,
+  onInverseSurface: palette.white,
   chart: {
     blue: palette.chartBlue,
     purple: palette.chartPurple,
     orange: palette.chartOrange,
     pink: palette.chartPink,
     cyan: palette.chartCyan,
+  },
+};
+
+export const darkColors: ColorTokens = {
+  background: darkPalette.background,
+  surface: darkPalette.surface,
+  surfaceMuted: darkPalette.surfaceMuted,
+  primary: darkPalette.primary,
+  primaryPressed: darkPalette.primaryPressed,
+  primarySoft: darkPalette.primarySoft,
+  onPrimary: palette.white,
+  onPrimaryMuted: darkPalette.onPrimaryMuted,
+  textPrimary: darkPalette.textPrimary,
+  textSecondary: darkPalette.textSecondary,
+  textMuted: darkPalette.textMuted,
+  border: darkPalette.border,
+  income: darkPalette.income,
+  incomeSoft: darkPalette.incomeSoft,
+  expense: darkPalette.expense,
+  expenseSoft: darkPalette.expenseSoft,
+  accent: darkPalette.accent,
+  accentSoft: darkPalette.accentSoft,
+  info: darkPalette.info,
+  infoSoft: darkPalette.infoSoft,
+  shadow: darkPalette.shadow,
+  overlay: darkPalette.overlay,
+  inverseSurface: darkPalette.textPrimary,
+  onInverseSurface: palette.textPrimary,
+  chart: {
+    blue: darkPalette.chartBlue,
+    purple: darkPalette.chartPurple,
+    orange: darkPalette.chartOrange,
+    pink: darkPalette.chartPink,
+    cyan: darkPalette.chartCyan,
   },
 };

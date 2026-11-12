@@ -15,6 +15,8 @@ export interface SettingsRowProps {
   hint?: string;
   onPress?: () => void;
   disabled?: boolean;
+  /** `danger` renders the icon and label in the expense color (destructive actions). */
+  tone?: 'default' | 'danger';
   trailing?: ReactNode;
 }
 
@@ -27,16 +29,18 @@ export function SettingsRow({
   hint,
   onPress,
   disabled = false,
+  tone = 'default',
   trailing,
 }: SettingsRowProps) {
   const styles = useStyles();
+  const color = disabled ? 'textMuted' : tone === 'danger' ? 'expense' : 'textPrimary';
   const a11yLabel = [label, value, hint].filter(Boolean).join(', ');
 
   const content = (
     <>
-      <AppIcon icon={icon} size="md" color={disabled ? 'textMuted' : 'textPrimary'} />
+      <AppIcon icon={icon} size="md" color={color} />
       <View style={styles.text}>
-        <AppText variant="body" color={disabled ? 'textMuted' : 'textPrimary'}>
+        <AppText variant="body" color={color}>
           {label}
         </AppText>
         {hint ? (

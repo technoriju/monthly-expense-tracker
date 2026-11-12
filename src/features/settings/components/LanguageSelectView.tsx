@@ -1,12 +1,11 @@
-import { Check } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { View } from 'react-native';
 
-import { AppCard, AppHeader, AppIcon, AppScreen, AppText } from '@/components/ui';
-import type { LanguageDefinition } from '@/i18n/languages';
-import { makeStyles, useTheme } from '@/theme';
+import { AppCard, AppHeader, AppScreen, AppText } from '@/components/ui';
+import { makeStyles } from '@/theme';
 
 import { useLanguageSettings } from '../hooks/useLanguageSettings';
+import { RadioOptionRow } from './RadioOptionRow';
 
 export function LanguageSelectView() {
   const styles = useStyles();
@@ -20,9 +19,13 @@ export function LanguageSelectView() {
       <AppCard padding="lg" style={styles.card}>
         <View accessibilityRole="radiogroup">
           {options.map((lang, i) => (
-            <LanguageOption
+            // Native name always renders in its own script's font.
+            <RadioOptionRow
               key={lang.code}
-              language={lang}
+              label={lang.nativeName}
+              labelScript={lang.script}
+              description={lang.englishName}
+              descriptionScript="latin"
               selected={lang.code === current.code}
               loading={lang.code === pending}
               showDivider={i > 0}
@@ -38,61 +41,6 @@ export function LanguageSelectView() {
   );
 }
 
-interface LanguageOptionProps {
-  language: LanguageDefinition;
-  selected: boolean;
-  loading: boolean;
-  showDivider: boolean;
-  onPress: () => void;
-}
-
-function LanguageOption({
-  language,
-  selected,
-  loading,
-  showDivider,
-  onPress,
-}: LanguageOptionProps) {
-  const styles = useStyles();
-  const { colors } = useTheme();
-  return (
-    <>
-      {showDivider ? <View style={styles.divider} /> : null}
-      <Pressable
-        onPress={onPress}
-        accessibilityRole="radio"
-        accessibilityState={{ checked: selected, busy: loading }}
-        accessibilityLabel={`${language.nativeName}, ${language.englishName}`}
-        style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
-        <View style={styles.names}>
-          {/* Native name always renders in its own script's font. */}
-          <AppText variant="bodyMedium" script={language.script}>
-            {language.nativeName}
-          </AppText>
-          <AppText variant="bodySmall" color="textSecondary" script="latin">
-            {language.englishName}
-          </AppText>
-        </View>
-        {loading ? (
-          <ActivityIndicator color={colors.primary} />
-        ) : selected ? (
-          <AppIcon icon={Check} size="md" color="primary" strokeWidth={2.5} />
-        ) : null}
-      </Pressable>
-    </>
-  );
-}
-
 const useStyles = makeStyles((t) => ({
   card: { paddingVertical: t.spacing.xs },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: t.spacing.md,
-    minHeight: t.layout.minTouchTarget,
-    paddingVertical: t.spacing.md,
-  },
-  pressed: { opacity: t.layout.pressedOpacity },
-  names: { flex: 1 },
-  divider: { height: t.layout.hairline, backgroundColor: t.colors.border },
 }));
