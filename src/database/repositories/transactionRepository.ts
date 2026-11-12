@@ -30,6 +30,7 @@ interface TransactionRow {
   c_color: string;
   c_sort_order: number;
   c_is_system: number;
+  c_custom_name: string | null;
   c_created_at: number;
 }
 
@@ -37,7 +38,8 @@ const SELECT = `
   SELECT t.id, t.type, t.amount_minor, t.currency, t.category_id, t.occurred_on, t.note,
          t.payment_method, t.source, t.created_at, t.updated_at,
          c.key AS c_key, c.type AS c_type, c.icon AS c_icon, c.color AS c_color,
-         c.sort_order AS c_sort_order, c.is_system AS c_is_system, c.created_at AS c_created_at
+         c.sort_order AS c_sort_order, c.is_system AS c_is_system,
+         c.custom_name AS c_custom_name, c.created_at AS c_created_at
   FROM transactions t
   JOIN categories c ON c.id = t.category_id`;
 
@@ -56,6 +58,7 @@ function mapRow(row: TransactionRow): Transaction {
       color: row.c_color,
       sort_order: row.c_sort_order,
       is_system: row.c_is_system,
+      custom_name: row.c_custom_name,
       created_at: row.c_created_at,
     }),
     occurredOn: row.occurred_on,

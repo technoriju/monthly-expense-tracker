@@ -57,6 +57,7 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
     categoriesLoading,
     categoriesError,
     retryCategories,
+    addCategory,
     submit,
     scrollRef,
     isSubmitting,
@@ -109,6 +110,7 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
           categoriesLoading={categoriesLoading}
           categoriesError={categoriesError}
           onRetryCategories={retryCategories}
+          onAddCategory={addCategory}
           hints={hints}
         />
 

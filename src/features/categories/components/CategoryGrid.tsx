@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 
 import { AppText } from '@/components/ui';
@@ -22,7 +23,7 @@ export function CategoryGrid({
   onSelect,
   accessibilityLabel,
 }: CategoryGridProps) {
-  const styles = useStyles();
+  const styles = useCellStyles();
   const nameOf = useCategoryName();
 
   return (
@@ -30,37 +31,64 @@ export function CategoryGrid({
       style={styles.grid}
       accessibilityRole="radiogroup"
       accessibilityLabel={accessibilityLabel}>
-      {categories.map((category) => {
-        const selected = category.id === selectedId;
-        const name = nameOf(category);
-        return (
-          <Pressable
-            key={category.id}
-            onPress={() => onSelect(category)}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: selected }}
-            accessibilityLabel={name}
-            style={({ pressed }) => [
-              styles.cell,
-              selected && styles.selected,
-              pressed && styles.pressed,
-            ]}>
-            <CategoryIcon category={category} />
-            <AppText
-              variant="bodySmall"
-              color={selected ? 'primaryText' : 'textPrimary'}
-              align="center"
-              numberOfLines={2}>
-              {name}
-            </AppText>
-          </Pressable>
-        );
-      })}
+      {categories.map((category) => (
+        <CategoryCell
+          key={category.id}
+          icon={<CategoryIcon category={category} />}
+          label={nameOf(category)}
+          selected={category.id === selectedId}
+          onPress={() => onSelect(category)}
+        />
+      ))}
     </View>
   );
 }
 
-const useStyles = makeStyles((t) => ({
+export interface CategoryCellProps {
+  icon: ReactNode;
+  /** Already-translated label. */
+  label: string;
+  /** Omit for action tiles (rendered as buttons instead of radios). */
+  selected?: boolean;
+  onPress: () => void;
+  accessibilityHint?: string;
+}
+
+/** One quarter-width tile of the category grid: icon circle above a label. */
+export function CategoryCell({
+  icon,
+  label,
+  selected,
+  onPress,
+  accessibilityHint,
+}: CategoryCellProps) {
+  const styles = useCellStyles();
+  const isRadio = selected !== undefined;
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole={isRadio ? 'radio' : 'button'}
+      accessibilityState={isRadio ? { checked: selected } : undefined}
+      accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
+      style={({ pressed }) => [
+        styles.cell,
+        selected && styles.selected,
+        pressed && styles.pressed,
+      ]}>
+      {icon}
+      <AppText
+        variant="bodySmall"
+        color={selected ? 'primaryText' : 'textPrimary'}
+        align="center"
+        numberOfLines={2}>
+        {label}
+      </AppText>
+    </Pressable>
+  );
+}
+
+export const useCellStyles = makeStyles((t) => ({
   grid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: t.spacing.sm },
   cell: {
     width: '25%',

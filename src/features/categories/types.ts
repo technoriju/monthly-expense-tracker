@@ -18,5 +18,7 @@ export interface Category {
   color: string;
   sortOrder: number;
   isDefault: boolean;
+  /** Name typed by the user for a custom category; `null` for system categories. */
+  customName: string | null;
   createdAt: number;
 }

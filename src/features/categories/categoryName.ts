@@ -8,10 +8,11 @@ export function isCategoryKey(key: string): key is CategoryKey {
   return Object.prototype.hasOwnProperty.call(englishResources.categories, key);
 }
 
-/** Display name for a category: translated system name, else the raw key. */
+/** Display name for a category: custom name, else translated system name, else the raw key. */
 export function getCategoryName(
   t: TFunction<'categories'>,
-  category: Pick<Category, 'key'>,
+  category: Pick<Category, 'key' | 'customName'>,
 ): string {
+  if (category.customName) return category.customName;
   return isCategoryKey(category.key) ? t(category.key) : category.key;
 }

@@ -4,7 +4,7 @@ import { getCategoryName } from '../categoryName';
 import type { Category } from '../types';
 
 /** Returns a function translating a category to its display name in the UI language. */
-export function useCategoryName(): (category: Pick<Category, 'key'>) => string {
+export function useCategoryName(): (category: Pick<Category, 'key' | 'customName'>) => string {
   const { t } = useTranslation('categories');
   return (category) => getCategoryName(t, category);
 }

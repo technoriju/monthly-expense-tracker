@@ -1,10 +1,10 @@
 import { CircleAlert } from 'lucide-react-native';
-import { Controller, useFormState, type Control } from 'react-hook-form';
+import { Controller, useFormState, useWatch, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppButton, AppIcon, AppInput, AppLoading, AppText } from '@/components/ui';
-import { CategoryGrid } from '@/features/categories/components/CategoryGrid';
+import { CategoryQuickPicker } from '@/features/categories/components/CategoryQuickPicker';
 import type { Category } from '@/features/categories/types';
 import { useAnnounce } from '@/hooks/useAnnounce';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -38,11 +38,13 @@ export interface TransactionFormFieldsProps {
   /** Categories failed to load: shows a message and a retry button instead of the grid. */
   categoriesError?: boolean;
   onRetryCategories?: () => void;
+  /** Creates a custom category of the current type (Add category tile). */
+  onAddCategory: (name: string) => Promise<Category>;
   hints?: TransactionFieldHints;
 }
 
 /**
- * Category grid, amount, date, note and payment method bound to a transaction form.
+ * Category quick picker, amount, date, note and payment method bound to a transaction form.
  * Shared by Add/Edit Transaction and the voice Review screen.
  */
 export function TransactionFormFields({
@@ -51,9 +53,11 @@ export function TransactionFormFields({
   categoriesLoading,
   categoriesError = false,
   onRetryCategories,
+  onAddCategory,
   hints = {},
 }: TransactionFormFieldsProps) {
   const styles = useStyles();
+  const type = useWatch({ control, name: 'type' });
   const { t } = useTranslation('transactions');
   const currency = useSettingsStore((s) => s.currency);
   const errorText = (message: unknown) =>
@@ -85,11 +89,13 @@ export function TransactionFormFields({
               </View>
             ) : (
               <View style={fieldState.error ? styles.gridErrored : null}>
-                <CategoryGrid
+                <CategoryQuickPicker
                   accessibilityLabel={t('fields.category')}
+                  type={type}
                   categories={categories}
                   selectedId={field.value}
-                  onSelect={(category) => field.onChange(category.id)}
+                  onSelect={field.onChange}
+                  onAddCategory={onAddCategory}
                 />
               </View>
             )}

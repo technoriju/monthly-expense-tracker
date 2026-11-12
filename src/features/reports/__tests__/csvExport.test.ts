@@ -72,6 +72,7 @@ const food: Category = {
   color: 'accent',
   sortOrder: 0,
   isDefault: true,
+  customName: null,
   createdAt: 0,
 };
 

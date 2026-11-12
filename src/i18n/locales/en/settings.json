@@ -113,5 +113,11 @@
   },
   "errors": {
     "saveFailed": "Could not save this setting. Please try again."
+  },
+  "more": {
+    "title": "More",
+    "section": "Manage",
+    "categories": "Categories",
+    "categoriesHint": "Add or delete your own categories"
   }
 }

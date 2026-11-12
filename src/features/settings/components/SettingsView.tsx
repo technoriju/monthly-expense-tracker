@@ -32,7 +32,9 @@ export function SettingsView() {
   const confirmClear = useClearData();
 
   return (
-    <AppScreen header={<AppHeader title={t('title')} />}>
+    <AppScreen
+      header={<AppHeader title={t('title')} back />}
+      edges={['top', 'left', 'right', 'bottom']}>
       <SettingsSection title={t('sections.general')}>
         <SettingsRow
           icon={Globe}

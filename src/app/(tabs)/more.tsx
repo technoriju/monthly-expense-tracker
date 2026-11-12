@@ -1,5 +1,5 @@
-import { SettingsView } from '@/features/settings/components/SettingsView';
+import { MoreView } from '@/features/settings/components/MoreView';
 
 export default function MoreScreen() {
-  return <SettingsView />;
+  return <MoreView />;
 }

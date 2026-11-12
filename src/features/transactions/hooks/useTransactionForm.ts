@@ -5,7 +5,7 @@ import { useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Keyboard, type ScrollViewInstance } from 'react-native';
 
-import { useCategories } from '@/features/categories/hooks/useCategories';
+import { useCategoriesByUsage } from '@/features/categories/hooks/useCategoriesByUsage';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
 
@@ -26,7 +26,7 @@ export interface TransactionFormOptions extends CreateOptions {
 }
 
 /**
- * Add/Edit form state: React Hook Form + Zod, category list for the selected type,
+ * Add/Edit form state: React Hook Form + Zod, usage-ordered category list for the selected type,
  * duplicate-submit guard, persistence and feedback. Pass `transactionId` to edit.
  */
 export function useTransactionForm(
@@ -55,7 +55,8 @@ export function useTransactionForm(
     loading: categoriesLoading,
     error: categoriesError,
     retry: retryCategories,
-  } = useCategories(type);
+    addCategory,
+  } = useCategoriesByUsage(type);
 
   /** Switching Expense ↔ Income clears the category: it belongs to the other type. */
   const changeType = (next: TransactionFormValues['type']) => {
@@ -117,6 +118,7 @@ export function useTransactionForm(
     categoriesLoading,
     categoriesError,
     retryCategories,
+    addCategory,
     changeType,
     submit,
     scrollRef,

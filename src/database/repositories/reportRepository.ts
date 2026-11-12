@@ -39,7 +39,7 @@ export const reportRepository = {
   ): Promise<CategoryTotalRow[]> {
     const db = await getDatabase();
     const rows = await db.getAllAsync<CategoryRow & { total: number; count: number }>(
-      `SELECT c.id, c.key, c.type, c.icon, c.color, c.sort_order, c.is_system, c.created_at,
+      `SELECT c.id, c.key, c.type, c.icon, c.color, c.sort_order, c.is_system, c.custom_name, c.created_at,
               SUM(t.amount_minor) AS total, COUNT(*) AS count
          FROM transactions t
          JOIN categories c ON c.id = t.category_id

@@ -57,6 +57,8 @@ function RootNavigator() {
       <Stack.Screen name="reports/calendar" />
       <Stack.Screen name="budgets" />
       <Stack.Screen name="voice/review" />
+      <Stack.Screen name="categories" />
+      <Stack.Screen name="settings" />
       <Stack.Screen name="settings/language" />
       <Stack.Screen name="settings/theme" />
       <Stack.Screen name="settings/voice" />

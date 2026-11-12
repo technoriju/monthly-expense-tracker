@@ -59,6 +59,7 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
     categoriesLoading,
     categoriesError,
     retryCategories,
+    addCategory,
     changeType,
     submit,
     scrollRef,
@@ -115,6 +116,7 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
           categoriesLoading={categoriesLoading}
           categoriesError={categoriesError}
           onRetryCategories={retryCategories}
+          onAddCategory={addCategory}
         />
 
         <View style={styles.actions}>

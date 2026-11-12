@@ -1,6 +1,10 @@
 {
-  "add": { "title": "Add Transaction" },
-  "edit": { "title": "Edit Transaction" },
+  "add": {
+    "title": "Add Transaction"
+  },
+  "edit": {
+    "title": "Edit Transaction"
+  },
   "type": {
     "label": "Transaction type",
     "expense": "Expense",
@@ -94,5 +98,35 @@
   "formErrors": {
     "categoriesFailed": "Could not load categories.",
     "retry": "Try again"
+  },
+  "quickCategories": {
+    "add": "Add",
+    "otherHint": "Opens the full category list"
+  },
+  "addCategory": {
+    "title": "Add category",
+    "nameLabel": "Category name",
+    "namePlaceholder": "e.g. Pets",
+    "submit": "Add",
+    "errors": {
+      "nameRequired": "Enter a category name",
+      "nameTooLong": "Name can be at most {{max}} characters",
+      "duplicate": "A category with this name already exists",
+      "failed": "Could not add category. Please try again."
+    }
+  },
+  "manageCategories": {
+    "title": "Categories",
+    "custom": "Your categories",
+    "default": "Default categories",
+    "customEmpty": "You have not added any categories yet.",
+    "added": "Category added",
+    "deleteLabel": "Delete {{name}}",
+    "deleteTitle": "Delete “{{name}}”?",
+    "deleteMessage": "It will no longer appear when adding transactions. Past transactions keep this category.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleted": "Category deleted",
+    "deleteFailed": "Could not delete category. Please try again."
   }
 }

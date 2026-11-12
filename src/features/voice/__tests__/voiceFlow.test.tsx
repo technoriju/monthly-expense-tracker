@@ -211,7 +211,10 @@ describe('Voice review → save', () => {
     expect(scrollTo).toHaveBeenCalledWith({ y: 0, animated: true });
     expect(await rows()).toHaveLength(0);
 
-    await fireEvent.press(screen.getByRole('radio', { name: 'Healthcare' }));
+    // Unused categories are not tiles: pick from the "Other" list.
+    await fireEvent.press(screen.getByHintText('Opens the full category list'));
+    await fireEvent.press(await screen.findByRole('radio', { name: 'Healthcare' }));
+    expect(screen.getByRole('radio', { checked: true })).toHaveAccessibleName('Healthcare');
     await fireEvent.press(confirmButton());
     await waitFor(async () => expect(await rows()).toHaveLength(1));
     const healthcare = (await categoryRepository.listAll()).find((c) => c.key === 'healthcare');
@@ -219,6 +222,20 @@ describe('Voice review → save', () => {
       'SELECT category_id FROM transactions',
     );
     expect(saved?.category_id).toBe(healthcare?.id);
+  });
+
+  it('creates a custom category from the Add tile and selects it', async () => {
+    await renderReview(draftFor('doctor fees 700 rupees'));
+    await fireEvent.press(await screen.findByRole('button', { name: 'Add' }));
+    await fireEvent.changeText(await screen.findByLabelText('Category name'), '  Pets ');
+    await fireEvent.press(screen.getAllByRole('button', { name: 'Add' }).at(-1)!);
+    await waitFor(() =>
+      expect(screen.getByRole('radio', { checked: true })).toHaveAccessibleName('Pets'),
+    );
+    await fireEvent.press(confirmButton());
+    await waitFor(async () => expect(await rows()).toHaveLength(1));
+    const pets = (await categoryRepository.listAll()).find((c) => c.customName === 'Pets');
+    expect(pets?.type).toBe('expense');
   });
 
   it('cancelling asks first, then discards the draft without writing', async () => {

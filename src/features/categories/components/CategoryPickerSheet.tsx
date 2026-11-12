@@ -18,15 +18,18 @@ export interface CategoryPickerSheetProps {
   selectedId: number | null;
   /** `null` = "All categories". */
   onSelect: (categoryId: number | null) => void;
+  /** Show the "All categories" option (history filter). Default `true`. */
+  includeAll?: boolean;
 }
 
-/** Searchable single-choice category list used by the history filter. */
+/** Searchable single-choice category list (history filter, Add Transaction "Other"). */
 export function CategoryPickerSheet({
   visible,
   onClose,
   categories,
   selectedId,
   onSelect,
+  includeAll = true,
 }: CategoryPickerSheetProps) {
   const styles = useStyles();
   const { t } = useTranslation('transactions');
@@ -57,7 +60,7 @@ export function CategoryPickerSheet({
         autoCorrect={false}
       />
       <View accessibilityRole="radiogroup">
-        {needle ? null : (
+        {needle || !includeAll ? null : (
           <Option
             selected={selectedId === null}
             label={t('history.allCategories')}

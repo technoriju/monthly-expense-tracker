@@ -70,6 +70,52 @@ describe('categoryRepository', () => {
     expect((await categoryRepository.getById(id))?.type).toBe('income');
     expect(await categoryRepository.getById(99_999)).toBeNull();
   });
+
+  it('lists a type by usage (most used first), ties in sort order', async () => {
+    const rent = await categoryId('rent');
+    const travel = await categoryId('travel');
+    await transactionRepository.insert(await record({ categoryId: travel }), 1_000);
+    await transactionRepository.insert(await record({ categoryId: rent }), 1_000);
+    await transactionRepository.insert(await record({ categoryId: rent }), 1_000);
+    const keys = (await categoryRepository.listByTypeByUsage('expense')).map((c) => c.key);
+    expect(keys.slice(0, 4)).toEqual(['rent', 'travel', 'food', 'groceries']);
+    expect(keys).toHaveLength(SYSTEM_CATEGORIES.filter((c) => c.type === 'expense').length);
+  });
+
+  it('creates a custom category at the end of its type with the given name', async () => {
+    const created = await categoryRepository.createCustom('income', 'Pocket money', 5_000);
+    expect(created).toMatchObject({
+      type: 'income',
+      customName: 'Pocket money',
+      isDefault: false,
+      icon: 'Tag',
+      color: 'primary',
+      createdAt: 5_000,
+    });
+    expect(created.key).toMatch(/^custom_/);
+    const income = await categoryRepository.listByType('income');
+    expect(income.at(-1)?.id).toBe(created.id);
+    const id = await transactionRepository.insert(
+      await record({ type: 'income', categoryId: created.id }),
+      1_000,
+    );
+    expect((await transactionRepository.getById(id))?.category.customName).toBe('Pocket money');
+  });
+
+  it('archives only custom categories; their transactions keep the category', async () => {
+    const custom = await categoryRepository.createCustom('expense', 'Pets', 5_000);
+    const txId = await transactionRepository.insert(
+      await record({ categoryId: custom.id }),
+      1_000,
+    );
+    expect(await categoryRepository.archiveCustom(custom.id)).toBe(true);
+    expect(await categoryRepository.archiveCustom(custom.id)).toBe(false);
+    expect((await categoryRepository.listByType('expense')).map((c) => c.id)).not.toContain(
+      custom.id,
+    );
+    expect((await transactionRepository.getById(txId))?.category.customName).toBe('Pets');
+    expect(await categoryRepository.archiveCustom(await categoryId('food'))).toBe(false);
+  });
 });
 
 describe('transactionRepository CRUD', () => {

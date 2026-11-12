@@ -19,6 +19,7 @@ const cat = (id: number, key: string, sortOrder = id): Category => ({
   color: 'accent',
   sortOrder,
   isDefault: true,
+  customName: null,
   createdAt: 0,
 });
 
