@@ -1,0 +1,44 @@
+{
+  "next": "Next",
+  "skip": "Skip",
+  "getStarted": "Get Started",
+  "language": "Language",
+  "progress": "Step {{current}} of {{total}}",
+  "slides": {
+    "welcome": {
+      "title": "Welcome to Expense Tracker",
+      "chip": "Track • Manage • Save",
+      "body": "Keep track of your monthly income and expenses. Everything stays on this phone and works offline."
+    },
+    "add": {
+      "title": "Add Income & Expenses",
+      "chip": "Tap the + button",
+      "body": "Choose Expense or Income, pick a category, enter the amount and date, then save."
+    },
+    "voice": {
+      "title": "Speak Your Expenses",
+      "chip": "“Bazar 100”",
+      "body": "Open Voice and speak in Bengali, Hindi or English. You always review the entry before it is saved."
+    },
+    "categories": {
+      "title": "Organise with Categories",
+      "chip": "More → Categories",
+      "body": "Use the ready-made categories or create your own for income and expenses."
+    },
+    "budgets": {
+      "title": "Set Monthly Budgets",
+      "chip": "Reports → Budget",
+      "body": "Set an overall or per-category limit for the month. You are warned at 80%, 90% and 100%."
+    },
+    "reports": {
+      "title": "See Where Money Goes",
+      "chip": "Reports",
+      "body": "Charts, category breakdown and a monthly calendar show your spending at a glance."
+    },
+    "settings": {
+      "title": "Make It Yours",
+      "chip": "More → Settings",
+      "body": "Change the language, theme and voice language, and back up or restore your data."
+    }
+  }
+}

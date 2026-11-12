@@ -102,3 +102,18 @@ describe('theme mode', () => {
     await expect(settingsService.setThemeMode('neon')).rejects.toThrow();
   });
 });
+
+describe('onboarding', () => {
+  it('is not done on a fresh install, and stays done once completed', async () => {
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().onboardingDone).toBe(false);
+
+    await settingsService.completeOnboarding();
+    expect(settingsRepository.set).toHaveBeenCalledWith('onboardingDone', true);
+    expect(useSettingsStore.getState().onboardingDone).toBe(true);
+
+    useSettingsStore.getState().applySettings({ onboardingDone: false });
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().onboardingDone).toBe(true);
+  });
+});

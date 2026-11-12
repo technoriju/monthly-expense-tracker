@@ -1,14 +1,29 @@
-import { User } from 'lucide-react-native';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
-import { AppIcon, AppText } from '@/components/ui';
-import { makeStyles } from '@/theme';
+import { AppText } from '@/components/ui';
+import { ProfileAvatar } from '@/features/profile/components/ProfileAvatar';
+import { ProfilePhotoSheet } from '@/features/profile/components/ProfilePhotoSheet';
+import { useProfileImage } from '@/features/profile/hooks/useProfileImage';
+import { makeStyles, useTheme } from '@/theme';
 import { getGreetingKey } from '@/utils/dates';
 
 export function DashboardGreeting({ now }: { now: Date }) {
   const styles = useStyles();
   const { t } = useTranslation('dashboard');
+  const { layout } = useTheme();
+  const profile = useProfileImage();
+  const [sheetOpen, setSheetOpen] = useState(false);
+
+  const pick = async () => {
+    if (await profile.pick()) setSheetOpen(false);
+  };
+  const remove = () => {
+    profile.remove();
+    setSheetOpen(false);
+  };
+
   return (
     <View style={styles.root}>
       <View style={styles.text}>
@@ -19,9 +34,23 @@ export function DashboardGreeting({ now }: { now: Date }) {
           {t(`greeting.${getGreetingKey(now)}`)}
         </AppText>
       </View>
-      <View style={styles.avatar} accessible accessibilityLabel={t('profileLabel')}>
-        <AppIcon icon={User} size="lg" color="primary" />
-      </View>
+      <Pressable
+        onPress={() => setSheetOpen(true)}
+        // 44pt avatar grown to the 48pt minimum touch target.
+        hitSlop={(layout.minTouchTarget - layout.avatarSize) / 2}
+        accessibilityRole="button"
+        accessibilityLabel={t('profileLabel')}
+        accessibilityHint={t('profilePhoto.openHint')}
+        style={({ pressed }) => pressed && styles.pressed}>
+        <ProfileAvatar uri={profile.uri} />
+      </Pressable>
+      <ProfilePhotoSheet
+        visible={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        uri={profile.uri}
+        onPick={() => void pick()}
+        onRemove={remove}
+      />
     </View>
   );
 }
@@ -29,12 +58,5 @@ export function DashboardGreeting({ now }: { now: Date }) {
 const useStyles = makeStyles((t) => ({
   root: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.md, paddingTop: t.spacing.md },
   text: { flex: 1 },
-  avatar: {
-    width: t.layout.avatarSize,
-    height: t.layout.avatarSize,
-    borderRadius: t.radius.pill,
-    backgroundColor: t.colors.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  pressed: { opacity: t.layout.pressedOpacity },
 }));

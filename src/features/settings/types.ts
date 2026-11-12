@@ -4,6 +4,7 @@ export const SETTING_KEYS = {
   currency: 'currency',
   themeMode: 'themeMode',
   voiceLanguage: 'voiceLanguage',
+  onboardingDone: 'onboardingDone',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

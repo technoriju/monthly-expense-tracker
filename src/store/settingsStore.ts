@@ -16,6 +16,8 @@ export interface SettingsState {
   themeMode: ThemeMode;
   /** Speech-recognition language. Separate from `uiLanguage`. */
   voiceLanguage: VoiceLanguage;
+  /** First-launch onboarding finished (or skipped). Device-only; not part of backups. */
+  onboardingDone: boolean;
 }
 
 interface SettingsStore extends SettingsState {
@@ -29,5 +31,6 @@ export const useSettingsStore = create<SettingsStore>()((set) => ({
   currency: DEFAULT_CURRENCY,
   themeMode: 'system',
   voiceLanguage: DEFAULT_VOICE_LANGUAGE,
+  onboardingDone: false,
   applySettings: (patch) => set(patch),
 }));

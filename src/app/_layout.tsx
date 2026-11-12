@@ -5,24 +5,30 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
 import { TriangleAlert } from 'lucide-react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Preloader } from '@/components/layout/Preloader';
 import { AppEmptyState, AppScreen, AppToast } from '@/components/ui';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
+import { useSettingsStore } from '@/store/settingsStore';
 import { ThemeProvider, useTheme } from '@/theme';
 
 void SplashScreen.preventAutoHideAsync();
 
+/** Minimum time the logo preloader stays up, so it reads as a screen rather than a flash. */
+const PRELOADER_MIN_MS = 1200;
+
 export default function RootLayout() {
   const { status, retry } = useAppBootstrap();
+  const preloaderElapsed = useElapsed(PRELOADER_MIN_MS);
 
+  // The JS preloader (same purple + logo) takes over from the native splash right away.
   useEffect(() => {
-    if (status !== 'loading') void SplashScreen.hideAsync();
-  }, [status]);
+    void SplashScreen.hideAsync();
+  }, []);
 
-  // Native splash stays visible while loading.
-  if (status === 'loading') return null;
+  if (status === 'loading' || !preloaderElapsed) return <Preloader />;
 
   return (
     <ThemeProvider>
@@ -44,12 +50,28 @@ function SystemBars() {
   return <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />;
 }
 
+function useElapsed(ms: number): boolean {
+  const [elapsed, setElapsed] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setElapsed(true), ms);
+    return () => clearTimeout(id);
+  }, [ms]);
+  return elapsed;
+}
+
 function RootNavigator() {
   const { colors } = useTheme();
+  const onboardingDone = useSettingsStore((s) => s.onboardingDone);
   return (
     <Stack
       screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
-      <Stack.Screen name="(tabs)" />
+      {/* First launch only: onboarding until finished or skipped, then straight to the tabs. */}
+      <Stack.Protected guard={onboardingDone} redirectTo="/onboarding">
+        <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!onboardingDone} redirectTo="/">
+        <Stack.Screen name="onboarding" />
+      </Stack.Protected>
       <Stack.Screen name="transaction/new" options={{ presentation: 'modal' }} />
       <Stack.Screen name="transaction/[id]" options={{ presentation: 'modal' }} />
       <Stack.Screen name="transactions" />

@@ -163,7 +163,9 @@
 
 **Scope**
 - Splash/intro with language shortcut; onboarding pager; `onboardingDone` flag.
+- *(pulled forward, done 2026-11-13)* Startup preloader: brand purple + `assets/images/logo.png` centred (min 1.2 s), also used as the native splash image (needs a new native build). First-launch onboarding pager (`/onboarding`, 7 slides: welcome, add income/expense, voice, categories, budgets, reports, settings) with Skip, dots, Next / Get Started and a language shortcut; `onboardingDone` setting (device-only, not in backups) gates it via `Stack.Protected`. The reference intro panel (row 1, col 1) is replaced by the preloader at the user's request.
 - Profile name in Settings.
+- *(pulled forward, done 2026-11-12)* Profile photo: tap the dashboard avatar → sheet to choose (system photo picker, square crop) or remove a photo. Stored only in app-private files (`src/features/profile`), not in SQLite or backups. Adds `expo-image-picker` (camera permission blocked) — needs a new native build.
 - Currency default derived from device locale (`expo-localization`), once more currencies exist.
 
 **Exit:** first launch → onboarding → dashboard; later launches go straight to the dashboard.

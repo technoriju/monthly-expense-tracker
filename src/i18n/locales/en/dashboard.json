@@ -6,6 +6,15 @@
     "evening": "Good Evening"
   },
   "profileLabel": "Profile",
+  "profilePhoto": {
+    "title": "Profile photo",
+    "openHint": "Opens profile photo options",
+    "choose": "Choose photo",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "saveFailed": "Could not set the photo. Please try again.",
+    "removeFailed": "Could not remove the photo. Please try again."
+  },
   "month": {
     "selectorLabel": "Selected month: {{month}}",
     "calendarLabel": "Open calendar",

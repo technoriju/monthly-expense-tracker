@@ -33,9 +33,16 @@ export const settingsService = {
       : isVoiceLanguage(uiLanguage)
         ? uiLanguage
         : DEFAULT_VOICE_LANGUAGE;
+    const onboardingDone = stored[SETTING_KEYS.onboardingDone] === true;
 
     await changeUiLanguage(uiLanguage);
-    useSettingsStore.getState().applySettings({ uiLanguage, currency, themeMode, voiceLanguage });
+    useSettingsStore.getState().applySettings({
+      uiLanguage,
+      currency,
+      themeMode,
+      voiceLanguage,
+      onboardingDone,
+    });
   },
 
   /** Persists the UI language (DB first), then switches it live. */
@@ -64,5 +71,11 @@ export const settingsService = {
     }
     await settingsRepository.set(SETTING_KEYS.voiceLanguage, code);
     useSettingsStore.getState().applySettings({ voiceLanguage: code });
+  },
+
+  /** Marks first-launch onboarding as finished so it never shows again (DB first). */
+  async completeOnboarding(): Promise<void> {
+    await settingsRepository.set(SETTING_KEYS.onboardingDone, true);
+    useSettingsStore.getState().applySettings({ onboardingDone: true });
   },
 };
