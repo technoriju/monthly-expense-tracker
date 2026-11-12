@@ -3,6 +3,7 @@
   "sections": {
     "general": "General",
     "voice": "Voice",
+    "security": "Security",
     "data": "Data management",
     "about": "About"
   },
@@ -165,5 +166,32 @@
       }
     },
     "rowHint": "Contact us and common questions"
+  },
+  "appLock": {
+    "label": "App lock",
+    "title": "App Lock",
+    "description": "Ask for your fingerprint, face or phone screen lock when the app opens. The app uses your phone's own security and never stores a PIN.",
+    "off": "Off",
+    "device": "Phone screen lock",
+    "biometric": {
+      "fingerprint": "Fingerprint",
+      "face": "Face unlock",
+      "other": "Biometrics"
+    },
+    "hints": {
+      "off": "Anyone with your unlocked phone can open the app",
+      "biometric": "Opens the scanner automatically; you can use your PIN instead",
+      "device": "Tap the lock icon, then enter your phone's PIN, pattern or password"
+    },
+    "noSecurity": "Your phone has no screen lock. Set a PIN, pattern, password or fingerprint in your phone's settings to use app lock.",
+    "prompt": "Unlock Expense Tracker",
+    "cancel": "Cancel",
+    "unlock": "Unlock",
+    "lockedTitle": "Expense Tracker is locked",
+    "lockedBiometricHint": "Use your fingerprint or face to unlock. You can also use your phone's PIN.",
+    "lockedDeviceHint": "Tap the lock to unlock with your phone's PIN, pattern or password.",
+    "authFailed": "Could not verify. Please try again.",
+    "turnedOn": "App lock is on",
+    "turnedOff": "App lock is off"
   }
 }

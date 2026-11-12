@@ -40,5 +40,11 @@
       "chip": "More → Settings",
       "body": "Change the language, theme and voice language, and back up or restore your data."
     }
+  },
+  "appLock": {
+    "title": "Secure Your App",
+    "body": "Lock Expense Tracker with your fingerprint or your phone's screen lock. You can change this later in Settings.",
+    "use": "Use {{method}}",
+    "skip": "Not now"
   }
 }

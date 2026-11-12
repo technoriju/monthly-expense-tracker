@@ -6,6 +6,7 @@ import {
   History,
   IndianRupee,
   Info,
+  LockKeyhole,
   Mic,
   ShieldCheck,
   SunMoon,
@@ -16,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { AppHeader, AppScreen, AppText } from '@/components/ui';
 import { useClearData } from '@/features/data-management/hooks/useClearData';
 import { useActiveLanguage } from '@/hooks/useActiveLanguage';
+import { appLockMethodLabelKey } from '@/features/security/methodLabel';
 import { getLanguage } from '@/i18n/languages';
 import { useSettingsStore } from '@/store/settingsStore';
 import { getCurrencyInfo } from '@/utils/money';
@@ -30,6 +32,7 @@ export function SettingsView() {
   const themeMode = useSettingsStore((s) => s.themeMode);
   const voiceLanguage = getLanguage(useSettingsStore((s) => s.voiceLanguage));
   const confirmClear = useClearData();
+  const appLockMethod = useSettingsStore((s) => s.appLockMethod);
 
   return (
     <AppScreen
@@ -64,6 +67,15 @@ export function SettingsView() {
           value={voiceLanguage.nativeName}
           valueScript={voiceLanguage.script}
           onPress={() => router.push('/settings/voice')}
+        />
+      </SettingsSection>
+
+      <SettingsSection title={t('sections.security')}>
+        <SettingsRow
+          icon={LockKeyhole}
+          label={t('appLock.label')}
+          value={t(appLockMethodLabelKey(appLockMethod, 'other'))}
+          onPress={() => router.push('/settings/app-lock')}
         />
       </SettingsSection>
 

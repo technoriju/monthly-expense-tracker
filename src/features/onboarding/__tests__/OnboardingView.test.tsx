@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { settingsRepository } from '@/database';
+import { appLockService } from '@/features/security/services/appLockService';
 import { changeUiLanguage } from '@/i18n';
 import { useSettingsStore } from '@/store/settingsStore';
 
@@ -20,6 +21,17 @@ jest.mock(
 );
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+
+jest.mock('@/features/security/services/appLockService', () => ({
+  appLockService: { getCapabilities: jest.fn(), authenticate: jest.fn() },
+}));
+
+const NO_LOCK = { hasSecurity: false, hasBiometrics: false, biometricKind: 'other' } as const;
+const FINGERPRINT = {
+  hasSecurity: true,
+  hasBiometrics: true,
+  biometricKind: 'fingerprint',
+} as const;
 
 const METRICS = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -39,8 +51,12 @@ async function renderOnboarding(): Promise<void> {
 
 beforeEach(async () => {
   await changeUiLanguage('en');
-  useSettingsStore.getState().applySettings({ uiLanguage: 'en', onboardingDone: false });
+  useSettingsStore
+    .getState()
+    .applySettings({ uiLanguage: 'en', onboardingDone: false, appLockMethod: 'off' });
   jest.mocked(settingsRepository.set).mockClear();
+  jest.mocked(appLockService.getCapabilities).mockResolvedValue(NO_LOCK);
+  jest.mocked(appLockService.authenticate).mockReset();
 });
 
 describe('OnboardingView', () => {
@@ -84,5 +100,46 @@ describe('OnboardingView', () => {
     await renderOnboarding();
     expect(screen.getByText('খরচের হিসাবে স্বাগতম')).toBeTruthy();
     expect(screen.getByText('পরবর্তী')).toBeTruthy();
+  });
+});
+
+describe('OnboardingView app-lock step', () => {
+  beforeEach(() => {
+    jest.mocked(appLockService.getCapabilities).mockResolvedValue(FINGERPRINT);
+  });
+
+  it('offers the app lock after Skip; Not now finishes without a lock', async () => {
+    await renderOnboarding();
+    await fireEvent.press(screen.getByText('Skip'));
+    expect(await screen.findByText('Secure Your App')).toBeTruthy();
+    expect(useSettingsStore.getState().onboardingDone).toBe(false);
+
+    await fireEvent.press(screen.getByText('Not now'));
+    expect(settingsRepository.set).toHaveBeenCalledWith('onboardingDone', true);
+    expect(settingsRepository.set).not.toHaveBeenCalledWith('appLockMethod', expect.anything());
+    expect(useSettingsStore.getState().appLockMethod).toBe('off');
+  });
+
+  it('turns on the chosen lock after the user verifies, then finishes', async () => {
+    jest.mocked(appLockService.authenticate).mockResolvedValue('success');
+    await renderOnboarding();
+    await fireEvent.press(screen.getByText('Skip'));
+    await fireEvent.press(await screen.findByText('Use Fingerprint'));
+
+    expect(appLockService.authenticate).toHaveBeenCalledTimes(1);
+    expect(settingsRepository.set).toHaveBeenCalledWith('appLockMethod', 'biometric');
+    expect(useSettingsStore.getState().appLockMethod).toBe('biometric');
+    expect(useSettingsStore.getState().onboardingDone).toBe(true);
+  });
+
+  it('stays on the step when verification is cancelled', async () => {
+    jest.mocked(appLockService.authenticate).mockResolvedValue('cancelled');
+    await renderOnboarding();
+    await fireEvent.press(screen.getByText('Skip'));
+    await fireEvent.press(await screen.findByText('Use Phone screen lock'));
+
+    expect(screen.getByText('Secure Your App')).toBeTruthy();
+    expect(useSettingsStore.getState().appLockMethod).toBe('off');
+    expect(useSettingsStore.getState().onboardingDone).toBe(false);
   });
 });

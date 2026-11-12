@@ -7,9 +7,12 @@ import { StatusBar } from 'expo-status-bar';
 import { TriangleAlert } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
 
 import { Preloader } from '@/components/layout/Preloader';
 import { AppEmptyState, AppScreen, AppToast } from '@/components/ui';
+import { LockScreen } from '@/features/security/components/LockScreen';
+import { useAppLock } from '@/features/security/hooks/useAppLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { useSettingsStore } from '@/store/settingsStore';
 import { ThemeProvider, useTheme } from '@/theme';
@@ -22,6 +25,7 @@ const PRELOADER_MIN_MS = 1200;
 export default function RootLayout() {
   const { status, retry } = useAppBootstrap();
   const preloaderElapsed = useElapsed(PRELOADER_MIN_MS);
+  const lock = useAppLock(status === 'ready');
 
   // The JS preloader (same purple + logo) takes over from the native splash right away.
   useEffect(() => {
@@ -33,7 +37,25 @@ export default function RootLayout() {
   return (
     <ThemeProvider>
       <SystemBars />
-      {status === 'error' ? <StartupError onRetry={retry} /> : <RootNavigator />}
+      {status === 'error' ? (
+        <StartupError onRetry={retry} />
+      ) : (
+        // While locked, the cover sits on top so navigation state survives; the app underneath
+        // is hidden from screen readers.
+        <View
+          style={layoutStyles.fill}
+          accessibilityElementsHidden={lock.locked}
+          importantForAccessibility={lock.locked ? 'no-hide-descendants' : 'auto'}>
+          <RootNavigator />
+        </View>
+      )}
+      {status !== 'error' && lock.locked ? (
+        <LockScreen
+          method={lock.method}
+          authenticating={lock.authenticating}
+          onUnlock={() => void lock.unlock()}
+        />
+      ) : null}
       <AppToast />
     </ThemeProvider>
   );
@@ -90,6 +112,7 @@ function RootNavigator() {
       <Stack.Screen name="settings/about" />
       <Stack.Screen name="settings/privacy" />
       <Stack.Screen name="settings/licenses" />
+      <Stack.Screen name="settings/app-lock" />
       <Stack.Screen name="help" />
     </Stack>
   );
@@ -109,3 +132,5 @@ function StartupError({ onRetry }: { onRetry: () => void }) {
     </AppScreen>
   );
 }
+
+const layoutStyles = StyleSheet.create({ fill: { flex: 1 } });

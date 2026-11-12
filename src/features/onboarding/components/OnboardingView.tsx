@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 
 import { AppButton, AppIcon, AppScreen, AppText } from '@/components/ui';
+import { AppLockSetupStep } from '@/features/security/components/AppLockSetupStep';
+import { useAppLockCapabilities } from '@/features/security/hooks/useAppLockCapabilities';
 import { useActiveLanguage } from '@/hooks/useActiveLanguage';
 import { makeStyles, useTheme } from '@/theme';
 
@@ -21,7 +23,10 @@ import { ONBOARDING_SLIDES, type OnboardingSlide } from '../slides';
 
 const LOGO = require('../../../../assets/images/logo.png') as number;
 
-/** First-launch walkthrough (reference row 1, col 2): swipeable slides, dots, Next / Get Started. */
+/**
+ * First-launch walkthrough (reference row 1, col 2): swipeable slides, dots, Next / Get Started,
+ * then an optional app-lock step when the phone has a screen lock.
+ */
 export function OnboardingView() {
   const styles = useStyles();
   const { t } = useTranslation('onboarding');
@@ -30,6 +35,8 @@ export function OnboardingView() {
   const listRef = useRef<FlatList<OnboardingSlide>>(null);
   const [pageWidth, setPageWidth] = useState(0);
   const [index, setIndex] = useState(0);
+  const [showLockStep, setShowLockStep] = useState(false);
+  const lockCapabilities = useAppLockCapabilities();
 
   const total = ONBOARDING_SLIDES.length;
   const isLast = index === total - 1;
@@ -42,14 +49,24 @@ export function OnboardingView() {
     if (pageWidth > 0) setIndex(Math.round(e.nativeEvent.contentOffset.x / pageWidth));
   }
 
+  /** Slides done or skipped: offer the app lock, or finish when the phone has no lock. */
+  function leaveSlides() {
+    if (lockCapabilities?.hasSecurity) setShowLockStep(true);
+    else void finish();
+  }
+
   function next() {
     if (isLast) {
-      void finish();
+      leaveSlides();
       return;
     }
     const target = index + 1;
     listRef.current?.scrollToOffset({ offset: target * pageWidth, animated: true });
     setIndex(target);
+  }
+
+  if (showLockStep) {
+    return <AppLockSetupStep onDone={() => void finish()} finishing={finishing} />;
   }
 
   return (
@@ -66,7 +83,7 @@ export function OnboardingView() {
           </AppText>
         </Pressable>
         {isLast ? null : (
-          <AppButton label={t('skip')} variant="ghost" size="sm" onPress={() => void finish()} />
+          <AppButton label={t('skip')} variant="ghost" size="sm" onPress={leaveSlides} />
         )}
       </View>
 

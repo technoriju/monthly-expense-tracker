@@ -72,6 +72,12 @@
       ],
       "expo-sqlite",
       "expo-localization",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID to unlock the app."
+        }
+      ],
       "expo-font",
       "expo-status-bar",
       "@react-native-community/datetimepicker",

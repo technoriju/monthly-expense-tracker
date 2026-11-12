@@ -1,4 +1,5 @@
 import { settingsRepository } from '@/database';
+import { isAppLockMethod, type AppLockMethod } from '@/features/security/types';
 import { changeUiLanguage } from '@/i18n';
 import {
   DEFAULT_VOICE_LANGUAGE,
@@ -34,6 +35,8 @@ export const settingsService = {
         ? uiLanguage
         : DEFAULT_VOICE_LANGUAGE;
     const onboardingDone = stored[SETTING_KEYS.onboardingDone] === true;
+    const storedAppLock = stored[SETTING_KEYS.appLockMethod];
+    const appLockMethod = isAppLockMethod(storedAppLock) ? storedAppLock : 'off';
 
     await changeUiLanguage(uiLanguage);
     useSettingsStore.getState().applySettings({
@@ -42,6 +45,7 @@ export const settingsService = {
       themeMode,
       voiceLanguage,
       onboardingDone,
+      appLockMethod,
     });
   },
 
@@ -77,5 +81,14 @@ export const settingsService = {
   async completeOnboarding(): Promise<void> {
     await settingsRepository.set(SETTING_KEYS.onboardingDone, true);
     useSettingsStore.getState().applySettings({ onboardingDone: true });
+  },
+
+  /** Persists the app-lock method (DB first). Callers verify the user before changing it. */
+  async setAppLockMethod(method: AppLockMethod): Promise<void> {
+    if (!isAppLockMethod(method)) {
+      throw new Error(`App lock method "${String(method)}" is not supported.`);
+    }
+    await settingsRepository.set(SETTING_KEYS.appLockMethod, method);
+    useSettingsStore.getState().applySettings({ appLockMethod: method });
   },
 };

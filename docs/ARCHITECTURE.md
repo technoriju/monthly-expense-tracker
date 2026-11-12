@@ -511,6 +511,7 @@ Pure TypeScript, fully unit-testable, no I/O:
 - **Voice:** recognition runs through the OS service (Google on Android, Apple on iOS). `requiresOnDeviceRecognition` is set only when the locale's offline pack is installed; otherwise audio may be sent to that provider. The app keeps only the reviewed text (`voice_transcript`) of saved entries; audio is never stored.
 - **Permissions:** Android requests only `RECORD_AUDIO` (+ `INTERNET`); `SYSTEM_ALERT_WINDOW`, `READ/WRITE_EXTERNAL_STORAGE` and `VIBRATE` are removed with `blockedPermissions`. iOS asks for microphone and speech recognition with usage strings that disclose possible Apple processing.
 - **Logging:** `console.*` calls log fixed messages plus error objects only — no amounts, notes or transcripts. Rejected backups log the error code only.
+- **App lock** (optional, `src/features/security`): uses the OS prompt (`expo-local-authentication`, biometrics with the phone's PIN/pattern/password as fallback). The app stores no PIN or secret, only the `appLockMethod` setting (`off` / `biometric` / `device`), which is device-only and not written to backups. It locks on cold start and after > 60 s in the background, as a cover over the navigator so navigation state survives. If the phone no longer has any screen lock, the lock is skipped so the user can never be locked out of their data. Enabling, changing or turning it off requires a successful prompt.
 - **Future tokens** (e.g. a Drive provider) must use `expo-secure-store`, never SQLite or settings.
 
 ## 13. Release

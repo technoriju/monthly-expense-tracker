@@ -178,6 +178,8 @@
 
 > *(added 2026-11-13, user request)* Settings → Export transactions offers CSV or PDF (PDF rendered on-device with `expo-print`; Reports keeps CSV only). More tab → Help & Support screen (email / WhatsApp contact via the user's own apps, FAQs). tsc/lint/jest pass; on-device check pending a new development build (`expo-print` is native).
 
+> *(added 2026-11-13, user request)* App lock (`src/features/security`): optional lock using the phone's own security via `expo-local-authentication`, with no app PIN stored. Settings → Security → App lock: Off / Fingerprint-Face (prompt opens automatically) / Phone screen lock (tap the lock icon). Offered as the last onboarding step when the phone has a screen lock. Locks on cold start and after > 60 s in the background. Device-only setting (not in backups). tsc/lint/jest pass; on-device check pending a new development build (native module).
+
 **Scope**
 - Accessibility audit (labels, roles, contrast, font scaling, touch targets).
 - Performance (long lists, startup time).

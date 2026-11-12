@@ -44,6 +44,7 @@ Never report a check as passing unless it was run in the current session.
 | Backup / restore | `src/features/data-management/__tests__/*` | generation, validation (amount ceiling, type mismatch, size, structure, consistency), backup → clear → restore, oversized file, preferences failure after commit |
 | Voice | `src/features/voice/**/__tests__/*` | parser fixtures (≥ 50 phrases each in en/bn/hi), session lifecycle and races, volume-only snapshot stability, review → save flow, inline save error |
 | Settings | `src/features/settings/__tests__/*` | hydrate, language/voice/theme, settings and restore screens |
+| App lock | `src/features/security/__tests__/*`, onboarding tests | capabilities and result mapping, setting persistence, startup lock, > 60 s re-lock, no-screen-lock safety valve, lock screen modes, verify-before-change, onboarding step |
 | i18n | `src/i18n/__tests__/languages.test.ts` | registry, key parity and `{{placeholder}}` parity en/bn/hi, no empty strings |
 | Theme | `src/theme/__tests__/theme.test.tsx` | WCAG AA for every text token on every surface (light + dark), theme switching |
 
@@ -90,6 +91,15 @@ build is available. Repeat the starred items in Bengali and Hindi, light and dar
 - [ ] Clear all data (two confirmations) → Restore the backup → identical data and preferences
 - [ ] Restore of a non-backup file / edited file is rejected without changing data
 - [ ] CSV export opens in a spreadsheet with correct Bengali/Hindi text
+
+**App lock**
+- [ ] Fresh install → onboarding ends with "Secure Your App"; Not now → Dashboard, no lock
+- [ ] Enable Fingerprint in onboarding or Settings → kill and reopen → prompt opens by itself; cancel → Unlock button retries; PIN fallback works
+- [ ] Phone screen lock mode → lock screen waits; tapping the lock icon opens the PIN/pattern prompt
+- [ ] Background < 60 s (e.g. Export share sheet, photo picker) → no lock; > 60 s → locked
+- [ ] Turning the lock off or changing method asks for verification first
+- [ ] Remove the phone's screen lock in system settings → app opens without a lock
+- [ ] iOS: Face ID usage text appears on first use
 
 **Accessibility**
 - [ ] TalkBack / VoiceOver: every button has a name; chart summaries are read; save errors and toasts are announced

@@ -5,6 +5,7 @@ export const SETTING_KEYS = {
   themeMode: 'themeMode',
   voiceLanguage: 'voiceLanguage',
   onboardingDone: 'onboardingDone',
+  appLockMethod: 'appLockMethod',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];
