@@ -1,7 +1,7 @@
 import { act, fireEvent, render, renderHook, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import type { ReactElement } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Keyboard, ScrollView } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { categoryRepository } from '@/database';
@@ -201,8 +201,14 @@ describe('Voice review → save', () => {
     ).toBeTruthy();
     expect(screen.queryByRole('radio', { checked: true })).toBeNull();
 
+    const dismiss = jest.spyOn(Keyboard, 'dismiss');
+    const scrollTo = jest.spyOn(ScrollView.prototype, 'scrollTo');
     await fireEvent.press(confirmButton());
     expect(await screen.findByText('Choose a category')).toBeTruthy();
+    expect(screen.getByRole('alert', { name: 'Choose a category' })).toBeTruthy();
+    // The error sits above the fold: the keyboard closes and the form scrolls up to it.
+    expect(dismiss).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenCalledWith({ y: 0, animated: true });
     expect(await rows()).toHaveLength(0);
 
     await fireEvent.press(screen.getByRole('radio', { name: 'Healthcare' }));

@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
 import { useMemo, useRef } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Keyboard, type ScrollViewInstance } from 'react-native';
 
 import { useCategories } from '@/features/categories/hooks/useCategories';
 import { useSettingsStore } from '@/store/settingsStore';
@@ -38,6 +39,8 @@ export function useTransactionForm(
   const showToast = useUiStore((s) => s.showToast);
   const schema = useMemo(() => createTransactionFormSchema(currency), [currency]);
   const submitting = useRef(false);
+  /** Attach to the screen's ScrollView so a failed submit can reveal the category error. */
+  const scrollRef = useRef<ScrollViewInstance>(null);
 
   const form = useForm<TransactionFormValues>({
     resolver: zodResolver(schema),
@@ -96,8 +99,17 @@ export function useTransactionForm(
     }
   };
 
+  /**
+   * The category grid sits at the top of the form, so its error is usually off-screen
+   * (keyboard open, user at the Save button). Close the keyboard and scroll up to it.
+   */
+  const onInvalid = (errors: FieldErrors<TransactionFormValues>) => {
+    Keyboard.dismiss();
+    if (errors.categoryId) scrollRef.current?.scrollTo({ y: 0, animated: true });
+  };
+
   /** Validates, then saves. Repeated taps while a save is in flight are ignored. */
-  const submit = () => form.handleSubmit(onValid)();
+  const submit = () => form.handleSubmit(onValid, onInvalid)();
 
   return {
     form,
@@ -107,6 +119,7 @@ export function useTransactionForm(
     retryCategories,
     changeType,
     submit,
+    scrollRef,
     isSubmitting: form.formState.isSubmitting,
   };
 }

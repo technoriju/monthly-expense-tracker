@@ -58,6 +58,7 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
     categoriesError,
     retryCategories,
     submit,
+    scrollRef,
     isSubmitting,
     recordAgain,
     discard,
@@ -87,6 +88,7 @@ function VoiceReviewForm({ draft }: { draft: VoiceExpenseDraft }) {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <AppScreen
+        scrollRef={scrollRef}
         edges={['top', 'left', 'right', 'bottom']}
         header={<AppHeader title={t('review.title')} back />}>
         <AppCard variant="muted" style={styles.heard}>

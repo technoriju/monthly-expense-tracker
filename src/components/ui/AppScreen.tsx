@@ -1,5 +1,11 @@
-import type { ReactNode } from 'react';
-import { ScrollView, View, type StyleProp, type ViewStyle } from 'react-native';
+import type { ReactNode, Ref } from 'react';
+import {
+  ScrollView,
+  View,
+  type ScrollViewInstance,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { makeStyles } from '@/theme';
@@ -12,6 +18,8 @@ export interface AppScreenProps {
   /** Safe-area edges. Tab screens omit `bottom` because the tab bar handles it. */
   edges?: Edge[];
   contentStyle?: StyleProp<ViewStyle>;
+  /** Ref to the inner ScrollView (only when `scroll`), e.g. to scroll a form error into view. */
+  scrollRef?: Ref<ScrollViewInstance>;
 }
 
 /** Screen wrapper: background, safe areas, horizontal gutter, optional scrolling. */
@@ -21,6 +29,7 @@ export function AppScreen({
   scroll = true,
   edges = ['top', 'left', 'right'],
   contentStyle,
+  scrollRef,
 }: AppScreenProps) {
   const styles = useStyles();
   return (
@@ -28,6 +37,7 @@ export function AppScreen({
       {header ? <View style={styles.header}>{header}</View> : null}
       {scroll ? (
         <ScrollView
+          ref={scrollRef}
           style={styles.flex}
           contentContainerStyle={[styles.content, contentStyle]}
           keyboardShouldPersistTaps="handled"

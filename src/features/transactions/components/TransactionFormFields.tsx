@@ -1,8 +1,9 @@
+import { CircleAlert } from 'lucide-react-native';
 import { Controller, useFormState, type Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { AppButton, AppInput, AppLoading, AppText } from '@/components/ui';
+import { AppButton, AppIcon, AppInput, AppLoading, AppText } from '@/components/ui';
 import { CategoryGrid } from '@/features/categories/components/CategoryGrid';
 import type { Category } from '@/features/categories/types';
 import { useAnnounce } from '@/hooks/useAnnounce';
@@ -83,17 +84,17 @@ export function TransactionFormFields({
                 ) : null}
               </View>
             ) : (
-              <CategoryGrid
-                accessibilityLabel={t('fields.category')}
-                categories={categories}
-                selectedId={field.value}
-                onSelect={(category) => field.onChange(category.id)}
-              />
+              <View style={fieldState.error ? styles.gridErrored : null}>
+                <CategoryGrid
+                  accessibilityLabel={t('fields.category')}
+                  categories={categories}
+                  selectedId={field.value}
+                  onSelect={(category) => field.onChange(category.id)}
+                />
+              </View>
             )}
             {fieldState.error ? (
-              <AppText variant="bodySmall" color="expenseText" accessibilityLiveRegion="polite">
-                {errorText(fieldState.error.message)}
-              </AppText>
+              <FieldErrorBanner message={errorText(fieldState.error.message)} />
             ) : hints.category ? (
               <AppText variant="bodySmall" color="accentText">
                 {hints.category}
@@ -178,6 +179,29 @@ export function TransactionFormFields({
   );
 }
 
+/**
+ * Danger-style banner (design.md: light red background, red text) for the category error.
+ * Plain red text under the large grid was easy to miss.
+ */
+function FieldErrorBanner({ message }: { message: string | undefined }) {
+  const styles = useStyles();
+  useAnnounce(message);
+
+  if (!message) return null;
+  return (
+    <View
+      style={styles.errorBanner}
+      accessible
+      accessibilityRole="alert"
+      accessibilityLiveRegion="assertive">
+      <AppIcon icon={CircleAlert} size="sm" color="expense" />
+      <AppText variant="bodyMedium" color="expenseText" style={styles.errorBannerText}>
+        {message}
+      </AppText>
+    </View>
+  );
+}
+
 /** The last save failure (set by the form hook as `root.save`), shown above the buttons. */
 function SaveError({ control }: { control: Control<TransactionFormValues> }) {
   const { errors } = useFormState({ control });
@@ -200,4 +224,20 @@ const useStyles = makeStyles((t) => ({
   group: { gap: t.spacing.sm },
   fields: { gap: t.spacing.lg },
   inlineError: { gap: t.spacing.sm, alignItems: 'flex-start' },
+  gridErrored: {
+    borderRadius: t.radius.lg,
+    borderWidth: t.layout.borderWidth,
+    borderColor: t.colors.expense,
+    padding: t.spacing.xs,
+  },
+  errorBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: t.spacing.sm,
+    paddingHorizontal: t.spacing.md,
+    paddingVertical: t.spacing.sm,
+    borderRadius: t.radius.md,
+    backgroundColor: t.colors.expenseSoft,
+  },
+  errorBannerText: { flex: 1 },
 }));

@@ -61,6 +61,7 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
     retryCategories,
     changeType,
     submit,
+    scrollRef,
     isSubmitting,
   } = useTransactionForm(defaults, mode.kind === 'edit' ? mode.transaction.id : undefined);
   const { control, formState } = form;
@@ -74,6 +75,7 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <AppScreen
+        scrollRef={scrollRef}
         edges={['top', 'left', 'right', 'bottom']}
         header={
           <AppHeader
