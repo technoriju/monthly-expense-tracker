@@ -17,7 +17,7 @@ function createJunction(linkPath, targetPath) {
   if (existsSync(linkPath)) return;
   if (!existsSync(targetPath)) return;
   try {
-    execSync(`cmd /c "mklink /J \\"${linkPath}\\" \\"${targetPath}\\""`, { stdio: 'ignore' });
+    execSync(`cmd /c "mklink /J \"${linkPath}\" \"${targetPath}\""`, { stdio: 'ignore' });
     console.log(`Created junction: ${linkPath} -> ${targetPath}`);
   } catch (err) {
     console.warn(`Could not create junction ${linkPath}:`, err.message);
@@ -31,6 +31,17 @@ function replaceInFile(filePath, search, replacement) {
   if (content.includes(search)) {
     writeFileSync(filePath, content.replace(search, replacement), 'utf8');
     console.log(`Patched ${filePath}`);
+  }
+}
+
+function setOrReplaceObjectPathMax(filePath, max = 240) {
+  if (!existsSync(filePath)) return;
+  let content = readFileSync(filePath, 'utf8');
+  content = content.replace(/\n*set\(CMAKE_OBJECT_PATH_MAX\s+\d+\)/g, '');
+  if (content.includes('cmake_minimum_required')) {
+    content = content.replace(/(cmake_minimum_required\([^\)]+\))/, `$1\nset(CMAKE_OBJECT_PATH_MAX ${max})`);
+    writeFileSync(filePath, content, 'utf8');
+    console.log(`Set CMAKE_OBJECT_PATH_MAX ${max} in ${filePath}`);
   }
 }
 
@@ -60,12 +71,24 @@ createJunction(
   join(root, 'node_modules', 'react-native-svg', 'common')
 );
 
-// 2. Patches to CMakeLists
-replaceInFile(
+// 2. Set CMAKE_OBJECT_PATH_MAX to 240
+// 240 leaves enough room for CMake's 160-170 char build directories while remaining below Windows 260 limit.
+// If set too low (e.g. 150), CMake gives up hashing for directories > 150 chars, causing ninja Stat() 260 errors.
+const cmakeFilesToSetMax = [
+  join(root, 'node_modules', 'react-native', 'ReactAndroid', 'cmake-utils', 'ReactNative-application.cmake'),
   join(root, 'node_modules', 'react-native-reanimated', 'android', 'CMakeLists.txt'),
-  'cmake_minimum_required(VERSION 3.16)',
-  'cmake_minimum_required(VERSION 3.16)\n\nset(CMAKE_OBJECT_PATH_MAX 200)'
-);
+  join(root, 'node_modules', 'react-native-gesture-handler', 'android', 'CMakeLists.txt'),
+  join(root, 'node_modules', 'react-native-screens', 'android', 'src', 'main', 'jni', 'CMakeLists.txt'),
+  join(root, 'node_modules', 'react-native-safe-area-context', 'android', 'src', 'main', 'jni', 'CMakeLists.txt'),
+  join(root, 'node_modules', 'react-native-svg', 'android', 'src', 'main', 'jni', 'CMakeLists.txt'),
+  join(root, 'node_modules', 'react-native-worklets', 'android', 'CMakeLists.txt'),
+];
+
+for (const file of cmakeFilesToSetMax) {
+  setOrReplaceObjectPathMax(file, 240);
+}
+
+// 3. Patches to source directories in CMakeLists
 replaceInFile(
   join(root, 'node_modules', 'react-native-reanimated', 'android', 'CMakeLists.txt'),
   'set(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/../Common/cpp")',
@@ -83,11 +106,6 @@ replaceInFile(
   'set(COMMON_CPP_DIR "${CMAKE_SOURCE_DIR}/Common/cpp")'
 );
 
-replaceInFile(
-  join(root, 'node_modules', 'react-native-gesture-handler', 'android', 'CMakeLists.txt'),
-  'cmake_minimum_required(VERSION 3.13)',
-  'cmake_minimum_required(VERSION 3.13)\nset(CMAKE_OBJECT_PATH_MAX 150)'
-);
 replaceInFile(
   join(root, 'node_modules', 'react-native-gesture-handler', 'android', 'CMakeLists.txt'),
   '../shared/shadowNodes',
@@ -110,10 +128,4 @@ replaceInFile(
   join(root, 'node_modules', 'react-native-svg', 'android', 'src', 'main', 'jni', 'CMakeLists.txt'),
   'set(RNSVG_COMMON_DIR ${RNSVG_ANDROID_DIR}/../common/cpp)',
   'set(RNSVG_COMMON_DIR ${RNSVG_ANDROID_DIR}/common/cpp)'
-);
-
-replaceInFile(
-  join(root, 'node_modules', 'react-native', 'ReactAndroid', 'cmake-utils', 'ReactNative-application.cmake'),
-  'cmake_minimum_required(VERSION 3.13)\nset(CMAKE_VERBOSE_MAKEFILE on)',
-  'cmake_minimum_required(VERSION 3.13)\nset(CMAKE_OBJECT_PATH_MAX 150)\nset(CMAKE_VERBOSE_MAKEFILE on)'
 );

@@ -1,21 +1,16 @@
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter';
-import {
-  NotoSansBengali_400Regular,
-  NotoSansBengali_500Medium,
-  NotoSansBengali_600SemiBold,
-  NotoSansBengali_700Bold,
-} from '@expo-google-fonts/noto-sans-bengali';
-import {
-  NotoSansDevanagari_400Regular,
-  NotoSansDevanagari_500Medium,
-  NotoSansDevanagari_600SemiBold,
-  NotoSansDevanagari_700Bold,
-} from '@expo-google-fonts/noto-sans-devanagari';
+// Deep imports: the package index requires every weight, which bundles ~24 unused font files.
+import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
+import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
+import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
+import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
+import { NotoSansBengali_400Regular } from '@expo-google-fonts/noto-sans-bengali/400Regular';
+import { NotoSansBengali_500Medium } from '@expo-google-fonts/noto-sans-bengali/500Medium';
+import { NotoSansBengali_600SemiBold } from '@expo-google-fonts/noto-sans-bengali/600SemiBold';
+import { NotoSansBengali_700Bold } from '@expo-google-fonts/noto-sans-bengali/700Bold';
+import { NotoSansDevanagari_400Regular } from '@expo-google-fonts/noto-sans-devanagari/400Regular';
+import { NotoSansDevanagari_500Medium } from '@expo-google-fonts/noto-sans-devanagari/500Medium';
+import { NotoSansDevanagari_600SemiBold } from '@expo-google-fonts/noto-sans-devanagari/600SemiBold';
+import { NotoSansDevanagari_700Bold } from '@expo-google-fonts/noto-sans-devanagari/700Bold';
 import type { FontSource } from 'expo-font';
 
 import type { FontWeightToken, LineHeightClass } from '@/theme';
