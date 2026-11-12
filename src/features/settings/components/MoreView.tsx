@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { Settings, Shapes } from 'lucide-react-native';
+import { LifeBuoy, Settings, Shapes } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppHeader, AppScreen } from '@/components/ui';
@@ -7,7 +7,7 @@ import { AppHeader, AppScreen } from '@/components/ui';
 import { SettingsRow } from './SettingsRow';
 import { SettingsSection } from './SettingsSection';
 
-/** More tab: entry points to Categories and Settings. */
+/** More tab: entry points to Categories, Settings and Help & Support. */
 export function MoreView() {
   const { t } = useTranslation('settings');
   return (
@@ -23,6 +23,12 @@ export function MoreView() {
           icon={Settings}
           label={t('title')}
           onPress={() => router.push('/settings')}
+        />
+        <SettingsRow
+          icon={LifeBuoy}
+          label={t('help.title')}
+          hint={t('help.rowHint')}
+          onPress={() => router.push('/help')}
         />
       </SettingsSection>
     </AppScreen>

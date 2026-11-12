@@ -37,10 +37,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#5B2ED6",
+        "backgroundColor": "#FDFDFD",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundImage": "./assets/images/android-icon-background.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.rijukarar.expensetracker",

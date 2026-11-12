@@ -122,7 +122,9 @@
       "amountFormatted": "Amount (formatted)",
       "paymentMethod": "Payment method",
       "note": "Note"
-    }
+    },
+    "pdfButton": "Export PDF",
+    "pdfTitle": "Transactions"
   },
   "empty": {
     "title": "No transactions in this period",

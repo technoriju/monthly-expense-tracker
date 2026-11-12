@@ -55,7 +55,12 @@
   },
   "export": {
     "title": "Export Transactions",
-    "intro": "Choose a period. Transactions are exported as a CSV file (UTF-8) that spreadsheet apps can open."
+    "intro": "Choose a period and a format. CSV opens in spreadsheet apps; PDF is a printable report with totals.",
+    "format": "Format",
+    "csv": "CSV",
+    "pdf": "PDF",
+    "csvHint": "Spreadsheet file (UTF-8) for Excel, Google Sheets and similar apps.",
+    "pdfHint": "Printable report with income, expense and net totals, then every transaction."
   },
   "clear": {
     "title": "Clear all data?",

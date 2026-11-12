@@ -122,7 +122,9 @@
       "amountFormatted": "राशि (फ़ॉर्मैट की हुई)",
       "paymentMethod": "भुगतान का तरीका",
       "note": "नोट"
-    }
+    },
+    "pdfButton": "PDF एक्सपोर्ट करें",
+    "pdfTitle": "लेन-देन"
   },
   "empty": {
     "title": "इस अवधि में कोई लेन-देन नहीं",

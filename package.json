@@ -20,6 +20,7 @@
     "expo-image-picker": "~58.0.10",
     "expo-linking": "~58.0.17",
     "expo-localization": "~58.0.5",
+    "expo-print": "~58.0.9",
     "expo-router": "~58.0.31",
     "expo-sharing": "~58.0.23",
     "expo-speech-recognition": "^58.0.1",

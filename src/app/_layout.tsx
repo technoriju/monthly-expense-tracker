@@ -90,6 +90,7 @@ function RootNavigator() {
       <Stack.Screen name="settings/about" />
       <Stack.Screen name="settings/privacy" />
       <Stack.Screen name="settings/licenses" />
+      <Stack.Screen name="help" />
     </Stack>
   );
 }

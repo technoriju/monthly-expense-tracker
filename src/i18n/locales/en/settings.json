@@ -119,5 +119,51 @@
     "section": "Manage",
     "categories": "Categories",
     "categoriesHint": "Add or delete your own categories"
+  },
+  "help": {
+    "title": "Help & Support",
+    "intro": "Have a question, found a problem or want to suggest a feature? Contact us or check the common questions below.",
+    "contactSection": "Contact us",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "emailSubject": "Monthly Expense Tracker support (v{{version}})",
+    "openFailed": "No app found to open this. Please contact us manually.",
+    "safetyNote": "Your message is sent from your own email or WhatsApp app. Never share passwords, OTPs or bank details with anyone, including us.",
+    "faqSection": "Common questions",
+    "faq": {
+      "add": {
+        "q": "How do I add income or an expense?",
+        "a": "Tap the + button in the tab bar. Choose Expense or Income, enter the amount, pick a category and date, then save."
+      },
+      "voice": {
+        "q": "How does voice entry work?",
+        "a": "Open the Voice tab, tap the microphone and say something like “Spent 250 on groceries”. You always see a review screen before anything is saved. Change the voice language in Settings → Voice."
+      },
+      "edit": {
+        "q": "How do I edit or delete a transaction?",
+        "a": "Tap a transaction in the list to open it. Change the details and save, or use Delete to remove it."
+      },
+      "budgets": {
+        "q": "How do I set a monthly budget?",
+        "a": "Open the Reports tab and tap the budget card. You can set an overall limit and limits for categories for each month."
+      },
+      "export": {
+        "q": "How do I export my transactions?",
+        "a": "Go to More → Settings → Export transactions. Choose a period and CSV or PDF, then save or share the file."
+      },
+      "backup": {
+        "q": "How do I keep my data safe or move it to a new phone?",
+        "a": "Use Settings → Back up data to create a backup file and keep it somewhere safe. On the new phone, use Settings → Restore data. Restoring replaces all data in the app."
+      },
+      "language": {
+        "q": "How do I change the language?",
+        "a": "Go to More → Settings → Language. The app language and the voice language are separate settings."
+      },
+      "privacy": {
+        "q": "Is my data uploaded anywhere?",
+        "a": "No. Your data stays on your device and the app works offline. Files are shared only when you choose to export or back up."
+      }
+    },
+    "rowHint": "Contact us and common questions"
   }
 }

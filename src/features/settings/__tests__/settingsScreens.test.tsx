@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import type { ReactElement } from 'react';
-import { Alert, type AlertButton } from 'react-native';
+import { Alert, type AlertButton, Linking } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import {
@@ -25,6 +25,8 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
 
 import { SettingsView } from '../components/SettingsView';
+import { HelpView } from '../components/HelpView';
+import { MoreView } from '../components/MoreView';
 import { ThemeSelectView } from '../components/ThemeSelectView';
 import { VoiceSettingsView } from '../components/VoiceSettingsView';
 
@@ -53,7 +55,10 @@ jest.mock('@/features/data-management/providers', () => ({
 }));
 
 jest.mock('@/features/reports/services/exportService', () => ({
-  exportService: { exportTransactionsCsv: jest.fn(async () => 'shared') },
+  exportService: {
+    exportTransactionsCsv: jest.fn(async () => 'shared'),
+    exportTransactionsPdf: jest.fn(async () => 'shared'),
+  },
 }));
 
 const METRICS = {
@@ -270,5 +275,32 @@ describe('ExportCsvView', () => {
       year: new Date().getFullYear(),
     });
     expect(useUiStore.getState().reportPeriod).toEqual(reportPeriod);
+  });
+
+  it('exports a PDF when the PDF format is chosen', async () => {
+    await renderScreen(<ExportCsvView />);
+    await fireEvent.press(screen.getByText('PDF'));
+    await fireEvent.press(screen.getByText('Export PDF'));
+    expect(exportService.exportTransactionsPdf).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Help & Support', () => {
+  it('is reachable from the More tab', async () => {
+    await renderScreen(<MoreView />);
+    await fireEvent.press(screen.getByText('Help & Support'));
+    expect(router.push).toHaveBeenCalledWith('/help');
+  });
+
+  it('opens email and WhatsApp with the support contacts', async () => {
+    const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+    await renderScreen(<HelpView />);
+    await fireEvent.press(screen.getByText('Email'));
+    await fireEvent.press(screen.getByText('WhatsApp'));
+    expect(openURL.mock.calls.map((c) => c[0])).toEqual([
+      expect.stringMatching(/^mailto:technoriju@gmail\.com\?subject=/),
+      'https://wa.me/919330882613',
+    ]);
+    expect(screen.getByText('Is my data uploaded anywhere?')).toBeTruthy();
   });
 });

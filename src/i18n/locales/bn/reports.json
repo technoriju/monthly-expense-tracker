@@ -122,7 +122,9 @@
       "amountFormatted": "পরিমাণ (ফরম্যাট করা)",
       "paymentMethod": "পেমেন্টের মাধ্যম",
       "note": "নোট"
-    }
+    },
+    "pdfButton": "PDF এক্সপোর্ট করুন",
+    "pdfTitle": "লেনদেন"
   },
   "empty": {
     "title": "এই সময়কালে কোনো লেনদেন নেই",
