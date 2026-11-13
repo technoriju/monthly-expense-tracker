@@ -7,6 +7,7 @@ import bnReports from './locales/bn/reports.json';
 import bnSettings from './locales/bn/settings.json';
 import bnTransactions from './locales/bn/transactions.json';
 import bnOnboarding from './locales/bn/onboarding.json';
+import bnReceipts from './locales/bn/receipts.json';
 import bnVoice from './locales/bn/voice.json';
 import enBudgets from './locales/en/budgets.json';
 import enCategories from './locales/en/categories.json';
@@ -17,6 +18,7 @@ import enReports from './locales/en/reports.json';
 import enSettings from './locales/en/settings.json';
 import enTransactions from './locales/en/transactions.json';
 import enOnboarding from './locales/en/onboarding.json';
+import enReceipts from './locales/en/receipts.json';
 import enVoice from './locales/en/voice.json';
 import hiBudgets from './locales/hi/budgets.json';
 import hiCategories from './locales/hi/categories.json';
@@ -27,6 +29,7 @@ import hiReports from './locales/hi/reports.json';
 import hiSettings from './locales/hi/settings.json';
 import hiTransactions from './locales/hi/transactions.json';
 import hiOnboarding from './locales/hi/onboarding.json';
+import hiReceipts from './locales/hi/receipts.json';
 import hiVoice from './locales/hi/voice.json';
 
 import type { LanguageCode } from './languages';
@@ -42,6 +45,7 @@ export const NAMESPACES = [
   'budgets',
   'dataManagement',
   'onboarding',
+  'receipts',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -57,6 +61,7 @@ const en = {
   dataManagement: enDataManagement,
   voice: enVoice,
   onboarding: enOnboarding,
+  receipts: enReceipts,
 };
 
 export type TranslationResources = typeof en;
@@ -72,6 +77,7 @@ const bn: TranslationResources = {
   dataManagement: bnDataManagement,
   voice: bnVoice,
   onboarding: bnOnboarding,
+  receipts: bnReceipts,
 };
 
 const hi: TranslationResources = {
@@ -85,6 +91,7 @@ const hi: TranslationResources = {
   dataManagement: hiDataManagement,
   voice: hiVoice,
   onboarding: hiOnboarding,
+  receipts: hiReceipts,
 };
 
 /**

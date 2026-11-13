@@ -1,15 +1,17 @@
 import { router } from 'expo-router';
-import { Trash2 } from 'lucide-react-native';
+import { ChevronRight, ReceiptText, Trash2 } from 'lucide-react-native';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
 
 import {
   AppButton,
   AppHeader,
+  AppIcon,
   AppIconButton,
   AppScreen,
   AppSegmentedControl,
+  AppText,
 } from '@/components/ui';
 import { makeStyles } from '@/theme';
 import type { TransactionType } from '@/types/money';
@@ -32,6 +34,7 @@ export type TransactionFormMode =
 export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
   const styles = useStyles();
   const { t } = useTranslation('transactions');
+  const { t: tReceipts } = useTranslation('receipts');
   const confirmDelete = useDeleteTransaction();
 
   const defaults: TransactionFormValues =
@@ -119,6 +122,26 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
           onAddCategory={addCategory}
         />
 
+        {mode.kind === 'edit' && mode.transaction.hasReceipt ? (
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: '/receipt/[id]',
+                params: { id: String(mode.transaction.id) },
+              })
+            }
+            accessibilityRole="button"
+            accessibilityLabel={tReceipts('detail.view')}
+            accessibilityHint={tReceipts('detail.viewHint')}
+            style={({ pressed }) => [styles.receipt, pressed && styles.pressed]}>
+            <AppIcon icon={ReceiptText} color="primary" />
+            <AppText variant="bodyMedium" color="primaryText" style={styles.flex}>
+              {tReceipts('detail.view')}
+            </AppText>
+            <AppIcon icon={ChevronRight} color="textMuted" mirrorInRTL />
+          </Pressable>
+        ) : null}
+
         <View style={styles.actions}>
           <AppButton
             label={t('actions.save')}
@@ -142,4 +165,14 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
 const useStyles = makeStyles((t) => ({
   flex: { flex: 1 },
   actions: { gap: t.spacing.sm },
+  receipt: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: t.spacing.md,
+    minHeight: t.layout.minTouchTarget,
+    paddingHorizontal: t.spacing.lg,
+    borderRadius: t.radius.lg,
+    backgroundColor: t.colors.primarySoft,
+  },
+  pressed: { opacity: t.layout.pressedOpacity },
 }));

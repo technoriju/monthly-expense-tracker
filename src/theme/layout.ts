@@ -42,6 +42,8 @@ export const layout = {
   waveformHeight: 56,
   waveformBarWidth: 4,
   sheetMaxHeightRatio: 0.85,
+  receiptThumbHeight: 180,
+  receiptPreviewHeight: 420,
   toastOffset: 24,
   borderWidth: 1,
   hairline: 1,

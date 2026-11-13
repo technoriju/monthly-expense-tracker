@@ -35,7 +35,8 @@
   },
   "quickActions": {
     "addTransaction": "लेन-देन जोड़ें",
-    "voiceExpense": "बोलकर खर्च"
+    "voiceExpense": "बोलकर खर्च",
+    "scanReceipt": "रसीद स्कैन"
   },
   "recent": {
     "title": "हाल के लेन-देन",

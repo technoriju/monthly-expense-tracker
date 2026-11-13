@@ -17,6 +17,8 @@ export interface Transaction {
   note: string | null;
   paymentMethod: PaymentMethod | null;
   source: TransactionSource;
+  /** A scanned receipt is attached (receipts table). */
+  hasReceipt: boolean;
   createdAt: number;
   updatedAt: number;
 }

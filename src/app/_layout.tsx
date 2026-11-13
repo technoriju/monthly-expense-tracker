@@ -101,6 +101,9 @@ function RootNavigator() {
       <Stack.Screen name="reports/calendar" />
       <Stack.Screen name="budgets" />
       <Stack.Screen name="voice/review" />
+      <Stack.Screen name="receipt/scan" />
+      <Stack.Screen name="receipt/review" />
+      <Stack.Screen name="receipt/[id]" />
       <Stack.Screen name="categories" />
       <Stack.Screen name="settings" />
       <Stack.Screen name="settings/language" />

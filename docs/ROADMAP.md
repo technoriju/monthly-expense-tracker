@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion.
+**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion. **Phase 9 — Receipt Scanner** pulled forward and implemented in code (2026-11-13; adds `expo-image-manipulator`, `expo-mlkit-ocr`); tsc/lint/jest pass; on-device check pending a new development build.
 
 ## Rules for every phase
 
@@ -188,3 +188,22 @@
 - Privacy policy text (microphone, speech data), store assets, EAS production builds.
 
 **Exit:** production builds for Android and iOS; release checklist complete.
+
+---
+
+## Phase 9 — Smart Receipt Scanner
+
+> Pulled forward at the user's request (2026-11-13; the user's brief called this "Phase 8"). No reference panel — unseen screens built from existing components and tokens (ARCHITECTURE.md §9.6). Implemented in code; on-device check pending a new development build. Phases 6 and 7 remain open.
+
+**Scope**
+- 9.1 Capture: `expo-image-picker` camera (camera permission enabled) and gallery; Android crop/rotate in the picker, in-app rotate; `expo-image-manipulator` resize (≤ 2000 px) and quality checks; photos in app-private `receipts/` files.
+- 9.2 OCR: `ReceiptOCRProvider` interface; on-device `expo-mlkit-ocr` (ML Kit Latin model on Android, Apple Vision on iOS) loaded optionally; rows rebuilt from bounding boxes; 30 s timeout, cancel, progress stages. No cloud OCR.
+- 9.3 Parser: deterministic `parseReceipt` (vendor, date, bill no., payment method, items with qty/unit/price/total, subtotal, tax, discount, charges, round-off, grand total); Indian grouping, Bengali/Devanagari digits; uncertainty flags; never invents names or amounts. `validateReceipt` reports discrepancies and never changes amounts.
+- 9.4 Review: editable shop, bill no., items (add/edit/delete), totals, total choice, discrepancy card with an explicit "I've checked the amount"; category/amount/date/payment/note reuse the Add Transaction fields; draft kept in `receipts/draft.json` and resumable; rescan asks before replacing edits.
+- 9.5 Migration 005 (`receipts`, `receipt_items`); expense + receipt + items saved in one transaction; `save_key` makes retries idempotent; confirmed total = expense amount.
+- 9.6 History: receipt icon on transaction rows; "View receipt" on the edit screen → receipt screen (photo, items, totals, edit details, remove attachment). Deleting an expense deletes its receipt and photo.
+- 9.7 Errors with a manual-entry fallback; tests (parser fixtures, validation, repository, services, review screen); privacy text.
+
+**Limits:** receipts are not in backups (restore / clear data delete them); no perspective or contrast correction; no crop on iOS; on-device OCR does not read Bengali or Devanagari script or Bengali numerals, and handwriting is weak — those receipts are typed in on the review screen. Parser fixtures are synthetic OCR text: real-receipt accuracy is not measured yet.
+
+**Exit:** capture/select → review → save works on a device; itemized, total-only and corrected receipts save once; data and photo persist after restart; screens pass the design checklist in English, Bengali and Hindi, light and dark.

@@ -53,6 +53,8 @@ The project is already on **Expo SDK 58** (`expo ~58.0.23`, React Native 0.88.1,
 | 2 | `expo-speech-recognition` | Device speech-to-text via the OS recognizer — on-device when the locale's offline pack is installed, otherwise the OS service may use the network (config plugin → **development build required; does not run in Expo Go**) |
 | 3 | `expo-file-system`, `expo-sharing` | CSV export of report transactions (pulled forward from Phase 7) |
 | 5 | `expo-application` | Native version / build number on the About screen |
+| 9 | `expo-image-manipulator` | Receipt photo rotate / resize |
+| 9 | `expo-mlkit-ocr` | On-device receipt text recognition (ML Kit Latin on Android, Apple Vision on iOS); loaded with `requireOptionalNativeModule`, so a missing module means "unavailable", not a crash |
 
 Backup / restore (Phase 5) reuses `expo-file-system` (including its `File.pickFileAsync` / `Directory.pickDirectoryAsync` pickers) and `expo-sharing`; `expo-document-picker` is not needed.
 
@@ -218,6 +220,10 @@ Budgets are per month and never copied or overwritten, so past months keep their
 ### 4.2.2 Amount guards (migration 004)
 
 The tables are not `STRICT`, so `CHECK (amount_minor > 0)` alone accepts `1.5` or text. Migration 004 adds `BEFORE INSERT` / `BEFORE UPDATE OF amount_minor` triggers on `transactions` and `budgets` that abort with `amount_minor_invalid` unless `typeof(amount_minor) = 'integer'` and `amount_minor <= 999999999999` (the app ceiling, frozen as a literal). Existing rows are not rewritten. It also adds `idx_budgets_month_currency` for the per-month budget lookup.
+
+### 4.2.3 Receipts (migration 005)
+
+`receipts` (one per expense: `transaction_id UNIQUE … ON DELETE CASCADE`, `save_key UNIQUE`, vendor, bill number, `receipt_date`, `image_file` (file name only), original OCR text, provider, extracted total and subtotal / tax / discount / charges / round-off in paise) and `receipt_items` (`receipt_id … ON DELETE CASCADE`, position, name (nullable — unreadable names stay empty), original OCR name, `quantity_milli` (thousandths), unit, unit price, line total, confidences, JSON flags, `user_corrected`). Amount columns are CHECK-constrained integers within the app ceiling. The confirmed total is **not** stored: it is the expense's `amount_minor`, so receipt and expense cannot disagree. Receipt expenses are found with a `LEFT JOIN` (`Transaction.hasReceipt`); `transactions.source` is unchanged. Receipts are excluded from backups; `dataRepository` deletes them on restore and clear.
 
 ### 4.3 Data rules
 
@@ -509,9 +515,10 @@ Pure TypeScript, fully unit-testable, no I/O:
 - **OS backup:** Android `allowBackup` is **false**, so Google Auto Backup does not copy the database. On iOS, an iCloud/computer *device* backup includes app data unless the user disables it — the in-app privacy text says so ("unless your device's own system backup kept a copy").
 - **Backup / CSV files** are plaintext and created only on request. Shared copies are written to the app cache and the previous one is deleted on the next export; files saved to a user-picked folder are outside the app's control. Restore validates everything before writing and is all-or-nothing.
 - **Voice:** recognition runs through the OS service (Google on Android, Apple on iOS). `requiresOnDeviceRecognition` is set only when the locale's offline pack is installed; otherwise audio may be sent to that provider. The app keeps only the reviewed text (`voice_transcript`) of saved entries; audio is never stored.
-- **Permissions:** Android requests only `RECORD_AUDIO` (+ `INTERNET`); `SYSTEM_ALERT_WINDOW`, `READ/WRITE_EXTERNAL_STORAGE` and `VIBRATE` are removed with `blockedPermissions`. iOS asks for microphone and speech recognition with usage strings that disclose possible Apple processing.
+- **Permissions:** Android requests `RECORD_AUDIO` and `CAMERA` (receipt photos) (+ `INTERNET`); `SYSTEM_ALERT_WINDOW`, `READ/WRITE_EXTERNAL_STORAGE` and `VIBRATE` are removed with `blockedPermissions`. iOS asks for microphone and speech recognition with usage strings that disclose possible Apple processing.
 - **Logging:** `console.*` calls log fixed messages plus error objects only — no amounts, notes or transcripts. Rejected backups log the error code only.
 - **App lock** (optional, `src/features/security`): uses the OS prompt (`expo-local-authentication`, biometrics with the phone's PIN/pattern/password as fallback). The app stores no PIN or secret, only the `appLockMethod` setting (`off` / `biometric` / `device`), which is device-only and not written to backups. It locks on cold start and after > 60 s in the background, as a cover over the navigator so navigation state survives. If the phone no longer has any screen lock, the lock is skipped so the user can never be locked out of their data. Enabling, changing or turning it off requires a successful prompt.
+- **Receipts:** photos are read on-device and stored as app-private files (`Paths.document/receipts/`), never uploaded; an unsaved review draft is kept in `receipts/draft.json`. Receipts and photos are not in backups; deleting an expense, removing its receipt, restore and clear-all delete them; orphaned photos are swept when the scanner opens.
 - **Future tokens** (e.g. a Drive provider) must use `expo-secure-store`, never SQLite or settings.
 
 ## 13. Release

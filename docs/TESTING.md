@@ -92,6 +92,18 @@ build is available. Repeat the starred items in Bengali and Hindi, light and dar
 - [ ] Restore of a non-backup file / edited file is rejected without changing data
 - [ ] CSV export opens in a spreadsheet with correct Bengali/Hindi text
 
+**Receipt scanner** ⭐ (needs a build with `expo-mlkit-ocr`)
+- [ ] Dashboard → Scan Receipt → Take photo: camera permission prompt; deny → message, gallery and manual entry still work
+- [ ] Gallery photo → Android crop screen → preview → rotate left/right → Use photo → progress → Review
+- [ ] Printed English receipt: shop, items, totals and amount pre-filled; compare every value with the paper
+- [ ] Bengali, Hindi and handwritten receipts: unreadable rows flagged or empty, nothing invented; type details and save
+- [ ] Receipt with several totals: amount empty; a total chip fills it; Save asks for "I've checked the amount"
+- [ ] Total-only save (delete all items) and itemized save; double-tap Save → one expense
+- [ ] Kill the app on the Review screen → reopen Scan Receipt → "Unfinished receipt" → Continue keeps edits
+- [ ] Expense row shows the receipt icon; edit screen → View receipt → photo opens full screen; edit details; Remove receipt keeps the expense
+- [ ] Delete the expense → receipt gone; restart → saved receipts persist; Clear all data / Restore → receipts removed
+- [ ] Airplane mode: scanning still works (on-device)
+
 **App lock**
 - [ ] Fresh install → onboarding ends with "Secure Your App"; Not now → Dashboard, no lock
 - [ ] Enable Fingerprint in onboarding or Settings → kill and reopen → prompt opens by itself; cancel → Unlock button retries; PIN fallback works

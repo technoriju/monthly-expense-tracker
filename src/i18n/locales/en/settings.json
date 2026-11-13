@@ -98,6 +98,10 @@
       "title": "Voice entry uses your device's speech service",
       "body": "When you use voice entry, your speech is processed by the speech recognition service of your device or operating system (for example Google on Android or Apple on iOS), not by this app. That service may work offline or may send audio over the internet, depending on your device and language, and its provider's privacy policy applies. The app saves only the recognized text, and only after you review and save the entry."
     },
+    "receipts": {
+      "title": "Receipt photos stay on this device",
+      "body": "When you scan a receipt, the camera photo is read by on-device text recognition — it is not uploaded. The photo and the receipt details are stored in the app only after you save the expense. Receipts are not included in backups; restoring a backup or clearing all data deletes them."
+    },
     "backups": {
       "title": "You control backup files",
       "body": "Backup and CSV files are created only when you ask. They are not encrypted and go only where you choose to save or share them."

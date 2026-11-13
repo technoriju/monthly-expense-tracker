@@ -124,7 +124,7 @@ describe('migration 002', () => {
   it('adds payment_method and indexes', async () => {
     const db = createFakeDb(1);
     const result = await runMigrations(db, MIGRATIONS);
-    expect(result.applied).toEqual(['transactions_v2', 'budgets', 'amount_guards']);
+    expect(result.applied).toEqual(['transactions_v2', 'budgets', 'amount_guards', 'receipts']);
     const sql = db.executed.join('\n');
     expect(sql).toMatch(/ALTER TABLE transactions ADD COLUMN payment_method TEXT/);
     expect(sql).toMatch(/CREATE INDEX idx_categories_type/);
@@ -147,9 +147,9 @@ describe('migration 003', () => {
 });
 
 describe('migration 004', () => {
-  it('adds amount guard triggers and the budget month index, ending at the latest version', async () => {
+  it('adds amount guard triggers and the budget month index', async () => {
     const db = createFakeDb(3);
-    const result = await runMigrations(db, MIGRATIONS);
+    const result = await runMigrations(db, MIGRATIONS.slice(0, 4));
     expect(result.applied).toEqual(['amount_guards']);
     const sql = db.executed.join('\n');
     expect(sql).toMatch(/CREATE TRIGGER trg_transactions_amount_insert/);

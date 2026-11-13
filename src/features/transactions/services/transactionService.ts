@@ -1,5 +1,6 @@
-import { categoryRepository, transactionRepository } from '@/database';
+import { categoryRepository, receiptRepository, transactionRepository } from '@/database';
 import { getCategoryName } from '@/features/categories/categoryName';
+import { receiptImageStore } from '@/features/receipts/services/receiptImageStore';
 import { i18n } from '@/i18n';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
@@ -26,7 +27,7 @@ export class TransactionError extends Error {
 }
 
 /** Validates input and the category rule: the category must exist and match the type. */
-async function validate(input: TransactionInput): Promise<TransactionInput> {
+export async function validateTransactionInput(input: TransactionInput): Promise<TransactionInput> {
   const parsed = transactionInputSchema.parse(input);
   const category = await categoryRepository.getById(parsed.categoryId);
   if (!category) throw new TransactionError('categoryNotFound');
@@ -63,7 +64,7 @@ export const transactionService = {
    * their source and transcript). Returns the stored row.
    */
   async create(input: TransactionInput, options: CreateOptions = {}): Promise<Transaction> {
-    const valid = await validate(input);
+    const valid = await validateTransactionInput(input);
     const created = await transactionRepository.insertAndGet({
       ...valid,
       currency: useSettingsStore.getState().currency,
@@ -75,15 +76,25 @@ export const transactionService = {
   },
 
   async update(id: number, input: TransactionInput): Promise<void> {
-    const valid = await validate(input);
+    const valid = await validateTransactionInput(input);
     const updated = await transactionRepository.update(id, valid);
     if (!updated) throw new TransactionError('notFound');
     dataChanged();
   },
 
+  /** Deletes the transaction; an attached receipt is removed with it (rows and photo). */
   async remove(id: number): Promise<void> {
+    const receiptImage = await receiptRepository.getImageFile(id);
     const removed = await transactionRepository.remove(id);
     if (!removed) throw new TransactionError('notFound');
+    if (receiptImage !== null) {
+      try {
+        receiptImageStore.delete(receiptImage);
+      } catch (error) {
+        // The expense is deleted; a leftover photo is removed by the next orphan sweep.
+        console.warn('Receipt image delete failed', error);
+      }
+    }
     dataChanged();
   },
 

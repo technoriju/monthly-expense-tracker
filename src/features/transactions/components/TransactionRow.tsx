@@ -1,7 +1,8 @@
+import { ReceiptText } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
-import { AppText } from '@/components/ui';
+import { AppIcon, AppText } from '@/components/ui';
 import { CategoryIcon } from '@/features/categories/components/CategoryIcon';
 import { useCategoryName } from '@/features/categories/hooks/useCategoryName';
 import { useFormatters } from '@/hooks/useFormatters';
@@ -32,6 +33,7 @@ export function TransactionRow({
   const styles = useStyles();
   const { t } = useTranslation();
   const { t: tTx } = useTranslation('transactions');
+  const { t: tReceipts } = useTranslation('receipts');
   const nameOf = useCategoryName();
   const format = useFormatters();
 
@@ -50,7 +52,14 @@ export function TransactionRow({
       disabled={!onPress && !onLongPress}
       accessibilityRole={onPress ? 'button' : undefined}
       accessibilityHint={onPress ? tTx('row.editHint') : undefined}
-      accessibilityLabel={[title, subtitle, amountLabel].filter(Boolean).join(', ')}
+      accessibilityLabel={[
+        title,
+        subtitle,
+        transaction.hasReceipt ? tReceipts('rowLabel') : null,
+        amountLabel,
+      ]
+        .filter(Boolean)
+        .join(', ')}
       accessibilityActions={
         onLongPress && longPressActionLabel
           ? [{ name: 'longpress', label: longPressActionLabel }]
@@ -62,9 +71,14 @@ export function TransactionRow({
       style={({ pressed }) => [styles.root, pressed && styles.pressed]}>
       <CategoryIcon category={category} />
       <View style={styles.text}>
-        <AppText variant="bodyMedium" numberOfLines={1}>
-          {title}
-        </AppText>
+        <View style={styles.titleRow}>
+          <AppText variant="bodyMedium" numberOfLines={1} style={styles.shrink}>
+            {title}
+          </AppText>
+          {transaction.hasReceipt ? (
+            <AppIcon icon={ReceiptText} size="sm" color="textMuted" />
+          ) : null}
+        </View>
         {subtitle ? (
           <AppText variant="bodySmall" color="textSecondary" numberOfLines={1}>
             {subtitle}
@@ -89,5 +103,7 @@ const useStyles = makeStyles((t) => ({
     paddingVertical: t.spacing.sm,
   },
   text: { flex: 1 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: t.spacing.xs },
+  shrink: { flexShrink: 1 },
   pressed: { opacity: t.layout.pressedOpacity },
 }));

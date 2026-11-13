@@ -84,8 +84,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos so you can choose a profile photo. The photo stays on this device.",
-          "cameraPermission": false
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos so you can choose a profile photo or a receipt. Photos stay on this device.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to use the camera so you can photograph receipts. Photos are read on this device and are not uploaded."
         }
       ],
       [
@@ -96,7 +96,8 @@
           "androidSpeechServicePackages": ["com.google.android.googlequicksearchbox"]
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      ["expo-mlkit-ocr", { "iosEngine": "vision" }]
     ],
     "experiments": {
       "typedRoutes": true,

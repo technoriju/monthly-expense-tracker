@@ -88,6 +88,7 @@ function tx(overrides: Partial<Transaction> = {}): Transaction {
     note: null,
     paymentMethod: null,
     source: 'manual',
+    hasReceipt: false,
     createdAt: 0,
     updatedAt: 0,
     ...overrides,

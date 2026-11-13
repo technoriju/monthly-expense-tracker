@@ -19,10 +19,16 @@ import {
   transactionService,
   type CreateOptions,
 } from '../services/transactionService';
+import type { TransactionInput } from '../types';
 
 export interface TransactionFormOptions extends CreateOptions {
   /** Called after a successful create instead of the default toast + `router.back()`. */
   onCreated?: () => void;
+  /**
+   * Replaces `transactionService.create` (e.g. a receipt save that writes more rows). It owns
+   * feedback and navigation; a thrown error shows the inline save error like a normal create.
+   */
+  createWith?: (input: TransactionInput) => Promise<void>;
 }
 
 /**
@@ -71,9 +77,13 @@ export function useTransactionForm(
     submitting.current = true;
     try {
       const input = toTransactionInput(values, currency);
+      if (transactionId === undefined && options.createWith) {
+        await options.createWith(input);
+        return;
+      }
       if (transactionId === undefined) {
-        const { onCreated, ...createOptions } = options;
-        await transactionService.create(input, createOptions);
+        const { onCreated, source, voiceTranscript } = options;
+        await transactionService.create(input, { source, voiceTranscript });
         if (onCreated) {
           onCreated();
           return;

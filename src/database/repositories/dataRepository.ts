@@ -122,7 +122,10 @@ async function readTables(db: Executor): Promise<DataTables> {
 }
 
 async function deleteUserData(db: Executor): Promise<void> {
-  // Children first: budgets and transactions reference categories.
+  // Children first: receipts reference transactions; budgets and transactions reference
+  // categories. Receipts are not part of backups, so a restore or reset removes them.
+  await db.runAsync('DELETE FROM receipt_items');
+  await db.runAsync('DELETE FROM receipts');
   await db.runAsync('DELETE FROM budgets');
   await db.runAsync('DELETE FROM transactions');
 }

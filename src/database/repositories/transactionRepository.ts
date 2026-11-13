@@ -32,6 +32,7 @@ interface TransactionRow {
   c_is_system: number;
   c_custom_name: string | null;
   c_created_at: number;
+  has_receipt: number;
 }
 
 const SELECT = `
@@ -39,9 +40,11 @@ const SELECT = `
          t.payment_method, t.source, t.created_at, t.updated_at,
          c.key AS c_key, c.type AS c_type, c.icon AS c_icon, c.color AS c_color,
          c.sort_order AS c_sort_order, c.is_system AS c_is_system,
-         c.custom_name AS c_custom_name, c.created_at AS c_created_at
+         c.custom_name AS c_custom_name, c.created_at AS c_created_at,
+         (r.id IS NOT NULL) AS has_receipt
   FROM transactions t
-  JOIN categories c ON c.id = t.category_id`;
+  JOIN categories c ON c.id = t.category_id
+  LEFT JOIN receipts r ON r.transaction_id = t.id`;
 
 function mapRow(row: TransactionRow): Transaction {
   return {
@@ -65,6 +68,7 @@ function mapRow(row: TransactionRow): Transaction {
     note: row.note,
     paymentMethod: row.payment_method,
     source: row.source,
+    hasReceipt: row.has_receipt === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

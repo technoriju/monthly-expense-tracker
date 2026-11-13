@@ -18,6 +18,8 @@ any of your data.
 - Transactions you enter: amount, type, category, date, optional note and payment method, and —
   for entries added by voice — the recognized text you reviewed and saved.
 - Budgets, categories and your preferences (app language, voice language, theme, currency).
+- Receipts you scan and save: the receipt photo (as a file in the app's private storage), the
+  shop name, bill number, items and totals, and the text read from the photo.
 
 This data is kept in the app's private database on your device. The app does not encrypt this
 database itself; it relies on your device's screen lock and storage protection. On Android, the
@@ -35,6 +37,14 @@ speech recognition service (Google on Android, Apple on iOS) to turn speech into
 - You can use the app fully without voice entry, and you can deny or revoke microphone access in
   your device settings at any time.
 
+## Receipt scanning and the camera
+
+Receipt scanning is optional. When you use it, the app uses your camera (or a photo you pick) and
+reads the text with on-device text recognition (Google ML Kit on Android, Apple Vision on iOS).
+The photo is not uploaded. A scanned receipt is stored only after you review it and save the
+expense. Receipts are not included in backup files; restoring a backup or clearing all data
+deletes them. Deleting an expense or removing its receipt deletes the photo.
+
 ## Backups and exports
 
 Backup (JSON) and CSV export files are created only when you ask. They are not encrypted and go
@@ -49,12 +59,14 @@ contains no advertising or analytics SDKs.
 ## Permissions
 
 - **Microphone** (and **Speech Recognition** on iOS): only for voice entry, only while you record.
+- **Camera**: only when you choose to photograph a receipt. **Photos** (iOS): only to pick a profile
+  photo or a receipt image.
 - **Internet** (Android): required by the app framework and used by the system speech service; the
   app itself makes no network requests.
 
 ## Deleting your data
 
-- **Settings → Clear all data** deletes all transactions and budgets in the app.
+- **Settings → Clear all data** deletes all transactions, budgets and saved receipts in the app.
 - Uninstalling the app deletes its local data from the device (except copies kept by your device's
   own system backup).
 - Backup or export files you saved elsewhere are not affected; delete them separately.

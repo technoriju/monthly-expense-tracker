@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AppCard, AppHeader, AppScreen, AppText } from '@/components/ui';
 import { makeStyles } from '@/theme';
 
-const SECTIONS = ['local', 'account', 'cloud', 'voice', 'backups', 'deletion'] as const;
+const SECTIONS = ['local', 'account', 'cloud', 'voice', 'receipts', 'backups', 'deletion'] as const;
 
 /** Plain statements of how data is handled — facts only, no guarantees beyond them. */
 export function PrivacyView() {

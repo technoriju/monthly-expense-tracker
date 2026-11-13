@@ -1,0 +1,177 @@
+{
+  "scan": {
+    "title": "Scan receipt",
+    "intro": "Take a clear photo of the whole receipt, flat and in good light.",
+    "languageNote": "Text is read on this phone. Printed English receipts work best. Bengali, Hindi and handwritten text usually can't be read — you can type those details in.",
+    "takePhoto": "Take photo",
+    "choosePhoto": "Choose from gallery",
+    "enterManually": "Enter manually",
+    "resume": {
+      "title": "Unfinished receipt",
+      "message": "You have a receipt that isn't saved yet.",
+      "continue": "Continue",
+      "discard": "Discard"
+    },
+    "preview": {
+      "imageLabel": "Receipt photo",
+      "rotateLeft": "Rotate left",
+      "rotateRight": "Rotate right",
+      "retake": "Retake",
+      "usePhoto": "Use photo"
+    },
+    "processing": {
+      "preparing": "Preparing photo…",
+      "reading": "Reading receipt…",
+      "analysing": "Finding amounts…",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "cameraDenied": {
+        "title": "Camera access is off",
+        "message": "Allow camera access in Settings to photograph receipts, or choose a photo from the gallery."
+      },
+      "unavailable": {
+        "title": "Receipt reading isn't available",
+        "message": "This version of the app can't read text from photos. You can still enter the receipt yourself."
+      },
+      "timeout": {
+        "title": "Reading took too long",
+        "message": "Try again with a sharper, well-lit photo, or enter the details yourself."
+      },
+      "failed": {
+        "title": "Couldn't read the receipt",
+        "message": "Something went wrong while reading the photo. Try again or enter the details yourself."
+      },
+      "tooSmall": {
+        "title": "Photo is too small",
+        "message": "Take the photo closer so the text is large and sharp."
+      },
+      "tooLarge": {
+        "title": "Photo is too large",
+        "message": "Choose a smaller photo or take a new one."
+      },
+      "invalidImage": {
+        "title": "Can't open this photo",
+        "message": "Choose another photo or take a new one."
+      },
+      "storage": {
+        "title": "Couldn't save the photo",
+        "message": "Your phone may be out of space. Free some space and try again, or enter the receipt without the photo."
+      },
+      "openSettings": "Open settings",
+      "tryAgain": "Try again",
+      "enterDetails": "Enter details yourself"
+    }
+  },
+  "review": {
+    "title": "Review receipt",
+    "photoLabel": "Receipt photo",
+    "openPhoto": "Opens the receipt photo",
+    "closePhoto": "Close photo",
+    "vendor": "Shop name",
+    "receiptNumber": "Bill number",
+    "optional": "Optional",
+    "noText": "No text could be read from this photo. Enter the amount and details yourself.",
+    "items": {
+      "title": "Items",
+      "add": "Add item",
+      "showAll": "Show all {{count}} items",
+      "showLess": "Show fewer",
+      "unnamed": "Unreadable item",
+      "noAmount": "No amount",
+      "editHint": "Opens the item to edit",
+      "flags": {
+        "nameUncertain": "Check name",
+        "amountUncertain": "Check amount",
+        "suspicious": "Two amounts",
+        "quantityMismatch": "Qty × price differs"
+      }
+    },
+    "totals": {
+      "title": "Totals",
+      "edit": "Edit totals",
+      "subtotal": "Subtotal",
+      "tax": "Tax / GST",
+      "discount": "Discount",
+      "charges": "Delivery / packing",
+      "roundOff": "Round off",
+      "none": "No subtotal, tax or discount found.",
+      "chooseTotal": "Several totals were found. Which one did you pay?",
+      "useItems": "Use items total ({{amount}})"
+    },
+    "issues": {
+      "title": "Please check",
+      "totalAmbiguous": "Several different totals were found. Choose or type the amount you paid.",
+      "totalMissing": "No total was found on the receipt. Enter the amount you paid.",
+      "itemAmountUncertain": "“{{name}}”: the amount may be misread.",
+      "itemSuspicious": "“{{name}}”: two different amounts on one line — it may be corrected or crossed out.",
+      "itemQuantityMismatch": "“{{name}}”: quantity × price is {{expected}}.",
+      "itemsVsSubtotal": "Items add up to {{items}}, but the subtotal is {{subtotal}}.",
+      "totalsMismatch": "Subtotal, tax and other lines add up to {{expected}}, not the amount entered.",
+      "finalVsItems": "Items add up to {{items}}, not the amount entered.",
+      "finalVsExtracted": "The total read from the receipt was {{amount}}."
+    },
+    "confirmCheck": "I've checked the amount",
+    "confirmRequired": "Tick “I've checked the amount” to save.",
+    "save": "Save expense",
+    "rescan": "Scan again",
+    "cancel": "Cancel",
+    "keepEditing": "Keep editing",
+    "discardTitle": "Discard this receipt?",
+    "discardMessage": "Nothing has been saved.",
+    "discard": "Discard",
+    "rescanTitle": "Scan again?",
+    "rescanMessage": "Your changes to this receipt will be replaced by the new scan.",
+    "rescanConfirm": "Scan again",
+    "imageMissingTitle": "Photo not found",
+    "imageMissingMessage": "The receipt photo is no longer on this phone. Save the expense without the photo?",
+    "saveWithoutPhoto": "Save without photo",
+    "duplicateTitle": "Possible duplicate",
+    "duplicateMessage": "A scanned receipt with the same date and amount is already saved. Save this one too?",
+    "saveAnyway": "Save anyway",
+    "saved": "Receipt saved",
+    "empty": {
+      "title": "No receipt to review",
+      "message": "Scan a receipt first.",
+      "action": "Scan receipt"
+    }
+  },
+  "item": {
+    "addTitle": "Add item",
+    "editTitle": "Edit item",
+    "name": "Item name",
+    "readAs": "Read as: {{text}}",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "unitPrice": "Price per unit",
+    "lineTotal": "Amount",
+    "delete": "Delete item",
+    "done": "Done",
+    "invalidAmount": "Enter a valid amount",
+    "invalidQuantity": "Enter a valid quantity"
+  },
+  "detail": {
+    "title": "Receipt",
+    "cardTitle": "Scanned receipt",
+    "view": "View receipt",
+    "viewHint": "Opens the receipt saved with this expense",
+    "photoMissing": "The photo is not available on this phone.",
+    "amountDiffers": "The expense amount ({{amount}}) is different from the receipt total read ({{read}}).",
+    "ocrText": "Text read from the photo",
+    "noItems": "No items saved.",
+    "edit": "Edit details",
+    "remove": "Remove receipt",
+    "removeTitle": "Remove receipt?",
+    "removeMessage": "The receipt photo and items are deleted. The expense stays.",
+    "removeConfirm": "Remove",
+    "removed": "Receipt removed",
+    "updated": "Receipt updated",
+    "saveFailed": "Couldn't save. Please try again.",
+    "loadError": "Couldn't load the receipt.",
+    "notFound": "This expense has no receipt.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "retry": "Try again"
+  },
+  "rowLabel": "Scanned receipt"
+}
