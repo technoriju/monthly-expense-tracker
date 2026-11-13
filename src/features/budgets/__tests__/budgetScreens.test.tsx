@@ -107,6 +107,22 @@ describe('BudgetView', () => {
     expect(await screen.findByText('Enter a budget amount')).toBeTruthy();
   });
 
+  it('offers 6 categories plus "Other" (no Add tile) and defaults "Other" to selected', async () => {
+    await renderScreen(<BudgetView initialMonth={MAY} />);
+    await fireEvent.press(await screen.findByRole('button', { name: 'Add category budget' }));
+
+    expect(screen.getAllByRole('radio')).toHaveLength(7);
+    expect(screen.queryByText('Add')).toBeNull();
+    await fireEvent.press(screen.getByRole('radio', { name: 'Other' }));
+    expect(screen.getByText('Choose category')).toBeTruthy();
+
+    await fireEvent.changeText(screen.getByLabelText('Budget amount'), '500');
+    await fireEvent.press(screen.getByLabelText('Save'));
+    await screen.findByText('Category budgets');
+    const stored = await budgetService.getMonthOverview(MAY);
+    expect(stored.categories.map((c) => c.category.key)).toEqual(['other_expense']);
+  });
+
   it('shows exceeded category budgets, warnings and unbudgeted spending', async () => {
     await budgetService.create({
       budgetType: 'category',

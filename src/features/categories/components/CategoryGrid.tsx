@@ -1,48 +1,8 @@
 import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable } from 'react-native';
 
 import { AppText } from '@/components/ui';
 import { makeStyles } from '@/theme';
-
-import { useCategoryName } from '../hooks/useCategoryName';
-import type { Category } from '../types';
-import { CategoryIcon } from './CategoryIcon';
-
-export interface CategoryGridProps {
-  categories: readonly Category[];
-  selectedId: number | null;
-  onSelect: (category: Category) => void;
-  /** Already-translated name of the group (screen-reader label). */
-  accessibilityLabel: string;
-}
-
-/** 4-column icon grid (design-reference Add Transaction). */
-export function CategoryGrid({
-  categories,
-  selectedId,
-  onSelect,
-  accessibilityLabel,
-}: CategoryGridProps) {
-  const styles = useCellStyles();
-  const nameOf = useCategoryName();
-
-  return (
-    <View
-      style={styles.grid}
-      accessibilityRole="radiogroup"
-      accessibilityLabel={accessibilityLabel}>
-      {categories.map((category) => (
-        <CategoryCell
-          key={category.id}
-          icon={<CategoryIcon category={category} />}
-          label={nameOf(category)}
-          selected={category.id === selectedId}
-          onPress={() => onSelect(category)}
-        />
-      ))}
-    </View>
-  );
-}
 
 export interface CategoryCellProps {
   icon: ReactNode;

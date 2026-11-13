@@ -117,3 +117,15 @@ describe('onboarding', () => {
     expect(useSettingsStore.getState().onboardingDone).toBe(true);
   });
 });
+
+describe('profile name', () => {
+  it('trims, caps and restores the name on the next hydrate', async () => {
+    await settingsService.setProfileName(`  ${'a'.repeat(40)}  `);
+    expect(settingsRepository.set).toHaveBeenCalledWith('profileName', 'a'.repeat(30));
+    expect(useSettingsStore.getState().profileName).toBe('a'.repeat(30));
+
+    useSettingsStore.getState().applySettings({ profileName: '' });
+    await settingsService.hydrate(['en']);
+    expect(useSettingsStore.getState().profileName).toBe('a'.repeat(30));
+  });
+});

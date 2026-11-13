@@ -21,7 +21,8 @@ export interface CategoryQuickPickerProps {
   categories: readonly Category[];
   selectedId: number | null;
   onSelect: (categoryId: number) => void;
-  onAddCategory: (name: string) => Promise<Category>;
+  /** Creates a custom category. Omit to hide the "Add category" tile (budget editor). */
+  onAddCategory?: (name: string) => Promise<Category>;
   /** Already-translated name of the group (screen-reader label). */
   accessibilityLabel: string;
 }
@@ -29,7 +30,9 @@ export interface CategoryQuickPickerProps {
 /**
  * Two-row category grid for the transaction form: the 6 most used categories, then an
  * "Other" tile (opens a searchable list of every category) and an "Add category" tile.
- * A selection outside the 6 is shown in place of "Other".
+ * A selection outside the 6 is shown in place of "Other". Without `onAddCategory` the "Add"
+ * tile is left out. When "Other" itself is not in `categories` (e.g. it already has a budget),
+ * the first category outside the 6 stands in for it so the rest stay reachable.
  */
 export function CategoryQuickPicker({
   type,
@@ -46,7 +49,9 @@ export function CategoryQuickPicker({
   const [pickerOpen, setPickerOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
 
-  const { quick, other } = splitQuickCategories(categories, type);
+  const split = splitQuickCategories(categories, type);
+  const { quick } = split;
+  const other = split.other ?? categories.find((c) => !quick.includes(c)) ?? null;
   const inQuick = quick.some((c) => c.id === selectedId);
   const selectedElsewhere =
     selectedId !== null && !inQuick ? categories.find((c) => c.id === selectedId) : undefined;
@@ -85,15 +90,17 @@ export function CategoryQuickPicker({
             accessibilityHint={t('quickCategories.otherHint')}
           />
         ) : null}
-        <CategoryCell
-          icon={
-            <View style={styles.addIcon}>
-              <AppIcon icon={Plus} size="md" color="primary" />
-            </View>
-          }
-          label={t('quickCategories.add')}
-          onPress={() => setAddOpen(true)}
-        />
+        {onAddCategory ? (
+          <CategoryCell
+            icon={
+              <View style={styles.addIcon}>
+                <AppIcon icon={Plus} size="md" color="primary" />
+              </View>
+            }
+            label={t('quickCategories.add')}
+            onPress={() => setAddOpen(true)}
+          />
+        ) : null}
       </View>
 
       <CategoryPickerSheet
@@ -107,15 +114,17 @@ export function CategoryQuickPicker({
         }}
       />
 
-      <AddCategorySheet
-        visible={addOpen}
-        onClose={() => setAddOpen(false)}
-        onSubmit={onAddCategory}
-        onCreated={(category) => {
-          setAddOpen(false);
-          onSelect(category.id);
-        }}
-      />
+      {onAddCategory ? (
+        <AddCategorySheet
+          visible={addOpen}
+          onClose={() => setAddOpen(false)}
+          onSubmit={onAddCategory}
+          onCreated={(category) => {
+            setAddOpen(false);
+            onSelect(category.id);
+          }}
+        />
+      ) : null}
     </>
   );
 }

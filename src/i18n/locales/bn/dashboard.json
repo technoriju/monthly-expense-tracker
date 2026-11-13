@@ -3,7 +3,8 @@
     "hello": "নমস্কার!",
     "morning": "সুপ্রভাত",
     "afternoon": "শুভ অপরাহ্ন",
-    "evening": "শুভ সন্ধ্যা"
+    "evening": "শুভ সন্ধ্যা",
+    "helloName": "নমস্কার, {{name}}!"
   },
   "profileLabel": "প্রোফাইল",
   "profilePhoto": {
@@ -13,7 +14,10 @@
     "change": "ছবি পরিবর্তন করুন",
     "remove": "ছবি সরান",
     "saveFailed": "ছবি সেট করা যায়নি। আবার চেষ্টা করুন।",
-    "removeFailed": "ছবি সরানো যায়নি। আবার চেষ্টা করুন।"
+    "removeFailed": "ছবি সরানো যায়নি। আবার চেষ্টা করুন।",
+    "nameLabel": "আপনার নাম",
+    "nameHelper": "অভিবাদনে দেখানো হয়",
+    "nameSaveFailed": "নাম সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।"
   },
   "month": {
     "selectorLabel": "নির্বাচিত মাস: {{month}}",

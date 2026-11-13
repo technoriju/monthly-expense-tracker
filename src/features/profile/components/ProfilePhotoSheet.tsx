@@ -2,7 +2,8 @@ import { ImagePlus, Trash2 } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { AppButton, AppSheet } from '@/components/ui';
+import { AppButton, AppInput, AppSheet } from '@/components/ui';
+import { PROFILE_NAME_MAX_LENGTH } from '@/features/settings/types';
 import { makeStyles } from '@/theme';
 
 import { ProfileAvatar } from './ProfileAvatar';
@@ -13,15 +14,20 @@ export interface ProfilePhotoSheetProps {
   uri: string | null;
   onPick: () => void;
   onRemove: () => void;
+  /** Greeting name being edited (saved by the caller when the sheet closes). */
+  name: string;
+  onNameChange: (name: string) => void;
 }
 
-/** Preview of the profile photo with choose / remove actions. */
+/** Preview of the profile photo with choose / remove actions, plus the greeting name. */
 export function ProfilePhotoSheet({
   visible,
   onClose,
   uri,
   onPick,
   onRemove,
+  name,
+  onNameChange,
 }: ProfilePhotoSheetProps) {
   const styles = useStyles();
   const { t } = useTranslation('dashboard');
@@ -51,6 +57,17 @@ export function ProfilePhotoSheet({
       <View style={styles.preview}>
         <ProfileAvatar uri={uri} size="lg" />
       </View>
+      <AppInput
+        label={t('profilePhoto.nameLabel')}
+        helperText={t('profilePhoto.nameHelper')}
+        value={name}
+        onChangeText={onNameChange}
+        maxLength={PROFILE_NAME_MAX_LENGTH}
+        autoCapitalize="words"
+        autoCorrect={false}
+        returnKeyType="done"
+        onSubmitEditing={onClose}
+      />
     </AppSheet>
   );
 }

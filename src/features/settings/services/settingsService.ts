@@ -13,7 +13,7 @@ import { useSettingsStore } from '@/store/settingsStore';
 import { isThemeMode, type ThemeMode } from '@/theme/theme';
 import { DEFAULT_CURRENCY, isCurrencyCode } from '@/utils/money';
 
-import { SETTING_KEYS } from '../types';
+import { PROFILE_NAME_MAX_LENGTH, SETTING_KEYS } from '../types';
 
 export const settingsService = {
   /**
@@ -37,6 +37,9 @@ export const settingsService = {
     const onboardingDone = stored[SETTING_KEYS.onboardingDone] === true;
     const storedAppLock = stored[SETTING_KEYS.appLockMethod];
     const appLockMethod = isAppLockMethod(storedAppLock) ? storedAppLock : 'off';
+    const storedName = stored[SETTING_KEYS.profileName];
+    const profileName =
+      typeof storedName === 'string' ? storedName.slice(0, PROFILE_NAME_MAX_LENGTH) : '';
 
     await changeUiLanguage(uiLanguage);
     useSettingsStore.getState().applySettings({
@@ -46,6 +49,7 @@ export const settingsService = {
       voiceLanguage,
       onboardingDone,
       appLockMethod,
+      profileName,
     });
   },
 
@@ -90,5 +94,12 @@ export const settingsService = {
     }
     await settingsRepository.set(SETTING_KEYS.appLockMethod, method);
     useSettingsStore.getState().applySettings({ appLockMethod: method });
+  },
+
+  /** Persists the greeting name (trimmed, capped; empty clears it). DB first. */
+  async setProfileName(name: string): Promise<void> {
+    const profileName = name.trim().slice(0, PROFILE_NAME_MAX_LENGTH);
+    await settingsRepository.set(SETTING_KEYS.profileName, profileName);
+    useSettingsStore.getState().applySettings({ profileName });
   },
 };

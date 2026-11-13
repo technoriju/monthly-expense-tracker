@@ -3,7 +3,8 @@
     "hello": "Hello!",
     "morning": "Good Morning",
     "afternoon": "Good Afternoon",
-    "evening": "Good Evening"
+    "evening": "Good Evening",
+    "helloName": "Hello, {{name}}!"
   },
   "profileLabel": "Profile",
   "profilePhoto": {
@@ -13,7 +14,10 @@
     "change": "Change photo",
     "remove": "Remove photo",
     "saveFailed": "Could not set the photo. Please try again.",
-    "removeFailed": "Could not remove the photo. Please try again."
+    "removeFailed": "Could not remove the photo. Please try again.",
+    "nameLabel": "Your name",
+    "nameHelper": "Shown in the greeting",
+    "nameSaveFailed": "Could not save the name. Please try again."
   },
   "month": {
     "selectorLabel": "Selected month: {{month}}",

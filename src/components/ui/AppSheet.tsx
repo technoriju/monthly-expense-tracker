@@ -1,7 +1,14 @@
 import { X } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { makeStyles, useTheme } from '@/theme';
@@ -29,7 +36,9 @@ export function AppSheet({ visible, onClose, title, children, footer }: AppSheet
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.backdrop}>
+      {/* Lifts the sheet above the keyboard. 'padding' on Android too: with edge-to-edge the
+          window no longer resizes for the keyboard. */}
+      <KeyboardAvoidingView behavior="padding" style={styles.backdrop}>
         <Pressable
           style={styles.dismissArea}
           onPress={onClose}
@@ -59,7 +68,7 @@ export function AppSheet({ visible, onClose, title, children, footer }: AppSheet
             <View style={{ height: insets.bottom }} />
           )}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

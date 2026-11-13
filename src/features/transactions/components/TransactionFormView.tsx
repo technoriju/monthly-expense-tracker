@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { ChevronRight, ReceiptText, Trash2 } from 'lucide-react-native';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAvoidingView, Platform, Pressable, View } from 'react-native';
+import { KeyboardAvoidingView, Pressable, View } from 'react-native';
 
 import {
   AppButton,
@@ -77,7 +77,9 @@ export function TransactionFormView({ mode }: { mode: TransactionFormMode }) {
   return (
     <KeyboardAvoidingView
       style={styles.flex}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      // 'padding' on Android too: with edge-to-edge the window no longer resizes for the
+      // keyboard, so the note field ended up under it.
+      behavior="padding">
       <AppScreen
         scrollRef={scrollRef}
         edges={['top', 'left', 'right', 'bottom']}

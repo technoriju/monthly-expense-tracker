@@ -21,6 +21,8 @@ export interface SettingsState {
   onboardingDone: boolean;
   /** App lock via the phone's own security. Device-only; not part of backups. */
   appLockMethod: AppLockMethod;
+  /** Name shown in the dashboard greeting; empty = none. Device-only; not part of backups. */
+  profileName: string;
 }
 
 interface SettingsStore extends SettingsState {
@@ -36,5 +38,6 @@ export const useSettingsStore = create<SettingsStore>()((set) => ({
   voiceLanguage: DEFAULT_VOICE_LANGUAGE,
   onboardingDone: false,
   appLockMethod: 'off',
+  profileName: '',
   applySettings: (patch) => set(patch),
 }));

@@ -2,7 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { DashboardGreeting } from '@/features/dashboard/components/DashboardGreeting';
+import { settingsService } from '@/features/settings/services/settingsService';
 import { changeUiLanguage } from '@/i18n';
+import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
 
 import { profileImageService } from '../services/profileImageService';
@@ -17,7 +19,12 @@ jest.mock('../services/profileImageService', () => ({
   profileImageService: { getUri: jest.fn(), pick: jest.fn(), remove: jest.fn() },
 }));
 
+jest.mock('@/features/settings/services/settingsService', () => ({
+  settingsService: { setProfileName: jest.fn() },
+}));
+
 const service = jest.mocked(profileImageService);
+const settings = jest.mocked(settingsService);
 const PHOTO = 'file:///data/profile/photo-1.jpg';
 const METRICS = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -35,6 +42,10 @@ beforeEach(async () => {
   service.getUri.mockReset().mockReturnValue(null);
   service.pick.mockReset();
   service.remove.mockReset();
+  useSettingsStore.getState().applySettings({ profileName: '' });
+  settings.setProfileName.mockReset().mockImplementation(async (name: string) => {
+    useSettingsStore.getState().applySettings({ profileName: name.trim() });
+  });
 });
 
 describe('Profile photo', () => {
@@ -87,5 +98,27 @@ describe('Profile photo', () => {
     await fireEvent.press(screen.getByText('Choose photo'));
 
     expect(useUiStore.getState().toast?.message).toBe('Could not set the photo. Please try again.');
+  });
+
+  it('saves the name when the sheet closes and greets with it', async () => {
+    await renderGreeting();
+    expect(screen.getByText('Hello!')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Profile' }));
+    await fireEvent.changeText(screen.getByLabelText('Your name'), '  Riju ');
+    await fireEvent(screen.getByLabelText('Your name'), 'submitEditing');
+
+    expect(settings.setProfileName).toHaveBeenCalledWith('  Riju ');
+    expect(screen.getByText('Hello, Riju!')).toBeTruthy();
+    expect(screen.queryByText('Profile photo')).toBeNull();
+  });
+
+  it('does not save an unchanged name', async () => {
+    useSettingsStore.getState().applySettings({ profileName: 'Riju' });
+    await renderGreeting();
+    await fireEvent.press(screen.getByRole('button', { name: 'Profile' }));
+    await fireEvent(screen.getByLabelText('Your name'), 'submitEditing');
+
+    expect(settings.setProfileName).not.toHaveBeenCalled();
+    expect(screen.getByText('Hello, Riju!')).toBeTruthy();
   });
 });

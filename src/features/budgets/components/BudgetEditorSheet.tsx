@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppButton, AppInput, AppSheet, AppText } from '@/components/ui';
-import { CategoryGrid } from '@/features/categories/components/CategoryGrid';
 import { CategoryIcon } from '@/features/categories/components/CategoryIcon';
+import { CategoryQuickPicker } from '@/features/categories/components/CategoryQuickPicker';
 import { useCategoryName } from '@/features/categories/hooks/useCategoryName';
 import type { Category } from '@/features/categories/types';
 import { useAnnounce } from '@/hooks/useAnnounce';
@@ -129,10 +129,11 @@ function EditorSheet({
                     {t('editor.noCategoriesLeft')}
                   </AppText>
                 ) : (
-                  <CategoryGrid
+                  <CategoryQuickPicker
+                    type="expense"
                     categories={availableCategories}
                     selectedId={field.value}
-                    onSelect={(c) => field.onChange(c.id)}
+                    onSelect={field.onChange}
                     accessibilityLabel={t('editor.category')}
                   />
                 )}
