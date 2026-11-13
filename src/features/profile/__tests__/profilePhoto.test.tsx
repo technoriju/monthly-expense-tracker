@@ -108,7 +108,7 @@ describe('Profile photo', () => {
     await fireEvent(screen.getByLabelText('Your name'), 'submitEditing');
 
     expect(settings.setProfileName).toHaveBeenCalledWith('  Riju ');
-    expect(screen.getByText('Hello, Riju!')).toBeTruthy();
+    expect(screen.getByText('Hello, Riju')).toBeTruthy();
     expect(screen.queryByText('Profile photo')).toBeNull();
   });
 
@@ -119,6 +119,6 @@ describe('Profile photo', () => {
     await fireEvent(screen.getByLabelText('Your name'), 'submitEditing');
 
     expect(settings.setProfileName).not.toHaveBeenCalled();
-    expect(screen.getByText('Hello, Riju!')).toBeTruthy();
+    expect(screen.getByText('Hello, Riju')).toBeTruthy();
   });
 });

@@ -4,7 +4,7 @@
     "morning": "সুপ্রভাত",
     "afternoon": "শুভ অপরাহ্ন",
     "evening": "শুভ সন্ধ্যা",
-    "helloName": "নমস্কার, {{name}}!"
+    "helloName": "নমস্কার, {{name}}"
   },
   "profileLabel": "প্রোফাইল",
   "profilePhoto": {

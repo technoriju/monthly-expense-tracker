@@ -4,7 +4,7 @@
     "morning": "Good Morning",
     "afternoon": "Good Afternoon",
     "evening": "Good Evening",
-    "helloName": "Hello, {{name}}!"
+    "helloName": "Hello, {{name}}"
   },
   "profileLabel": "Profile",
   "profilePhoto": {

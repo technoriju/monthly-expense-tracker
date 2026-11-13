@@ -4,7 +4,7 @@
     "morning": "सुप्रभात",
     "afternoon": "शुभ दोपहर",
     "evening": "शुभ संध्या",
-    "helloName": "नमस्ते, {{name}}!"
+    "helloName": "नमस्ते, {{name}}"
   },
   "profileLabel": "प्रोफ़ाइल",
   "profilePhoto": {
