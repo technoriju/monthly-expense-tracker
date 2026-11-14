@@ -10,6 +10,7 @@ const SECTIONS = [
   'voice',
   'receipts',
   'updates',
+  'ads',
   'backups',
   'deletion',
 ] as const;

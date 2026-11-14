@@ -1,6 +1,7 @@
 # Privacy Policy — Expense Tracker (DRAFT)
 
-> **Draft for the owner's review.** It describes what the app's code does as of version 1.0.0.
+> **Draft for the owner's review.** It describes what the app's code does as of version 1.0.0
+> (with Google AdMob banner ads, Android).
 > It is not legal advice. Fill in the bracketed fields, have it reviewed, and host it at a
 > public URL before store submission. Update it whenever the app's data handling changes.
 
@@ -10,8 +11,9 @@
 ## Summary
 
 Expense Tracker stores your income, expenses, budgets and preferences only on your device. The
-app has no account, no server for your data, no advertising and no analytics. The developer does
-not receive any of your data.
+app has no account and no server for your data, and the developer does not receive any of your
+data. The free Android app shows banner ads from Google AdMob; to serve them, Google's advertising
+SDK collects some device data (see "Advertising"). Your financial data is never part of that.
 
 ## Update check
 
@@ -22,6 +24,37 @@ transactions or settings. Like any web request, the server can see your device's
 your version is no longer supported, the app asks you to update from the Play Store or App Store;
 your data on the device is not changed or deleted. Without an internet connection the app keeps
 working.
+
+## Advertising (Google AdMob, Android)
+
+The Dashboard and Reports screens show a banner ad served by Google AdMob. Ads never appear on the
+screens where you add or edit entries, record by voice, scan receipts or review entries.
+
+To show ads, measure them and prevent fraud, the Google Mobile Ads SDK built into the app
+automatically collects and shares with Google:
+
+- your device's **IP address**, which may be used to estimate your general location;
+- **device identifiers**: the Android advertising ID and app set ID;
+- **ad and app interactions**, such as app launches, ad taps and video views;
+- **diagnostic information** about the performance of the app and the SDK.
+
+This data is encrypted in transit (TLS). Google processes it under its own privacy policy:
+https://policies.google.com/privacy — see also "How Google uses information from sites or apps
+that use our services": https://policies.google.com/technologies/partner-sites.
+
+**What is never shared with Google or any ad network:** your transactions, amounts, categories,
+notes, budgets, receipts, receipt photos, voice text, backups or settings. The app passes no
+user data to the ads SDK.
+
+**Your choices:**
+- In regions where consent is required (for example the EEA, UK and Switzerland), the app asks
+  for your consent through Google's consent message before personalised ads are requested. You
+  can change your choice at any time in **Settings → Ad privacy options**.
+- You can reset or delete your advertising ID in your Android settings (Settings → Privacy → Ads,
+  or Google → Ads, depending on the device).
+- If ads cannot load (for example offline), the app works normally without them.
+
+The iOS version of the app does not currently show ads.
 
 ## Data the app stores on your device
 
@@ -63,8 +96,10 @@ messaging app). The app itself does not upload them.
 
 ## Data sharing
 
-The app does not sell, share or transfer your data to the developer or to third parties. It
-contains no advertising or analytics SDKs.
+The app does not sell your data. Your financial data (transactions, budgets, receipts, voice text,
+backups) is not shared with the developer or any third party. The only third-party data sharing
+is the device data collected by the Google Mobile Ads SDK described under "Advertising". The app
+contains no analytics SDK of its own.
 
 ## Permissions
 
@@ -72,7 +107,9 @@ contains no advertising or analytics SDKs.
 - **Camera**: only when you choose to photograph a receipt. **Photos** (iOS): only to pick a profile
   photo or a receipt image.
 - **Internet** (Android): required by the app framework, used by the system speech service and by the
-  app's update check (see above); the app sends none of your data.
+  app's update check (see above) and by the Google Mobile Ads SDK; the app sends none of your
+  financial data.
+- **Advertising ID** (Android, `AD_ID`): added by the Google Mobile Ads SDK to show and measure ads.
 
 ## Deleting your data
 
@@ -83,7 +120,8 @@ contains no advertising or analytics SDKs.
 
 ## Children
 
-The app is not directed at children and does not knowingly collect personal information from them.
+The app is not directed at children under 13 (or the equivalent minimum age in your country) and
+does not knowingly collect personal information from them. Ads are not intended for children.
 
 ## Changes
 

@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion. **Phase 9 — Receipt Scanner** pulled forward and implemented in code (2026-11-13; adds `expo-image-manipulator`, `expo-mlkit-ocr`); tsc/lint/jest pass; on-device check pending a new development build. **Phase 10 — App Update Gate** pulled forward and implemented in code (2026-11-14); no new dependencies; tsc/lint/jest pass; on-device check pending a release build.
+**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion. **Phase 9 — Receipt Scanner** pulled forward and implemented in code (2026-11-13; adds `expo-image-manipulator`, `expo-mlkit-ocr`); tsc/lint/jest pass; on-device check pending a new development build. **Phase 10 — App Update Gate** pulled forward and implemented in code (2026-11-14); no new dependencies; tsc/lint/jest pass; on-device check pending a release build. **Phase 11 — AdMob & Google Play Release** implemented in code (2026-11-14; adds `react-native-google-mobile-ads`); tsc/lint/jest pass; test-ad and consent checks pending a device build; store submission is manual.
 
 ## Rules for every phase
 
@@ -226,3 +226,20 @@
 **Out of scope:** Play In-App Updates, staged rollouts, per-platform minimum versions.
 
 **Exit:** tests for version comparison, schema, rules, service, store links and the root gate pass; on a release build each manual case in TESTING.md (App update) passes on Android and iOS; data intact after updating.
+
+---
+
+## Phase 11 — AdMob & Google Play Release
+
+> Requested 2026-11-14 (the user's brief called this "Phase 10 — AdMob + Google Play Release Preparation"). Reverses the earlier "no ads" decision (ARCHITECTURE.md §12). No reference panel — the banner sits below existing screen content using tokens only.
+
+**Scope**
+- `react-native-google-mobile-ads` (classic Android SDK); App IDs injected by `app.config.ts` from env, Google sample IDs otherwise; EAS `production` fails without a real App ID.
+- Google UMP consent at startup (after lock/onboarding/update gate); SDK initialised only when `canRequestAds`; Settings → Ad privacy options when required.
+- One anchored adaptive banner on Dashboard and Reports only; test units in development; collapses on no-fill/offline; never blocks the app.
+- Android only for this release; `EXPO_PUBLIC_ADS_ENABLED=0` builds without ads.
+- Root `ErrorBoundary` (release blocker fix). Privacy policy, in-app privacy text, Data safety, store copy and release docs updated (`ADMOB_SETUP.md`, `PRIVACY_AND_DATA_SAFETY.md`, `PLAY_STORE_RELEASE.md`).
+
+**Out of scope:** interstitial, app-open, rewarded or native ads; iOS ads (ATT); mediation; remote ads kill switch; automatic store submission.
+
+**Exit:** ads tests pass; on a device build: test banner on Dashboard/Reports only, consent accept/reject flows, offline and no-fill collapse, ads-disabled build, entry/voice/receipt flows unaffected; internal testing track install.

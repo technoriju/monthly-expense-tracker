@@ -7,6 +7,7 @@ import {
   IndianRupee,
   Info,
   LockKeyhole,
+  Megaphone,
   Mic,
   ShieldCheck,
   SunMoon,
@@ -15,10 +16,12 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { AppHeader, AppScreen, AppText } from '@/components/ui';
+import { showAdPrivacyOptions } from '@/features/ads/services/adsService';
 import { useClearData } from '@/features/data-management/hooks/useClearData';
 import { useActiveLanguage } from '@/hooks/useActiveLanguage';
 import { appLockMethodLabelKey } from '@/features/security/methodLabel';
 import { getLanguage } from '@/i18n/languages';
+import { useAdsStore } from '@/store/adsStore';
 import { useSettingsStore } from '@/store/settingsStore';
 import { getCurrencyInfo } from '@/utils/money';
 
@@ -33,6 +36,7 @@ export function SettingsView() {
   const voiceLanguage = getLanguage(useSettingsStore((s) => s.voiceLanguage));
   const confirmClear = useClearData();
   const appLockMethod = useSettingsStore((s) => s.appLockMethod);
+  const adPrivacyOptionsRequired = useAdsStore((s) => s.privacyOptionsRequired);
 
   return (
     <AppScreen
@@ -118,6 +122,13 @@ export function SettingsView() {
           label={t('about.privacy')}
           onPress={() => router.push('/settings/privacy')}
         />
+        {adPrivacyOptionsRequired ? (
+          <SettingsRow
+            icon={Megaphone}
+            label={t('about.adPrivacy')}
+            onPress={() => void showAdPrivacyOptions()}
+          />
+        ) : null}
       </SettingsSection>
       <AppText variant="bodySmall" color="textSecondary" align="center">
         {t('about.description')}

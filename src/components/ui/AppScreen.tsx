@@ -20,6 +20,8 @@ export interface AppScreenProps {
   contentStyle?: StyleProp<ViewStyle>;
   /** Ref to the inner ScrollView (only when `scroll`), e.g. to scroll a form error into view. */
   scrollRef?: Ref<ScrollViewInstance>;
+  /** Fixed content below the scroll area, full width (e.g. an ad banner above the tab bar). */
+  footer?: ReactNode;
 }
 
 /** Screen wrapper: background, safe areas, horizontal gutter, optional scrolling. */
@@ -30,6 +32,7 @@ export function AppScreen({
   edges = ['top', 'left', 'right'],
   contentStyle,
   scrollRef,
+  footer,
 }: AppScreenProps) {
   const styles = useStyles();
   return (
@@ -47,6 +50,7 @@ export function AppScreen({
       ) : (
         <View style={[styles.flex, styles.content, contentStyle]}>{children}</View>
       )}
+      {footer}
     </SafeAreaView>
   );
 }

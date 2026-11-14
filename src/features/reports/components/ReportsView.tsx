@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppEmptyState, AppHeader, AppIconButton, AppLoading, AppScreen } from '@/components/ui';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { BudgetSummaryCard } from '@/features/budgets/components/BudgetSummaryCard';
 import { SummaryCard } from '@/features/dashboard/components/SummaryCard';
 import { makeStyles } from '@/theme';
@@ -121,7 +122,7 @@ export function ReportsView() {
   }
 
   return (
-    <AppScreen header={header}>
+    <AppScreen header={header} footer={<AdBanner />}>
       <ReportPeriodSelector period={period} onChange={setPeriod} today={today} />
       {body}
     </AppScreen>

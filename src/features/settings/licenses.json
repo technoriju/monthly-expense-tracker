@@ -175,6 +175,11 @@
     "license": "MIT"
   },
   {
+    "name": "react-native-google-mobile-ads",
+    "version": "17.4.0",
+    "license": "Apache-2.0"
+  },
+  {
     "name": "react-native-reanimated",
     "version": "4.7.1",
     "license": "MIT"

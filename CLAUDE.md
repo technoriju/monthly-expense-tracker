@@ -95,7 +95,7 @@ Release: identifiers, versioning (`appVersionSource: local` — bump `version`, 
 - **Strings:** every user-facing string is a typed i18n key. Never translate category keys or DB values.
 - **UI language and voice language are separate settings.**
 - **Styling:** tokens from `src/theme` only — no raw hex colors, font sizes, or magic spacing in `src/app` or `src/features`. Do not redesign; match `docs/design-reference.png`. Readable text uses `textPrimary`/`textSecondary`/`primaryText`/`incomeText`/`expenseText`/`accentText`; `textMuted` and the plain status hues are for icons, fills and charts only (WCAG AA, enforced by `theme.test.tsx`).
-- **Privacy:** no network calls, analytics or logging of amounts/notes/transcripts. Never put user data in logs. Native config (permissions, `allowBackup`) lives in `app.json`; `android/`/`ios/` are generated.
+- **Privacy:** no network calls except the update check, the OS speech service and the Google Mobile Ads SDK (Phase 11); no analytics; never pass user data to the ads SDK; no logging of amounts/notes/transcripts. Ads only on Dashboard/Reports, never on entry, voice, receipt or review screens. Never put user data in logs. Native config (permissions, `allowBackup`) lives in `app.json`; `android/`/`ios/` are generated.
 - **Voice:** parsed entries always go through the Review screen; voice never writes to the DB directly.
 - `.tsx` for components, `.ts` for everything else. No `any` without a justification comment.
 - Ask before destructive operations (deleting files, removing deps, wiping data).

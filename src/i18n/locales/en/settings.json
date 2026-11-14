@@ -78,7 +78,8 @@
     "description": "Track your income and expenses — works offline.",
     "longDescription": "A simple income and expense tracker. Add entries by hand or by voice in English, Bengali or Hindi, set monthly budgets and see reports. Your data stays on your device.",
     "privacy": "Privacy",
-    "licenses": "Open-source licenses"
+    "licenses": "Open-source licenses",
+    "adPrivacy": "Ad privacy options"
   },
   "privacy": {
     "title": "Privacy",
@@ -105,6 +106,10 @@
     "updates": {
       "title": "Update check",
       "body": "When the app starts, it downloads a small public file from the developer's website to see whether a newer version is available or required. No personal data is sent; like any website, the server can see your device's internet address. The app works normally when you are offline."
+    },
+    "ads": {
+      "title": "Ads by Google",
+      "body": "The Dashboard and Reports screens show a banner ad from Google AdMob. To show ads, Google’s advertising SDK collects and shares your device’s IP address (which can indicate your approximate location), your Android advertising ID and app set ID, ad interactions such as taps, and app performance information, for advertising, analytics and fraud prevention. In regions where it is required, the app asks for your consent first, and you can change it under Settings → Ad privacy options. You can reset or delete your advertising ID in Android settings. Your transactions, amounts, notes, receipts and voice entries are never shared with Google or any ad network. Ads never appear on the entry, voice, receipt or review screens."
     },
     "backups": {
       "title": "You control backup files",

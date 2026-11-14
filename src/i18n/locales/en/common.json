@@ -25,12 +25,17 @@
   "errors": {
     "startupTitle": "Something went wrong",
     "startupMessage": "The app could not start. Please close it and open it again.",
-    "retry": "Try again"
+    "retry": "Try again",
+    "crashTitle": "Something went wrong",
+    "crashMessage": "This screen ran into a problem. Your saved data is safe. Please try again."
   },
   "placeholders": {
     "reports": {
       "title": "Reports",
       "message": "Monthly reports and charts will appear here."
     }
+  },
+  "ads": {
+    "label": "Advertisement"
   }
 }

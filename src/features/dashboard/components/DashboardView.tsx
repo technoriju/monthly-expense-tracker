@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppEmptyState, AppLoading, AppScreen } from '@/components/ui';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { BudgetSummaryCard } from '@/features/budgets/components/BudgetSummaryCard';
 import { makeStyles } from '@/theme';
 
@@ -23,7 +24,7 @@ export function DashboardView() {
     useDashboardData();
 
   return (
-    <AppScreen>
+    <AppScreen footer={<AdBanner />}>
       <DashboardGreeting now={today} />
       <View style={styles.group}>
         <MonthSelector month={month} onChange={setMonth} today={today} />

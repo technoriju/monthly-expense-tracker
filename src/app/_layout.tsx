@@ -1,6 +1,6 @@
 import '@/i18n';
 
-import { Stack } from 'expo-router';
+import { Stack, type ErrorBoundaryProps } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
@@ -11,6 +11,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Preloader } from '@/components/layout/Preloader';
 import { AppEmptyState, AppScreen, AppToast } from '@/components/ui';
+import { initializeAds } from '@/features/ads/services/adsService';
 import { MandatoryUpdateScreen } from '@/features/app-update/components/MandatoryUpdateScreen';
 import { OptionalUpdateSheet } from '@/features/app-update/components/OptionalUpdateSheet';
 import { useUpdateGate } from '@/features/app-update/hooks/useUpdateGate';
@@ -31,11 +32,19 @@ export default function RootLayout() {
   const lock = useAppLock(status === 'ready');
   const update = useUpdateGate(status === 'ready');
   const onboardingDone = useSettingsStore((s) => s.onboardingDone);
+  const appUsable =
+    status === 'ready' && update.status !== 'mandatory' && !lock.locked && onboardingDone;
 
   // The JS preloader (same purple + logo) takes over from the native splash right away.
   useEffect(() => {
     void SplashScreen.hideAsync();
   }, []);
+
+  // Ad consent + SDK start once the app is usable, so the consent form never covers the lock
+  // screen, onboarding or a mandatory update. Fire-and-forget: the app never waits for ads.
+  useEffect(() => {
+    if (appUsable) void initializeAds();
+  }, [appUsable]);
 
   if (status === 'loading' || !preloaderElapsed) return <Preloader />;
 
@@ -145,6 +154,36 @@ function StartupError({ onRetry }: { onRetry: () => void }) {
         tone="error"
         title={t('errors.startupTitle')}
         message={t('errors.startupMessage')}
+        action={{ label: t('errors.retry'), onPress: onRetry }}
+      />
+    </AppScreen>
+  );
+}
+
+/**
+ * Expo Router renders this instead of a blank screen when any screen throws while rendering.
+ * Only a static message is logged, never the error's data.
+ */
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  useEffect(() => {
+    console.error('Unhandled render error', error.name);
+  }, [error]);
+  return (
+    <ThemeProvider>
+      <CrashFallback onRetry={() => void retry()} />
+    </ThemeProvider>
+  );
+}
+
+function CrashFallback({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <AppScreen scroll={false}>
+      <AppEmptyState
+        icon={TriangleAlert}
+        tone="error"
+        title={t('errors.crashTitle')}
+        message={t('errors.crashMessage')}
         action={{ label: t('errors.retry'), onPress: onRetry }}
       />
     </AppScreen>

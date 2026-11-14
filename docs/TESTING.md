@@ -46,6 +46,7 @@ Never report a check as passing unless it was run in the current session.
 | Settings | `src/features/settings/__tests__/*` | hydrate, language/voice/theme, settings and restore screens |
 | App lock | `src/features/security/__tests__/*`, onboarding tests | capabilities and result mapping, setting persistence, startup lock, > 60 s re-lock, no-screen-lock safety valve, lock screen modes, verify-before-change, onboarding step |
 | App update | `src/features/app-update/__tests__/*` | semantic version comparison, config schema (published file, placeholders, localized notes, invalid files), rules A–D, forceUpdate, 30-day grace, fetch errors/timeout, cache round-trip with user tables untouched, store links, root gate (navigator not mounted when mandatory, restart/offline, Retry, return from store, Later, Bengali) |
+| Ads | `src/features/ads/__tests__/*` | test unit in dev / configured unit in release / fallback, Android-only + off switch, consent → init, consent refused, consent or SDK failure never throws, once per session, privacy options form, banner hidden until ready, label after load, collapse on failure |
 | i18n | `src/i18n/__tests__/languages.test.ts` | registry, key parity and `{{placeholder}}` parity en/bn/hi, no empty strings |
 | Theme | `src/theme/__tests__/theme.test.tsx` | WCAG AA for every text token on every surface (light + dark), theme switching |
 
@@ -123,6 +124,16 @@ build is available. Repeat the starred items in Bengali and Hindi, light and dar
 - [ ] `forceUpdate: false` with minimum above installed → only the optional sheet
 - [ ] Server unreachable on a fresh install → app opens normally
 - [ ] Bengali UI: update screen and sheet translated
+
+**Ads** (preview/dev build — always Google test ads; never tap live ads)
+- [ ] Dashboard and Reports show a test banner ("Test Ad") above the tab bar with an "Advertisement" label; nothing overlaps content or the tab bar; last list item is reachable
+- [ ] No banner on Add/Edit transaction, Voice, Voice review, Receipt scan/review/detail, Onboarding, Settings, lock screen or mandatory update screen
+- [ ] Airplane mode from a cold start → no banner, no empty gap, every feature works
+- [ ] Build with `EXPO_PUBLIC_ADS_ENABLED=0` → no banner, no consent form
+- [ ] Consent (EEA): temporarily pass `debugGeography: AdsConsentDebugGeography.EEA` and the device hash from logcat as `testDeviceIdentifiers` to `gatherConsent` (do not commit), clear app data → consent form after onboarding/unlock; **Consent** → banner; clear data, **Do not consent / Manage → reject all** → app works, limited or no ads, no crash; Settings → Ad privacy options reopens the form
+- [ ] Banner failure: release build with an invalid `EXPO_PUBLIC_ADMOB_BANNER_ANDROID` → banner never appears, no gap
+- [ ] Voice recording and receipt scanning while ads load → no interruption
+- [ ] Kill and reopen → data intact; banner returns
 
 **Accessibility**
 - [ ] TalkBack / VoiceOver: every button has a name; chart summaries are read; save errors and toasts are announced
