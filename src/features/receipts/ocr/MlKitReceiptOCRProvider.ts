@@ -77,7 +77,9 @@ export function createMlKitReceiptOcrProvider(): ReceiptOCRProvider {
       let result: NativeResult;
       try {
         result = await module.recognizeText(imageUri);
-      } catch {
+      } catch (error) {
+        // Error object only (native code + message) — never the image or recognized text.
+        console.warn('On-device OCR failed', error);
         throw new OcrError('failed');
       }
       const lines = mapMlKitResult(result);

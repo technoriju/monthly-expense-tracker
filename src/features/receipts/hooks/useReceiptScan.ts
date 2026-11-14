@@ -140,6 +140,8 @@ export function useReceiptScan() {
       openReview(imageFile, result.parsed, result.ocrProvider, id);
     } catch (error) {
       const code = error instanceof OcrError ? error.code : 'failed';
+      // Not an OCR error: the parser or opening the review threw. Log the error object only.
+      if (!(error instanceof OcrError)) console.warn('Receipt scan step failed', error);
       if (code === 'cancelled') {
         receiptImageStore.delete(imageFile);
         setState({ kind: 'preview', uri });
