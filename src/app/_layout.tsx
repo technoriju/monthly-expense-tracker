@@ -11,6 +11,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { Preloader } from '@/components/layout/Preloader';
 import { AppEmptyState, AppScreen, AppToast } from '@/components/ui';
+import { MandatoryUpdateScreen } from '@/features/app-update/components/MandatoryUpdateScreen';
+import { OptionalUpdateSheet } from '@/features/app-update/components/OptionalUpdateSheet';
+import { useUpdateGate } from '@/features/app-update/hooks/useUpdateGate';
 import { LockScreen } from '@/features/security/components/LockScreen';
 import { useAppLock } from '@/features/security/hooks/useAppLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
@@ -26,6 +29,8 @@ export default function RootLayout() {
   const { status, retry } = useAppBootstrap();
   const preloaderElapsed = useElapsed(PRELOADER_MIN_MS);
   const lock = useAppLock(status === 'ready');
+  const update = useUpdateGate(status === 'ready');
+  const onboardingDone = useSettingsStore((s) => s.onboardingDone);
 
   // The JS preloader (same purple + logo) takes over from the native splash right away.
   useEffect(() => {
@@ -39,6 +44,10 @@ export default function RootLayout() {
       <SystemBars />
       {status === 'error' ? (
         <StartupError onRetry={retry} />
+      ) : update.status === 'mandatory' ? (
+        // Unsupported version: the navigator is not mounted at all, so no route, tab, back
+        // stack or deep link can be reached. It mounts again once a re-check clears the block.
+        <MandatoryUpdateScreen gate={update} />
       ) : (
         // While locked, the cover sits on top so navigation state survives; the app underneath
         // is hidden from screen readers.
@@ -49,11 +58,17 @@ export default function RootLayout() {
           <RootNavigator />
         </View>
       )}
-      {status !== 'error' && lock.locked ? (
+      {status !== 'error' && update.status !== 'mandatory' && lock.locked ? (
         <LockScreen
           method={lock.method}
           authenticating={lock.authenticating}
           onUnlock={() => void lock.unlock()}
+        />
+      ) : null}
+      {status !== 'error' ? (
+        <OptionalUpdateSheet
+          gate={update}
+          visible={update.status === 'optional' && !lock.locked && onboardingDone}
         />
       ) : null}
       <AppToast />

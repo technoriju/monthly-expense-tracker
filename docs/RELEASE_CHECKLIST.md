@@ -41,6 +41,7 @@ Nothing here is submitted automatically. Each store upload is a manual, delibera
    - [ ] Bump `expo.version` (semver) when user-visible changes ship
    - [ ] Increment `android.versionCode` and `ios.buildNumber`
    - [ ] New DB changes are **new** migrations (never edit a shipped one); migration test added
+   - [ ] Remote update file `https://expensetracker.dlyneed.com/config.json`: real `storeUrlAndroid` / `storeUrlIOS` (placeholders are ignored; iOS has no fallback), `minimumSupportedVersion` **≤ the version being released** (otherwise the new build blocks itself), `latestVersion` raised only after the build is live in the stores
 3. **Build**
    - [ ] `npx eas-cli build --platform android --profile production` → `.aab`
    - [ ] `npx eas-cli build --platform ios --profile production` → `.ipa`

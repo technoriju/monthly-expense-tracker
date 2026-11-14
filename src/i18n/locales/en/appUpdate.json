@@ -1,0 +1,26 @@
+{
+  "mandatory": {
+    "title": "Update required",
+    "message": "This version of the app is no longer supported. Please update to keep using it."
+  },
+  "optional": {
+    "title": "Update available",
+    "message": "Version {{version}} is available. You can update now or later."
+  },
+  "versions": "Installed: {{installed}} · Latest: {{latest}}",
+  "installedOnly": "Installed: {{installed}}",
+  "dataSafe": "Your transactions stay on this device and are kept after the update.",
+  "releaseNotes": "What's new",
+  "checking": "Checking for updates…",
+  "storeHint": "Install the update from the store, then open the app again.",
+  "actions": {
+    "updateNow": "Update now",
+    "later": "Later",
+    "retry": "Try again"
+  },
+  "errors": {
+    "offline": "Couldn't check for updates. Check your internet connection and try again.",
+    "invalid": "Couldn't read the update information. Please try again later.",
+    "storeUnavailable": "Couldn't open the app store. Open it yourself and update the app from there."
+  }
+}

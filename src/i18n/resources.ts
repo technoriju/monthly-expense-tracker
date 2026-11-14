@@ -1,3 +1,4 @@
+import bnAppUpdate from './locales/bn/appUpdate.json';
 import bnBudgets from './locales/bn/budgets.json';
 import bnCategories from './locales/bn/categories.json';
 import bnCommon from './locales/bn/common.json';
@@ -9,6 +10,7 @@ import bnTransactions from './locales/bn/transactions.json';
 import bnOnboarding from './locales/bn/onboarding.json';
 import bnReceipts from './locales/bn/receipts.json';
 import bnVoice from './locales/bn/voice.json';
+import enAppUpdate from './locales/en/appUpdate.json';
 import enBudgets from './locales/en/budgets.json';
 import enCategories from './locales/en/categories.json';
 import enCommon from './locales/en/common.json';
@@ -20,6 +22,7 @@ import enTransactions from './locales/en/transactions.json';
 import enOnboarding from './locales/en/onboarding.json';
 import enReceipts from './locales/en/receipts.json';
 import enVoice from './locales/en/voice.json';
+import hiAppUpdate from './locales/hi/appUpdate.json';
 import hiBudgets from './locales/hi/budgets.json';
 import hiCategories from './locales/hi/categories.json';
 import hiCommon from './locales/hi/common.json';
@@ -46,6 +49,7 @@ export const NAMESPACES = [
   'dataManagement',
   'onboarding',
   'receipts',
+  'appUpdate',
 ] as const;
 export type Namespace = (typeof NAMESPACES)[number];
 
@@ -62,6 +66,7 @@ const en = {
   voice: enVoice,
   onboarding: enOnboarding,
   receipts: enReceipts,
+  appUpdate: enAppUpdate,
 };
 
 export type TranslationResources = typeof en;
@@ -78,6 +83,7 @@ const bn: TranslationResources = {
   voice: bnVoice,
   onboarding: bnOnboarding,
   receipts: bnReceipts,
+  appUpdate: bnAppUpdate,
 };
 
 const hi: TranslationResources = {
@@ -92,6 +98,7 @@ const hi: TranslationResources = {
   voice: hiVoice,
   onboarding: hiOnboarding,
   receipts: hiReceipts,
+  appUpdate: hiAppUpdate,
 };
 
 /**

@@ -92,7 +92,7 @@
     },
     "cloud": {
       "title": "No cloud sync",
-      "body": "The app has no server. It does not sync or upload your data, and nothing is sent to the developer."
+      "body": "The app has no server for your data. It does not sync or upload your data, and none of it is sent to the developer."
     },
     "voice": {
       "title": "Voice entry uses your device's speech service",
@@ -101,6 +101,10 @@
     "receipts": {
       "title": "Receipt photos stay on this device",
       "body": "When you scan a receipt, the camera photo is read by on-device text recognition — it is not uploaded. The photo and the receipt details are stored in the app only after you save the expense. Receipts are not included in backups; restoring a backup or clearing all data deletes them."
+    },
+    "updates": {
+      "title": "Update check",
+      "body": "When the app starts, it downloads a small public file from the developer's website to see whether a newer version is available or required. No personal data is sent; like any website, the server can see your device's internet address. The app works normally when you are offline."
     },
     "backups": {
       "title": "You control backup files",

@@ -10,8 +10,18 @@
 ## Summary
 
 Expense Tracker stores your income, expenses, budgets and preferences only on your device. The
-app has no account, no server, no advertising and no analytics. The developer does not receive
-any of your data.
+app has no account, no server for your data, no advertising and no analytics. The developer does
+not receive any of your data.
+
+## Update check
+
+When the app starts (and again when you return to it, at most every 15 minutes), it downloads a
+small public file from the developer's website (`expensetracker.dlyneed.com`) that says which app
+versions are current or still supported. The request contains no personal data, identifiers,
+transactions or settings. Like any web request, the server can see your device's IP address. If
+your version is no longer supported, the app asks you to update from the Play Store or App Store;
+your data on the device is not changed or deleted. Without an internet connection the app keeps
+working.
 
 ## Data the app stores on your device
 
@@ -61,8 +71,8 @@ contains no advertising or analytics SDKs.
 - **Microphone** (and **Speech Recognition** on iOS): only for voice entry, only while you record.
 - **Camera**: only when you choose to photograph a receipt. **Photos** (iOS): only to pick a profile
   photo or a receipt image.
-- **Internet** (Android): required by the app framework and used by the system speech service; the
-  app itself makes no network requests.
+- **Internet** (Android): required by the app framework, used by the system speech service and by the
+  app's update check (see above); the app sends none of your data.
 
 ## Deleting your data
 

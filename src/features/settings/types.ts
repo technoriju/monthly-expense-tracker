@@ -7,6 +7,9 @@ export const SETTING_KEYS = {
   onboardingDone: 'onboardingDone',
   appLockMethod: 'appLockMethod',
   profileName: 'profileName',
+  // Device-only app-update state (not in backups; see features/app-update).
+  updatePolicyCache: 'updatePolicyCache',
+  updateDismissedVersion: 'updateDismissedVersion',
 } as const;
 
 /** Longest greeting name kept. */

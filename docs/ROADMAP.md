@@ -2,7 +2,7 @@
 
 > See [`ARCHITECTURE.md`](./ARCHITECTURE.md) for design decisions. Reference panels refer to `docs/design-reference.png` (row, column).
 
-**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion. **Phase 9 — Receipt Scanner** pulled forward and implemented in code (2026-11-13; adds `expo-image-manipulator`, `expo-mlkit-ocr`); tsc/lint/jest pass; on-device check pending a new development build.
+**Current phase:** **Phase 8 — Hardening & Release** implemented in code (2026-11-12; the user's brief called this "Phase 7: Security, Quality & Production Readiness"), pulled forward ahead of Phase 6 (Language Expansion) and Phase 7 (Onboarding & Profile), which remain open. Phases 0–5 are implemented. tsc/lint/jest pass; a local Android release build was made for configuration checks; on-device exit checks, iOS and EAS store builds are pending (see `RELEASE_CHECKLIST.md`). Next: on-device verification, then Phase 6 — Language Expansion. **Phase 9 — Receipt Scanner** pulled forward and implemented in code (2026-11-13; adds `expo-image-manipulator`, `expo-mlkit-ocr`); tsc/lint/jest pass; on-device check pending a new development build. **Phase 10 — App Update Gate** pulled forward and implemented in code (2026-11-14); no new dependencies; tsc/lint/jest pass; on-device check pending a release build.
 
 ## Rules for every phase
 
@@ -207,3 +207,22 @@
 **Limits:** receipts are not in backups (restore / clear data delete them); no perspective or contrast correction; no crop on iOS; on-device OCR does not read Bengali or Devanagari script or Bengali numerals, and handwriting is weak — those receipts are typed in on the review screen. Parser fixtures are synthetic OCR text: real-receipt accuracy is not measured yet.
 
 **Exit:** capture/select → review → save works on a device; itemized, total-only and corrected receipts save once; data and photo persist after restart; screens pass the design checklist in English, Bengali and Hindi, light and dark.
+
+---
+
+## Phase 10 — App Update Gate
+
+> Pulled forward at the user's request (2026-11-14; the user's brief called this "Phase 9 — Mandatory App Update System"). No reference panel — screens built from existing components and tokens (ARCHITECTURE.md §9.6). Implemented in code; on-device check pending a release build (the gate is off in development builds). Phases 6 and 7 remain open.
+
+**Scope**
+- Remote policy: the existing `https://expensetracker.dlyneed.com/config.json` is the single source of truth (no new config system). Zod-validated, backward-compatible; optional per-language `releaseNotes` / `message`.
+- Semantic version comparison against the installed version (`expo-application`, app.json fallback).
+- Rules: below `minimumSupportedVersion` → mandatory (unless `forceUpdate: false`, which only suggests); below `latestVersion` → optional sheet with Later; otherwise nothing.
+- Mandatory screen replaces the navigator at the root (no tabs, back stack or deep links); Update now + Try again, release notes, offline / store-unavailable messages.
+- Store redirection: Play Store / App Store links (Play fallback from the package name). No Play In-App Updates (would need a third-party native module); iOS cannot force-install — the user updates in the App Store.
+- Offline: last good policy cached in `settings` (device-only); a cached mandatory policy blocks for up to 30 days after the last successful check; no policy → never blocked; re-check on return from the store and on foreground (at most every 15 min). User data is never touched.
+- `appUpdate` i18n namespace (en, bn, hi); privacy texts and docs updated for the update check.
+
+**Out of scope:** Play In-App Updates, staged rollouts, per-platform minimum versions.
+
+**Exit:** tests for version comparison, schema, rules, service, store links and the root gate pass; on a release build each manual case in TESTING.md (App update) passes on Android and iOS; data intact after updating.

@@ -55,7 +55,7 @@ Capture from a release build with realistic sample data (no real personal data).
 
 | Question | Proposed answer | Basis in code |
 | --- | --- | --- |
-| Does the app collect or share user data? | **No data collected; no data shared** | No network code in the app; data stays in local SQLite; developer receives nothing |
+| Does the app collect or share user data? | **No data collected; no data shared** | The only app request is an anonymous GET of the public update file (`config.json`), sending no user data; data stays in local SQLite; developer receives nothing |
 | Is data encrypted in transit? | Not applicable (the app transmits no data) | — |
 | Can users request deletion? | Data is on-device; users delete it with *Clear all data* or by uninstalling | Settings → Clear all data |
 | Voice / audio | Not collected by the app. Speech is handled by the device's speech service (Google), not stored by the app | `expo-speech-recognition` → Android `SpeechRecognizer`; only reviewed text is saved |
@@ -65,7 +65,7 @@ Capture from a release build with realistic sample data (no real personal data).
 
 **Permissions explanation (Play Console / listing):**
 - Microphone — used only for optional voice entry while you record.
-- Internet — required by the framework and used by the system speech service; the app sends no data.
+- Internet — required by the framework, used by the system speech service and to check for app updates; the app sends none of your data.
 
 **Privacy policy URL:** required — host [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) after review.
 **Target audience:** 18+ (finance); not designed for children. **Ads:** none.

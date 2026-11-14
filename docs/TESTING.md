@@ -45,6 +45,7 @@ Never report a check as passing unless it was run in the current session.
 | Voice | `src/features/voice/**/__tests__/*` | parser fixtures (≥ 50 phrases each in en/bn/hi), session lifecycle and races, volume-only snapshot stability, review → save flow, inline save error |
 | Settings | `src/features/settings/__tests__/*` | hydrate, language/voice/theme, settings and restore screens |
 | App lock | `src/features/security/__tests__/*`, onboarding tests | capabilities and result mapping, setting persistence, startup lock, > 60 s re-lock, no-screen-lock safety valve, lock screen modes, verify-before-change, onboarding step |
+| App update | `src/features/app-update/__tests__/*` | semantic version comparison, config schema (published file, placeholders, localized notes, invalid files), rules A–D, forceUpdate, 30-day grace, fetch errors/timeout, cache round-trip with user tables untouched, store links, root gate (navigator not mounted when mandatory, restart/offline, Retry, return from store, Later, Bengali) |
 | i18n | `src/i18n/__tests__/languages.test.ts` | registry, key parity and `{{placeholder}}` parity en/bn/hi, no empty strings |
 | Theme | `src/theme/__tests__/theme.test.tsx` | WCAG AA for every text token on every surface (light + dark), theme switching |
 
@@ -112,6 +113,16 @@ build is available. Repeat the starred items in Bengali and Hindi, light and dar
 - [ ] Turning the lock off or changing method asks for verification first
 - [ ] Remove the phone's screen lock in system settings → app opens without a lock
 - [ ] iOS: Face ID usage text appears on first use
+
+**App update** (release/preview build, or a debug build with `EXPO_PUBLIC_UPDATE_GATE_IN_DEV=1` in `.env.local` + `npx expo start -c`; edit `config.json` on the server for each case)
+- [ ] `minimumSupportedVersion` above the installed version → "Update required" screen; no close/Later; Android back leaves the app; `adb shell am start -d monthlyexpensetracker://transactions` stays on the update screen
+- [ ] Kill and reopen, then airplane mode and reopen → still blocked; error text + Try again shown
+- [ ] Update now opens the Play Store / App Store listing; coming back re-checks
+- [ ] Lower `minimumSupportedVersion`, tap Try again → app opens with all data intact
+- [ ] `latestVersion` above installed, minimum below → "Update available" sheet; Later hides it until `latestVersion` changes
+- [ ] `forceUpdate: false` with minimum above installed → only the optional sheet
+- [ ] Server unreachable on a fresh install → app opens normally
+- [ ] Bengali UI: update screen and sheet translated
 
 **Accessibility**
 - [ ] TalkBack / VoiceOver: every button has a name; chart summaries are read; save errors and toasts are announced
