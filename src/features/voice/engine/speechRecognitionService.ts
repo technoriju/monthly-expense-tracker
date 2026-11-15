@@ -41,7 +41,11 @@ const ACTIVE: readonly VoiceSessionStatus[] = ['preparing', 'listening', 'proces
  * (availability → permission → locale check → listen → result | error), ignores duplicate
  * starts, and drops late events from cancelled sessions. Swap the engine to change providers.
  */
-export function createSpeechRecognitionService(engine: SpeechEngine, now = () => Date.now()) {
+export function createSpeechRecognitionService(
+  engine: SpeechEngine,
+  now = () => Date.now(),
+  isOffline: () => Promise<boolean> = async () => false,
+) {
   let state: VoiceSessionState = INITIAL_SESSION_STATE;
   /**
    * `state` as of its last non-volume change. Volume events arrive ~10×/s while listening;
@@ -51,6 +55,8 @@ export function createSpeechRecognitionService(engine: SpeechEngine, now = () =>
   const listeners = new Set<() => void>();
   /** Incremented on every start/cancel so async steps of an old session stop early. */
   let session = 0;
+  /** The current session was forced offline because the device has no internet. */
+  let offlineAttempt = false;
 
   const set = (patch: Partial<VoiceSessionState>) => {
     state = { ...state, ...patch };
@@ -81,6 +87,11 @@ export function createSpeechRecognitionService(engine: SpeechEngine, now = () =>
         if (event.error.code === 'aborted') return;
         // "No match" after partial text: keep what was heard; `end` finishes the session.
         if (event.error.code === 'noSpeech' && state.transcript.trim().length > 0) return;
+        // Offline with no usable language pack: "needs internet" is the actionable message.
+        if (offlineAttempt && event.error.code === 'languageUnsupported') {
+          fail({ code: 'network', detail: event.error.detail });
+          return;
+        }
         fail(event.error);
         break;
       case 'end':
@@ -108,6 +119,7 @@ export function createSpeechRecognitionService(engine: SpeechEngine, now = () =>
     async start(locale: string): Promise<void> {
       if (isActive()) return;
       const id = ++session;
+      offlineAttempt = false;
       set({ ...INITIAL_SESSION_STATE, status: 'preparing' });
 
       const available = await engine.isAvailable();
@@ -125,8 +137,16 @@ export function createSpeechRecognitionService(engine: SpeechEngine, now = () =>
       if (localeSupport === 'unsupported') {
         return fail({ code: 'languageUnsupported' }, { localeSupport });
       }
+      // No internet: use an offline model or explain why recognition can't run.
+      const offline = localeSupport !== 'onDevice' && (await isOffline());
+      if (id !== session) return;
+      if (offline && localeSupport === 'network') {
+        return fail({ code: 'network' }, { localeSupport });
+      }
       set({ localeSupport });
-      engine.start({ locale, onDevice: localeSupport === 'onDevice' });
+      // 'unknown' + offline: the device may have a pack it could not report, so try it.
+      offlineAttempt = offline;
+      engine.start({ locale, onDevice: localeSupport === 'onDevice' || offline });
     },
 
     /** Stops listening; the recognizer then delivers the final transcript. */

@@ -1,3 +1,4 @@
+import { isDeviceOffline } from './connectivity';
 import { NativeSpeechEngine } from './NativeSpeechEngine';
 import {
   createSpeechRecognitionService,
@@ -16,7 +17,7 @@ export function getSpeechEngine(): SpeechEngine {
 
 /** App-wide recognition service (one microphone, one session). Created on first use. */
 export function getSpeechRecognitionService(): SpeechRecognitionService {
-  service ??= createSpeechRecognitionService(getSpeechEngine());
+  service ??= createSpeechRecognitionService(getSpeechEngine(), undefined, isDeviceOffline);
   return service;
 }
 
@@ -24,7 +25,7 @@ export function getSpeechRecognitionService(): SpeechRecognitionService {
 export function setSpeechEngine(next: SpeechEngine): void {
   service?.cancel();
   engine = next;
-  service = createSpeechRecognitionService(next);
+  service = createSpeechRecognitionService(next, undefined, isDeviceOffline);
 }
 
 export type {

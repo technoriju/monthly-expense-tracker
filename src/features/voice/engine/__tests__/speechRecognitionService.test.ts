@@ -206,6 +206,48 @@ describe('speechRecognitionService', () => {
     expect(service.getState().localeSupport).toBe('network');
   });
 
+  describe('without internet', () => {
+    function setupOffline() {
+      const engine = new FakeEngine();
+      const service = createSpeechRecognitionService(engine, () => 1_000, async () => true);
+      return { engine, service };
+    }
+
+    it('uses an installed offline model', async () => {
+      const { engine, service } = setupOffline();
+      await service.start('bn-IN');
+      expect(engine.starts).toEqual([{ locale: 'bn-IN', onDevice: true }]);
+    });
+
+    it('shows the connection error before opening the mic when no offline model exists', async () => {
+      const { engine, service } = setupOffline();
+      engine.support = 'network';
+      await service.start('bn-IN');
+      expect(engine.starts).toEqual([]);
+      expect(service.getState()).toMatchObject({ status: 'error', error: { code: 'network' } });
+    });
+
+    it('tries offline recognition when the device cannot report its models', async () => {
+      const { engine, service } = setupOffline();
+      engine.support = 'unknown';
+      await service.start('bn-IN');
+      expect(engine.starts).toEqual([{ locale: 'bn-IN', onDevice: true }]);
+
+      // Pack not downloaded → recognizer says "language unavailable" → explain it needs internet.
+      engine.emit({ type: 'error', error: { code: 'languageUnsupported' } });
+      expect(service.getState().error?.code).toBe('network');
+    });
+
+    it('keeps "language unsupported" when online', async () => {
+      const { engine, service } = setup();
+      engine.support = 'unknown';
+      await service.start('bn-IN');
+      expect(engine.starts).toEqual([{ locale: 'bn-IN', onDevice: false }]);
+      engine.emit({ type: 'error', error: { code: 'languageUnsupported' } });
+      expect(service.getState().error?.code).toBe('languageUnsupported');
+    });
+  });
+
   it('notifies subscribers on every change', async () => {
     const { service } = setup();
     const listener = jest.fn();

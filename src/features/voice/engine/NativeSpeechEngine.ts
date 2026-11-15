@@ -1,4 +1,5 @@
 import { requireOptionalNativeModule } from 'expo';
+import { Platform } from 'react-native';
 import type {
   ExpoSpeechRecognitionErrorCode,
   ExpoSpeechRecognitionModule as NativeModuleType,
@@ -49,6 +50,24 @@ const ERROR_MAP: Partial<Record<ExpoSpeechRecognitionErrorCode, SpeechErrorCode>
   aborted: 'aborted',
 };
 
+/**
+ * Google's recognizer supports Bengali and the other Indian languages. Some devices (Samsung)
+ * default to a vendor recognizer that lacks them, so Google is asked for explicitly when present.
+ * Must stay listed in `androidSpeechServicePackages` in app.json (package visibility).
+ */
+const GOOGLE_SPEECH_SERVICE = 'com.google.android.googlequicksearchbox';
+
+function pickServicePackage(module: NativeModule): string | undefined {
+  if (Platform.OS !== 'android') return undefined;
+  try {
+    return module.getSpeechRecognitionServices().includes(GOOGLE_SPEECH_SERVICE)
+      ? GOOGLE_SPEECH_SERVICE
+      : undefined;
+  } catch {
+    return undefined; // fall back to the system default recognizer
+  }
+}
+
 const normalizeLocale = (locale: string) => locale.replace('_', '-').toLowerCase();
 const languageOf = (locale: string) => normalizeLocale(locale).split('-')[0];
 
@@ -62,6 +81,7 @@ export class NativeSpeechEngine implements SpeechEngine {
   private readonly module = loadNativeModule();
   private readonly listeners = new Set<SpeechListener>();
   private attached = false;
+  private servicePackage: string | undefined | null = null; // null = not resolved yet
 
   async isAvailable(): Promise<boolean> {
     if (!this.module) return false;
@@ -75,9 +95,14 @@ export class NativeSpeechEngine implements SpeechEngine {
   async getLocaleSupport(locale: string): Promise<LocaleSupport> {
     if (!this.module) return 'unsupported';
     try {
-      const { locales, installedLocales } = await this.module.getSupportedLocales({});
       const wanted = normalizeLocale(locale);
-      if (installedLocales.some((l) => normalizeLocale(l) === wanted)) return 'onDevice';
+      // Without a package this asks the system on-device recognizer (offline models).
+      const onDevice = await this.module.getSupportedLocales({});
+      if (onDevice.installedLocales.some((l) => normalizeLocale(l) === wanted)) return 'onDevice';
+      const servicePackage = this.getServicePackage(this.module);
+      const { locales } = servicePackage
+        ? await this.module.getSupportedLocales({ androidRecognitionServicePackage: servicePackage })
+        : onDevice;
       if (locales.some((l) => normalizeLocale(l) === wanted)) return 'network';
       // Older Android returns empty lists; another region of the language may still work.
       if (locales.length === 0 || locales.some((l) => languageOf(l) === languageOf(locale))) {
@@ -111,6 +136,7 @@ export class NativeSpeechEngine implements SpeechEngine {
       continuous: false,
       maxAlternatives: 1,
       requiresOnDeviceRecognition: onDevice,
+      androidRecognitionServicePackage: this.getServicePackage(this.module),
       addsPunctuation: false,
       volumeChangeEventOptions: { enabled: true, intervalMillis: 100 },
     });
@@ -127,6 +153,11 @@ export class NativeSpeechEngine implements SpeechEngine {
   subscribe(listener: SpeechListener): () => void {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
+  }
+
+  private getServicePackage(module: NativeModule): string | undefined {
+    if (this.servicePackage === null) this.servicePackage = pickServicePackage(module);
+    return this.servicePackage;
   }
 
   private emit: SpeechListener = (event) => {

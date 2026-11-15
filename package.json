@@ -23,6 +23,7 @@
     "expo-local-authentication": "~58.0.3",
     "expo-localization": "~58.0.5",
     "expo-mlkit-ocr": "0.2.7",
+    "expo-network": "~58.0.5",
     "expo-print": "~58.0.9",
     "expo-router": "~58.0.31",
     "expo-sharing": "~58.0.23",
