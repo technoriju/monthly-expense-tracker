@@ -1,6 +1,5 @@
-import { categoryRepository, receiptRepository, transactionRepository } from '@/database';
+import { categoryRepository, transactionRepository } from '@/database';
 import { getCategoryName } from '@/features/categories/categoryName';
-import { receiptImageStore } from '@/features/receipts/services/receiptImageStore';
 import { i18n } from '@/i18n';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useUiStore } from '@/store/uiStore';
@@ -82,19 +81,9 @@ export const transactionService = {
     dataChanged();
   },
 
-  /** Deletes the transaction; an attached receipt is removed with it (rows and photo). */
   async remove(id: number): Promise<void> {
-    const receiptImage = await receiptRepository.getImageFile(id);
     const removed = await transactionRepository.remove(id);
     if (!removed) throw new TransactionError('notFound');
-    if (receiptImage !== null) {
-      try {
-        receiptImageStore.delete(receiptImage);
-      } catch (error) {
-        // The expense is deleted; a leftover photo is removed by the next orphan sweep.
-        console.warn('Receipt image delete failed', error);
-      }
-    }
     dataChanged();
   },
 

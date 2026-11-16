@@ -1,7 +1,6 @@
 import { getLocales } from 'expo-localization';
 
 import { dataRepository } from '@/database';
-import { deleteAllReceiptFiles } from '@/features/receipts/services/receiptFiles';
 import { settingsService } from '@/features/settings/services/settingsService';
 import { useUiStore } from '@/store/uiStore';
 import { useVoiceDraftStore } from '@/store/voiceDraftStore';
@@ -59,8 +58,6 @@ export const restoreService = {
     } catch (error) {
       console.error('Applying restored preferences failed', error);
     }
-    // Backups hold no receipts; the restored expenses have none, so the photos go too.
-    deleteAllReceiptFiles();
     useVoiceDraftStore.getState().clearDraft();
     useUiStore.getState().bumpDataVersion();
   },

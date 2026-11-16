@@ -1,12 +1,12 @@
 import { router } from 'expo-router';
-import { Mic, Plus, ScanText } from 'lucide-react-native';
+import { Mic, Plus } from 'lucide-react-native';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { AppButton } from '@/components/ui';
 import { makeStyles } from '@/theme';
 
-/** Shortcuts to manual entry, voice entry and receipt scanning. */
+/** Shortcuts to manual entry and voice entry. */
 export function QuickActions() {
   const styles = useStyles();
   const { t } = useTranslation('dashboard');
@@ -27,13 +27,6 @@ export function QuickActions() {
           style={styles.button}
         />
       </View>
-      <AppButton
-        label={t('quickActions.scanReceipt')}
-        icon={ScanText}
-        variant="secondary"
-        onPress={() => router.push('/receipt/scan')}
-        fullWidth
-      />
     </View>
   );
 }

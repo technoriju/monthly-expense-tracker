@@ -1,5 +1,4 @@
 import { dataRepository } from '@/database';
-import { deleteAllReceiptFiles } from '@/features/receipts/services/receiptFiles';
 import { useUiStore } from '@/store/uiStore';
 import { useVoiceDraftStore } from '@/store/voiceDraftStore';
 
@@ -10,7 +9,6 @@ export const resetService = {
    */
   async clearAllData(): Promise<void> {
     await dataRepository.clearUserData();
-    deleteAllReceiptFiles();
     useVoiceDraftStore.getState().clearDraft();
     useUiStore.getState().bumpDataVersion();
   },

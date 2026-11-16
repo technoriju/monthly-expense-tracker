@@ -8,7 +8,6 @@ const SECTIONS = [
   'account',
   'cloud',
   'voice',
-  'receipts',
   'updates',
   'ads',
   'backups',

@@ -39,8 +39,7 @@
   },
   "quickActions": {
     "addTransaction": "Add Transaction",
-    "voiceExpense": "Voice Expense",
-    "scanReceipt": "Scan Receipt"
+    "voiceExpense": "Voice Expense"
   },
   "recent": {
     "title": "Recent Transactions",

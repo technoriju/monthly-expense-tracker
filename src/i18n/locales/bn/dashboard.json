@@ -39,8 +39,7 @@
   },
   "quickActions": {
     "addTransaction": "লেনদেন যোগ",
-    "voiceExpense": "ভয়েসে খরচ",
-    "scanReceipt": "রসিদ স্ক্যান"
+    "voiceExpense": "ভয়েসে খরচ"
   },
   "recent": {
     "title": "সাম্প্রতিক লেনদেন",
