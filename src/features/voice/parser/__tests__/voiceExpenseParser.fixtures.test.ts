@@ -62,7 +62,7 @@ const ENGLISH: Fixture[] = [
   ['shop 90 rupees', 9_000, 'dokan', 0],
   ['pizza 399 rupees with card', 39_900, 'food', 0, 'card'],
   ['paid electricity bill 1450 by upi', 145_000, 'bills', 0, 'upi'],
-  ['tea 20 and samosa 30', null, 'food', 0],
+  ['tea 20 and samosa 30', 5000, 'food', 0],
   ['groceries and medicine 500 rupees', 50_000, null, 0],
   ['spent two lakh fifty thousand rupees on travel', 25_000_000, 'travel', 0],
   ['one hundred and fifty rupees for bus', 15_000, 'transportation', 0],
@@ -121,7 +121,7 @@ const BENGALI: Fixture[] = [
   ['শাড়ি তিন হাজার টাকা', 300_000, 'shopping', 0],
   ['মুভি দেখতে ৪০০ টাকা', 40_000, 'entertainment', 0],
   ['আজ ১,২৫০ টাকা ওষুধ', 125_000, 'healthcare', 0],
-  ['দশ টাকা আর বিশ টাকা চা', null, 'food', 0],
+  ['দশ টাকা আর বিশ টাকা চা', 3000, 'food', 0],
 ];
 
 const HINDI: Fixture[] = [
@@ -170,7 +170,7 @@ const HINDI: Fixture[] = [
   ['परसों बस में 100 रुपये', 10_000, 'transportation', 2],
   ['आज 1,250 रुपये दवा', 125_000, 'healthcare', 0],
   ['चावल और दाल 650 रुपये', 65_000, 'groceries', 0],
-  ['दस रुपये और बीस रुपये चाय', null, 'food', 0],
+  ['दस रुपये और बीस रुपये चाय', 3000, 'food', 0],
   ['राशन 2000 रुपये', 200_000, 'groceries', 0],
   ['बिरयानी 280 रुपये', 28_000, 'food', 0],
   ['कॉलेज फीस 15000 रुपये', 1_500_000, 'education', 0],

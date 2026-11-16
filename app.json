@@ -57,7 +57,8 @@
         "expo-build-properties",
         {
           "android": {
-            "cmakeVersion": "3.31.6"
+            "cmakeVersion": "3.31.6",
+            "extraProguardRules": "-keep class * extends androidx.room.RoomDatabase { <init>(); }"
           }
         }
       ],

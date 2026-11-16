@@ -125,9 +125,14 @@ describe('parseAmount', () => {
     expect(amount('spent money on lunch')).toEqual({ amountMinor: null, uncertain: false });
   });
 
-  it('refuses to choose between different unmarked or marked amounts', () => {
-    expect(amount('tea 20 and samosa 30')).toEqual({ amountMinor: null, uncertain: true });
-    expect(amount('10 rupees and 20 rupees')).toEqual({ amountMinor: null, uncertain: true });
+  it('sums several unmarked or marked amounts', () => {
+    expect(amount('tea 20 and samosa 30')).toEqual({ amountMinor: 5000, uncertain: false });
+    expect(amount('10 rupees and 20 rupees')).toEqual({ amountMinor: 3000, uncertain: false });
+    expect(amount('2 kg rice 120 rupees and oil 80 rupees').amountMinor).toBe(20_000);
+  });
+
+  it('leaves a total above the app limit empty', () => {
+    expect(amount('9999999999 rupees and 1 rupees')).toEqual({ amountMinor: null, uncertain: true });
   });
 
   it('rejects amounts above the app limit and fractions finer than paise', () => {
@@ -241,8 +246,8 @@ describe('parseVoiceExpense — draft', () => {
     expect(draft.uncertainFields).toEqual(['category']);
   });
 
-  it('flags ambiguous amounts and dates', () => {
-    expect(parse('tea 20 and samosa 30').uncertainFields).toEqual(['amount']);
+  it('flags ambiguous dates', () => {
+    expect(parse('tea 20 and samosa 30').uncertainFields).toEqual([]);
     expect(
       parseVoiceExpense('कल 50 रुपये चाय', { language: 'hi', currency: 'INR', today: TODAY })
         .uncertainFields,

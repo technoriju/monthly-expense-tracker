@@ -52,8 +52,9 @@ function isMarked(group: NumberGroup, tokens: readonly string[]): boolean {
 }
 
 /**
- * Extracts the spent amount. Never guesses: with several different numbers and no single
- * one next to a currency word, the amount is left empty for the user to enter.
+ * Extracts the spent amount. Several amounts in one utterance ("tea 20 and samosa 30") are
+ * summed. When some numbers sit next to a currency word, only those are summed, so
+ * quantities like "2 kg" are ignored. A total above the app limit is left empty.
  */
 export function parseAmount(tokens: readonly string[], currency: CurrencyCode): AmountResult {
   const groups = findNumberGroups(tokens).filter((g) => g.value <= MAX_MAJOR * HUNDREDTHS);
@@ -61,9 +62,8 @@ export function parseAmount(tokens: readonly string[], currency: CurrencyCode): 
 
   const marked = groups.filter((g) => isMarked(g, tokens));
   const pool = marked.length > 0 ? marked : groups;
-  const values = new Set(pool.map((g) => g.value));
-  if (values.size !== 1) return { amountMinor: null, uncertain: true };
+  const total = pool.reduce((sum, g) => sum + g.value, 0);
+  if (total > MAX_MAJOR * HUNDREDTHS) return { amountMinor: null, uncertain: true };
 
-  const [value] = values;
-  return { amountMinor: toMinor(value ?? 0, currency), uncertain: false };
+  return { amountMinor: toMinor(total, currency), uncertain: false };
 }
