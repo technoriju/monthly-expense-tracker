@@ -47,7 +47,7 @@ npx expo lint             # ESLint
 npx jest                  # unit, service, repository (real SQL) and component tests
 npx expo install --check  # dependency versions match the SDK
 ```
-npx expo prebuild --clean
+npx expo prebuild --clean #  so the old native libraries and assets don't stay in the APK.
 npx expo run:android
 
 See [docs/TESTING.md](docs/TESTING.md) for what the tests cover and the manual device checklist.
