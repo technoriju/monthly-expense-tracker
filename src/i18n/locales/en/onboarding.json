@@ -6,7 +6,7 @@
   "progress": "Step {{current}} of {{total}}",
   "slides": {
     "welcome": {
-      "title": "Welcome to Expense Tracker",
+      "title": "Welcome to Khoroch",
       "chip": "Track • Manage • Save",
       "body": "Keep track of your monthly income and expenses. Everything stays on this phone and works offline."
     },
@@ -43,7 +43,7 @@
   },
   "appLock": {
     "title": "Secure Your App",
-    "body": "Lock Expense Tracker with your fingerprint or your phone's screen lock. You can change this later in Settings.",
+    "body": "Lock Khoroch with your fingerprint or your phone's screen lock. You can change this later in Settings.",
     "use": "Use {{method}}",
     "skip": "Not now"
   }

@@ -42,7 +42,7 @@ $white = [System.Drawing.Brushes]::White
 $soft = New-Object System.Drawing.SolidBrush ([System.Drawing.ColorTranslator]::FromHtml('#EDE7FF'))
 $title = New-Object System.Drawing.Font $bold, 60, ([System.Drawing.FontStyle]::Bold), ([System.Drawing.GraphicsUnit]::Pixel)
 $sub = New-Object System.Drawing.Font $bold, 30, ([System.Drawing.FontStyle]::Regular), ([System.Drawing.GraphicsUnit]::Pixel)
-$g.DrawString('Expense Tracker', $title, $white, 380, 170)
+$g.DrawString('Khoroch', $title, $white, 380, 170)
 $g.DrawString('Income, expenses & budgets', $sub, $soft, 384, 258)
 $g.DrawString('By hand, by voice, by receipt', $sub, $soft, 384, 300)
 

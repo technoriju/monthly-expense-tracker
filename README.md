@@ -48,6 +48,9 @@ npx jest                  # unit, service, repository (real SQL) and component t
 npx expo install --check  # dependency versions match the SDK
 ```
 npx expo prebuild --clean #  so the old native libraries and assets don't stay in the APK.
+
+Run npx expo prebuild --clean -p android  - so the Android label updates, then rebuild. 
+
 npx expo run:android
 
 See [docs/TESTING.md](docs/TESTING.md) for what the tests cover and the manual device checklist.

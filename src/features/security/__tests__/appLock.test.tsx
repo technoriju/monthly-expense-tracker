@@ -213,7 +213,7 @@ describe('LockScreen', () => {
     const onUnlock = jest.fn();
     await renderLock('device', onUnlock);
     expect(onUnlock).not.toHaveBeenCalled();
-    expect(screen.getByText('Expense Tracker is locked')).toBeTruthy();
+    expect(screen.getByText('Khoroch is locked')).toBeTruthy();
     await fireEvent.press(screen.getByTestId('lock-screen-icon'));
     expect(onUnlock).toHaveBeenCalledTimes(1);
   });

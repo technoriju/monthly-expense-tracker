@@ -1,4 +1,4 @@
-# Privacy & Data Safety — Expense Tracker (Google Play)
+# Privacy & Data Safety — Khoroch (Google Play)
 
 Proposed Play Console answers for **version 1.0.0 (Android, with AdMob banner ads)**. Each answer is
 tied to code or to Google's own SDK disclosure. **Not legal advice** — the owner must review and

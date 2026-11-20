@@ -62,7 +62,7 @@ beforeEach(async () => {
 describe('OnboardingView', () => {
   it('walks through every slide with Next and finishes on Get Started', async () => {
     await renderOnboarding();
-    expect(screen.getByText('Welcome to Expense Tracker')).toBeTruthy();
+    expect(screen.getByText('Welcome to Khoroch')).toBeTruthy();
     expect(screen.getByLabelText(`Step 1 of ${ONBOARDING_SLIDES.length}`)).toBeTruthy();
 
     for (let i = 1; i < ONBOARDING_SLIDES.length; i++) {
@@ -98,7 +98,7 @@ describe('OnboardingView', () => {
     await changeUiLanguage('bn');
     useSettingsStore.getState().applySettings({ uiLanguage: 'bn' });
     await renderOnboarding();
-    expect(screen.getByText('খরচের হিসাবে স্বাগতম')).toBeTruthy();
+    expect(screen.getByText('Khoroch-এ স্বাগতম')).toBeTruthy();
     expect(screen.getByText('পরবর্তী')).toBeTruthy();
   });
 });

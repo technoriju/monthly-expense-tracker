@@ -1,4 +1,4 @@
-# Privacy Policy — Expense Tracker (DRAFT)
+# Privacy Policy — Khoroch (DRAFT)
 
 > **Draft for the owner's review.** It describes what the app's code does as of version 1.0.0
 > (with Google AdMob banner ads, Android).
@@ -10,7 +10,7 @@
 
 ## Summary
 
-Expense Tracker stores your income, expenses, budgets and preferences only on your device. The
+Khoroch stores your income, expenses, budgets and preferences only on your device. The
 app has no account and no server for your data, and the developer does not receive any of your
 data. The free Android app shows banner ads from Google AdMob; to serve them, Google's advertising
 SDK collects some device data (see "Advertising"). Your financial data is never part of that.

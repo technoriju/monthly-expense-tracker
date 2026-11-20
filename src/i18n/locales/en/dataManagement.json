@@ -46,7 +46,7 @@
     "errors": {
       "tooLarge": "This file is too large to be a backup.",
       "invalidJson": "This file is damaged or is not a backup file.",
-      "notBackup": "This is not an Expense Tracker backup file.",
+      "notBackup": "This is not a Khoroch backup file.",
       "unsupportedVersion": "This backup was made by a newer version of the app. Update the app and try again.",
       "invalidStructure": "This backup is incomplete or damaged.",
       "inconsistent": "This backup contains inconsistent data and cannot be restored.",

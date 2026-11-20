@@ -1,4 +1,4 @@
-# Store Listing — Expense Tracker (DRAFT)
+# Store Listing — Khoroch (DRAFT)
 
 Drafts for Google Play and the App Store. Every claim below matches the app's code as of 1.0.0
 (Android build with AdMob banner ads). Play release copy and checklists: [PLAY_STORE_RELEASE.md](./PLAY_STORE_RELEASE.md).
@@ -6,7 +6,7 @@ Review before use; do not add claims that are not true of the shipped build.
 
 ## Shared copy
 
-**App name:** Expense Tracker
+**App name:** Khoroch : Expense Tracker (Play title, ≤ 30 chars) · launcher label: Khoroch
 
 **Short description (Play, ≤ 80 chars):**
 Track income & expenses by hand or by voice. Budgets, reports, no account.
@@ -15,7 +15,7 @@ Track income & expenses by hand or by voice. Budgets, reports, no account.
 
 **Full description:**
 
-Expense Tracker is a simple, private way to keep track of where your money goes.
+Khoroch is a simple, private way to keep track of where your money goes.
 
 - Add income and expenses in seconds, with categories, notes and payment method
 - Speak your entries in English, Bengali or Hindi — always reviewed before saving
@@ -81,8 +81,8 @@ Capture from a release build with realistic sample data (no real personal data).
 | --- | --- |
 | Data collection | **Data Not Collected** only while iOS ships without ads (the AdMob SDK is linked but never initialised on iOS). **Before any iOS release:** re-check with the owner — App Review may ask about the linked SDK; enabling iOS ads needs ATT + updated App Privacy answers |
 | Tracking | No (`NSPrivacyTracking: false`) |
-| Microphone usage string | "Allow Expense Tracker to use the microphone while you record an expense by voice. Audio is used only during recording." |
-| Speech recognition usage string | "Allow Expense Tracker to turn your speech into text so you can add expenses by voice. Depending on your device and language, speech may be processed by Apple's speech recognition service." |
+| Microphone usage string | "Allow Khoroch to use the microphone while you record an expense by voice. Audio is used only during recording." |
+| Speech recognition usage string | "Allow Khoroch to turn your speech into text so you can add expenses by voice. Depending on your device and language, speech may be processed by Apple's speech recognition service." |
 | Export compliance | Uses no non-exempt encryption (`ITSAppUsesNonExemptEncryption: false`) |
 
 > Owner decision needed: confirm with Apple's guidance that speech handled by Apple's
@@ -90,7 +90,7 @@ Capture from a release build with realistic sample data (no real personal data).
 
 ### App Review notes (draft)
 
-> Expense Tracker needs no login. All data is stored locally on the device.
+> Khoroch needs no login. All data is stored locally on the device.
 > To test voice entry: open the **Voice** tab, tap the microphone, allow microphone and speech
 > recognition, and say "Food 250 rupees today" (English). The recognized text opens a Review
 > screen; tap **Confirm & Save**. Voice language can be changed on the Voice screen
