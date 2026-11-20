@@ -51,7 +51,7 @@ this project.
    npx eas-cli env:create --environment production --name EXPO_PUBLIC_ADMOB_BANNER_ANDROID --value "ca-app-pub-.../..." --visibility plaintext
    ```
    `eas.json` → `build.production.environment = "production"` already selects these.
-   For a local release build instead, put the same variables in `.env.local` (git-ignored; see `.env.example`), then `npx expo prebuild --clean -p android` so the manifest picks up the App ID.
+   For a local release build instead, put the same variables in `.env` (git-ignored; see `.env.example`), then `npx expo prebuild --clean -p android` so the manifest picks up the App ID.
 
 ## Testing safely
 

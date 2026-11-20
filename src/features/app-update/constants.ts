@@ -20,6 +20,6 @@ export const MAX_TEXT_LENGTH = 200;
 /**
  * The gate runs in release builds only: development builds would otherwise be blocked by the
  * live policy whenever their version is below the published minimum. To try it in a debug build,
- * set `EXPO_PUBLIC_UPDATE_GATE_IN_DEV=1` (e.g. in `.env.local`) and restart Metro with `-c`.
+ * set `EXPO_PUBLIC_UPDATE_GATE_IN_DEV=1` (e.g. in `.env`) and restart Metro with `-c`.
  */
 export const UPDATE_GATE_ENABLED = !__DEV__ || process.env.EXPO_PUBLIC_UPDATE_GATE_IN_DEV === '1';

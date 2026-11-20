@@ -19,8 +19,8 @@ Ads: [ADMOB_SETUP.md](./ADMOB_SETUP.md). Play declarations: [PRIVACY_AND_DATA_SA
 | Splash | `expo-splash-screen` plugin, `#5B2ED6` background, `assets/images/logo.png` (160 px wide) |
 | Android permissions | `INTERNET`, `RECORD_AUDIO`, `CAMERA`, `USE_BIOMETRIC`/`USE_FINGERPRINT`, `AD_ID` (Google Mobile Ads SDK); `SYSTEM_ALERT_WINDOW`, `READ/WRITE_EXTERNAL_STORAGE`, `VIBRATE` blocked |
 | SDK levels | targetSdk 36, compileSdk 37, minSdk 24 (Expo SDK 58 defaults; not pinned) |
-| AdMob | `app.config.ts` adds the `react-native-google-mobile-ads` plugin; App ID from `ADMOB_ANDROID_APP_ID` (EAS env / `.env.local`), Google sample ID otherwise; EAS `production` fails without it. Banner unit from `EXPO_PUBLIC_ADMOB_BANNER_ANDROID` |
-| Env files | `.env.example` (committed) lists every variable; `.env.local` is git-ignored |
+| AdMob | `app.config.ts` adds the `react-native-google-mobile-ads` plugin; App ID from `ADMOB_ANDROID_APP_ID` (EAS env / `.env`), Google sample ID otherwise; EAS `production` fails without it. Banner unit from `EXPO_PUBLIC_ADMOB_BANNER_ANDROID` |
+| Env files | `.env.example` (committed) lists every variable; `.env` is git-ignored |
 | Android backup | `allowBackup: false` |
 | iOS usage strings | microphone + speech recognition (set by the `expo-speech-recognition` plugin in `app.json`) |
 | iOS export compliance | `ITSAppUsesNonExemptEncryption: false` (the app adds no encryption) |

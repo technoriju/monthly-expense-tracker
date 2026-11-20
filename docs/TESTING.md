@@ -115,7 +115,7 @@ build is available. Repeat the starred items in Bengali and Hindi, light and dar
 - [ ] Remove the phone's screen lock in system settings → app opens without a lock
 - [ ] iOS: Face ID usage text appears on first use
 
-**App update** (release/preview build, or a debug build with `EXPO_PUBLIC_UPDATE_GATE_IN_DEV=1` in `.env.local` + `npx expo start -c`; edit `config.json` on the server for each case)
+**App update** (release/preview build, or a debug build with `EXPO_PUBLIC_UPDATE_GATE_IN_DEV=1` in `.env` + `npx expo start -c`; edit `config.json` on the server for each case)
 - [ ] `minimumSupportedVersion` above the installed version → "Update required" screen; no close/Later; Android back leaves the app; `adb shell am start -d monthlyexpensetracker://transactions` stays on the update screen
 - [ ] Kill and reopen, then airplane mode and reopen → still blocked; error text + Try again shown
 - [ ] Update now opens the Play Store / App Store listing; coming back re-checks
